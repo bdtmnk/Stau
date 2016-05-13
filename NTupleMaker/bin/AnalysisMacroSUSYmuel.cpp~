@@ -46,15 +46,6 @@ int main(int argc, char * argv[]) {
 
   // kinematic cuts on electrons
   const bool isData = cfg.get<bool>("IsData");
- 
-  const bool applyPUreweighting = cfg.get<bool>("ApplyPUreweighting");
-  
-  const string pileUpInDataFile = cfg.get<string>("pileUpInDataFile");
-  const string pileUpInMCFile = cfg.get<string>("pileUpInMCFile");
-  const bool applyLeptonSF = cfg.get<bool>("ApplyLeptonSF");
-  const bool InvertTauIso = cfg.get<bool>("InvertTauIso");
-  const bool InvertLeptonIso = cfg.get<bool>("InvertLeptonIso");
-  const bool InvertMET = cfg.get<bool>("InvertMET");
   const float ptElectronLowCut   = cfg.get<float>("ptElectronLowCut");
   const float ptElectronHighCut  = cfg.get<float>("ptElectronHighCut");
   const float etaElectronCut     = cfg.get<float>("etaElectronCut");
@@ -63,12 +54,6 @@ int main(int argc, char * argv[]) {
   const float isoElectronLowCut  = cfg.get<float>("isoElectronLowCut");
   const float isoElectronHighCut = cfg.get<float>("isoElectronHighCut");
   const bool applyElectronId     = cfg.get<bool>("ApplyElectronId");
-  
-  
- // vertex cuts
-  const double ndofVertexCut  = cfg.get<double>("NdofVertexCut");   
-  const double zVertexCut     = cfg.get<double>("ZVertexCut");
-  const double dVertexCut     = cfg.get<double>("DVertexCut");
 
   // veto electrons
   const float ptVetoElectronCut   = cfg.get<float>("ptVetoElectronCut");
@@ -105,6 +90,21 @@ int main(int argc, char * argv[]) {
   const float deltaRTrigMatch = cfg.get<float>("DRTrigMatch");
   const bool oppositeSign    = cfg.get<bool>("oppositeSign");
   const bool isIsoR03 = cfg.get<bool>("IsIsoR03");
+ 
+
+
+
+
+
+	// tau
+  const Float_t taupt    = cfg.get<Float_t>("taupt");
+  const Float_t taueta    = cfg.get<Float_t>("taueta");
+  const Float_t decayModeFinding    = cfg.get<Float_t>("decayModeFinding");
+  const Float_t   decayModeFindingNewDMs  = cfg.get<Float_t>("decayModeFindingNewDMs");
+  const Float_t   againstElectronVLooseMVA5  = cfg.get<Float_t>("againstElectronVLooseMVA5");
+  const Float_t   againstMuonTight3  = cfg.get<Float_t>("againstMuonTight3");
+  const Float_t   vertexz =  cfg.get<Float_t>("vertexz");
+  const Float_t   byCombinedIsolationDeltaBetaCorrRaw3Hits = cfg.get<Float_t>("byCombinedIsolationDeltaBetaCorrRaw3Hits");
   
 
   const string lowPtLegElectron  = cfg.get<string>("LowPtLegElectron");
@@ -113,40 +113,6 @@ int main(int argc, char * argv[]) {
 
   const string lowPtLegMuon  = cfg.get<string>("LowPtLegMuon");
   const string highPtLegMuon = cfg.get<string>("HighPtLegMuon");
-
-  const string dataBaseDir = cfg.get<string>("DataBaseDir");
-
-  string TrigLeg  ;
-  if (!isData) TrigLeg  = cfg.get<string>("Mu17LegMC");
-  if (isData) TrigLeg  = cfg.get<string>("Mu18LegData");
-  const string SingleMuonTriggerFile  = cfg.get<string>("SingMuonTriggEff");
-  const float singleMuonTriggerPtCut = cfg.get<float>("SingleMuonTriggerPtCut");
-  const float singleMuonTriggerEtaCut = cfg.get<float>("SingleMuonTriggerEtaCut");
-
-  const string idIsoEffFile = cfg.get<string>("idIsoEffFile");
-  const string trigEffFile = cfg.get<string>("trigEffFile");
-
-  const string Region  = cfg.get<string>("Region");
-  const string Sign  = cfg.get<string>("Sign");
-
-  const double leadchargedhadrcand_dz = cfg.get<double>("leadchargedhadrcand_dz");
-  const double leadchargedhadrcand_dxy = cfg.get<double>("leadchargedhadrcand_dxy");
-
-
-
-  // kinematic cuts on Jets
-  const double etaJetCut   = cfg.get<double>("etaJetCut");
-  const double ptJetCut   = cfg.get<double>("ptJetCut");
-  // topSingleMuonTriggerFile
-  const double dRleptonsCutmutau   = cfg.get<double>("dRleptonsCutmutau");
-  const double dZetaCut       = cfg.get<double>("dZetaCut");
-  const double deltaRTrigMatch = cfg.get<double>("DRTrigMatch");
-  const bool oppositeSign    = cfg.get<bool>("oppositeSign");
-  const bool isIsoR03 = cfg.get<bool>("IsIsoR03");
-
-
-
-
 
 
   // topological cuts
@@ -661,6 +627,7 @@ int main(int argc, char * argv[]) {
 
 	//for (unsigned int j=0;j<LeptMV.size();++j) cout<<" j "<<j<<"  "<<LeptMV.at(j).Pt()<<endl;
 	//cout<<""<<endl;
+      ////////jets cleaning 
  
 	bool isMu23 = false;
 	bool isMu8 = false;

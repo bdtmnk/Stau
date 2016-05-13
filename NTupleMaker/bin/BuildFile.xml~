@@ -117,7 +117,7 @@
  <use name="DesyTauAnalyses/NTupleMaker"/>
 </bin>
 
-<bin name="SUSYmuel" file="AnalysisMacroSUSYmuel2.cpp">
+<bin name="SUSYmuel" file="AnalysisMacroSUSYmutau.cpp">
  <use name="PhysicsTools/Utilities"/>
  <use name="rootgraphics"/>
  <use name="root"/>

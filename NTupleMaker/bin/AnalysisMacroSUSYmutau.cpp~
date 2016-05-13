@@ -681,7 +681,6 @@ int main(int argc, char * argv[]) {
 
       }
 
-      if (!isData && (   string::npos != filen.find("stau") || string::npos != filen.find("C1")) ) isMainTrigger = true;
 
       if (!isMainTrigger) {
 	std::cout << "HLT filter for Mu18 " << MainTrigger << " not found" << std::endl;
