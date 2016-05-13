@@ -572,6 +572,27 @@ int main(int argc, char * argv[]) {
 
 
       if (!lumi) continue;
+
+	std::vector<TString> metFlags; metFlags.clear();
+
+     //////////////MET filters flag
+      if (isData){
+
+	 metFlags.push_back("Flag_HBHENoiseFilter");
+	 metFlags.push_back("Flag_HBHENoiseIsoFilter");
+	 metFlags.push_back("Flag_CSCTightHalo2015Filter");
+	 metFlags.push_back("Flag_EcalDeadCellTriggerPrimitiveFilter");
+	 metFlags.push_back("Flag_goodVertices");
+	 metFlags.push_back("Flag_eeBadScFilter");
+
+      }
+
+
+	bool METflag = metFiltersPasses(analysisTree, metFlags);
+	if (!METflag) continue;
+
+
+
       JetsMV.clear();
       ElMV.clear();
       TauMV.clear();
@@ -621,22 +642,7 @@ int main(int argc, char * argv[]) {
 	//	tau_index=0;
       }
 
-	std::vector<TString> metFlags; metFlags.clear();
 
-     //////////////MET filters flag
-      if (isData){
-
-	 metFlags.push_back("Flag_HBHENoiseFilter");
-	 metFlags.push_back("Flag_HBHENoiseIsoFilter");
-	 metFlags.push_back("Flag_CSCTightHalo2015Filter");
-	 metFlags.push_back("Flag_EcalDeadCellTriggerPrimitiveFilter");
-	 metFlags.push_back("Flag_goodVertices");
-	 metFlags.push_back("Flag_eeBadScFilter");
-
-      }
-
-	bool METflag = metFiltersPasses(analysisTree, metFlags);
-	if (!METflag) continue;
 
       if (!isData) 
 	{
@@ -677,7 +683,7 @@ int main(int argc, char * argv[]) {
 
 
       if (!isMainTrigger) {
-	std::cout << "HLT filter for Mu20 " << MainTrigger << " not found" << std::endl;
+	std::cout << "HLT filter for Mu18 " << MainTrigger << " not found" << std::endl;
 	return(-1);
       }
 
@@ -769,11 +775,14 @@ int main(int argc, char * argv[]) {
 
       float Mu17EffData = (float)SF_muonTrigger->get_EfficiencyData(double(ptMu1),double(etaMu1));
       float Mu17EffMC   = (float)SF_muonTrigger->get_EfficiencyMC(double(ptMu1),double(etaMu1));
+	
+      bool Signal = true;
 
+	//if (!isData && (   string::npos != filen.find("stau") || string::npos != filen.find("C1")) ) Signal=true;
       if (!isData) {
 	if (Mu17EffMC>1e-6)
 	  trigweight = Mu17EffData / Mu17EffMC;
-	if (!isData &&  (string::npos != filen.find("stau") || string::npos != filen.find("C1")) )  trigweight = Mu17EffData;
+	if (!isData && (   string::npos != filen.find("stau") || string::npos != filen.find("C1")) ) trigweight = Mu17EffData;
 	weight *= trigweight;
 	trig_weight = trigweight;
 	//	cout<<" Trigger weight "<<trigweight<<endl;
@@ -796,37 +805,42 @@ int main(int argc, char * argv[]) {
 	if (analysisTree.tau_decayModeFinding[it]<decayModeFindingNewDMs) continue;
 	if ( fabs(analysisTree.tau_leadchargedhadrcand_dz[it])> leadchargedhadrcand_dz) continue;
 	///////////////// To fully switch in 76 later
-	//if (string::npos == filen.find("stau")  && analysisTree.tau_againstElectronVLooseMVA6[it]<againstElectronVLooseMVA6) continue;
-	//if (string::npos != filen.find("stau")  && analysisTree.tau_againstElectronVLooseMVA5[it]<againstElectronVLooseMVA5) continue;
-	if (analysisTree.tau_againstElectronVLooseMVA5[it]<againstElectronVLooseMVA5) continue;
+
+	if (!Signal && analysisTree.tau_againstElectronVLooseMVA6[it]<againstElectronVLooseMVA6) continue;
+
+	if ( Signal  && analysisTree.tau_againstElectronVLooseMVA5[it]<againstElectronVLooseMVA5) continue;
+
 	if (analysisTree.tau_againstMuonTight3[it]<againstMuonTight3) continue;
 
 	//cout<<"  "<<analysisTree.tau_byMediumCombinedIsolationDeltaBetaCorr3Hits[it]<<endl;
 	
-	////if (!InvertTauIso && analysisTree.tau_byCombinedIsolationDeltaBetaCorrRaw3Hits[it] > byCombinedIsolationDeltaBetaCorrRaw3Hits ) continue;
-	//if  (  string::npos != filen.find("stau") && !InvertTauIso && analysisTree.tau_byMediumCombinedIsolationDeltaBetaCorr3Hits[it] < 0.5 ) continue;
-	//if  (  string::npos == filen.find("stau") &&   !InvertTauIso && analysisTree.tau_byTightIsolationMVArun2v1DBoldDMwLT[it] < 0.5 ) continue;
-	if  (  !InvertTauIso && analysisTree.tau_byMediumCombinedIsolationDeltaBetaCorr3Hits[it] < 0.5 ) continue;
+	if  ( Signal && !InvertTauIso && analysisTree.tau_byMediumCombinedIsolationDeltaBetaCorr3Hits[it] < 0.5 ) continue;
 
-	//if  (  string::npos != filen.find("stau"))
+	if  (!Signal && !InvertTauIso && analysisTree.tau_byTightIsolationMVArun2v1DBoldDMwLT[it] < 0.5 ) continue;
+
+	//if  (  !InvertTauIso && analysisTree.tau_byMediumCombinedIsolationDeltaBetaCorr3Hits[it] < 0.5 ) continue;
+
+	if (Signal)
 	ta_IsoFlag=analysisTree.tau_byMediumCombinedIsolationDeltaBetaCorr3Hits[it];
 
-	//if  (  string::npos == filen.find("stau"))
-	//ta_IsoFlag=analysisTree.tau_byTightIsolationMVArun2v1DBoldDMwLT[it];	
+	if (!Signal)
+	ta_IsoFlag=analysisTree.tau_byTightIsolationMVArun2v1DBoldDMwLT[it];	
 	
-	//double  tauIso = analysisTree.tau_byCombinedIsolationDeltaBetaCorrRaw3Hits[it];
-	double  tauIso = ta_IsoFlag;
 
 
-	//if (tauIso<isoTauMin ) {
-	if (tauIso>0.5 ) {
-	       //cout<<"  there was a change  "<<tauIso<<"  "<<ta_IsoFlag<<" it "<<it<<" tau_index "<<(int)tau_index<<"  "<<analysisTree.tau_count<<endl;
+	double  tauIso = analysisTree.tau_byCombinedIsolationDeltaBetaCorrRaw3Hits[it];
+	//double  tauIso = ta_IsoFlag;
+
+	if (tauIso<isoTauMin ) {
+	//if (tauIso>0.5 ) {
+	     // cout<<"  there was a change  "<<tauIso<<"  "<<ta_IsoFlag<<" it "<<it<<" tau_index "<<(int)tau_index<<"  "<<analysisTree.tau_count<<endl;
 	  isoTauMin  = tauIso;
 	  tau_iso=true;
 	  tau_index = (int)it;
 	  tau.push_back(tau_index);
 
 	}
+	//cout<<" "<<endl;
 
 	if (tauIso==isoTauMin && (int)it != (int)tau_index) {
 	  //analysisTree.tau_pt[it] > analysisTree.tau_pt[tau_index] ? tau_index = it : tau_index = tau_index;
@@ -847,7 +861,7 @@ int main(int argc, char * argv[]) {
       // cout<< " Lets check  "<<mu_index <<"  "<<tau_index <<"  "<<endl;
       //cout<<"  "<<endl;
 
-      if ( fabs(analysisTree.tau_charge[tau_index]) !=1 ) continue;
+      if ( fabs(analysisTree.tau_charge[tau_index]) != 1 ) continue;
       if ( fabs(analysisTree.muon_charge[mu_index]) != 1) continue;
 
       double q = analysisTree.tau_charge[tau_index] * analysisTree.muon_charge[mu_index];
@@ -881,8 +895,8 @@ int main(int argc, char * argv[]) {
 
 	}
       }
-      //      if (!isData && ( string::npos != filen.find("stau")  ) ) isdRLeptonMatched = true; 
-      if (!isData &&  ( string::npos != filen.find("stau") || string::npos != filen.find("C1")) )  isdRLeptonMatched = true;
+            if (!isData && ( string::npos != filen.find("stau")  || string::npos != filen.find("C1") ) ) isdRLeptonMatched = true; 
+      //if (!isData &&  Signal)  isdRLeptonMatched = true;
       event_leptonDrTrigger = isdRLeptonMatched;
 
       if (!isdRLeptonMatched) continue;
