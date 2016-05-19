@@ -884,7 +884,7 @@ int main(int argc, char * argv[]) {
       /////////////////////////fix the online/offline
       for (unsigned int iT=0; iT<analysisTree.trigobject_count; ++iT) {
 	if (analysisTree.trigobject_filters[iT][nMainTrigger]   && analysisTree.muon_pt[mu_index]>19 &&
-	      analysisTree.trigobject_pt[iT]>ptMuonHighCut) { // IsoMu Leg
+	      analysisTree.trigobject_pt[iT]>singleMuonTriggerPtCut) { // IsoMu Leg
 
 	  double dRtrig = deltaR(analysisTree.muon_eta[mu_index],analysisTree.muon_phi[mu_index],
 				 analysisTree.trigobject_eta[iT],analysisTree.trigobject_phi[iT]);
@@ -986,7 +986,7 @@ int main(int argc, char * argv[]) {
 //	    bool electronMvaId = electronMvaIdWP90(analysisTree.electron_pt[iev], analysisTree.electron_superclusterEta[iev], analysisTree.electron_mva_id_nontrigPhys14[iev]);
 		bool electronMvaId = analysisTree.electron_mva_wp90_nontrig_Spring15_v1[iev];
 
-	    if ( analysisTree.electron_pt[iev] > 10 &&  fabs(analysisTree.electron_eta[iev]) < 2.5 && fabs(analysisTree.electron_dxy[iev])<0.045
+	    if ( (int)el_index != (int)iev && analysisTree.electron_pt[iev] > 10 &&  fabs(analysisTree.electron_eta[iev]) < 2.5 && fabs(analysisTree.electron_dxy[iev])<0.045
 		 && fabs(analysisTree.electron_dz[iev]) < 0.2 && relIsoV< 0.3 && electronMvaId && analysisTree.electron_pass_conversion[iev] 
 		 && analysisTree.electron_nmissinginnerhits[iev] <=1) ThirdLeptVeto=true;
 

@@ -878,7 +878,7 @@ int main(int argc, char * argv[]) {
 	      if ( analysisTree.electron_charge[imv] != analysisTree.electron_charge[el_index] ) OSCharge=true;
 	      if ( analysisTree.electron_charge[imv] * analysisTree.electron_charge[el_index] < 0) OSCharge=true;
 
-	      if ( analysisTree.electron_charge[imv] != analysisTree.electron_charge[el_index] &&  analysisTree.electron_cutId_veto_Spring15[imv]  
+	      if ( analysisTree.electron_charge[imv] != analysisTree.electron_charge[el_index] &&  analysisTree.electron_cutId_veto_Spring15[imv]  && dRr > 0.15 
 		   && analysisTree.electron_cutId_veto_Spring15[el_index] &&  analysisTree.electron_pt[imv]> 15 &&  fabs(analysisTree.electron_eta[imv])< 2.5 && fabs(analysisTree.electron_dxy[imv])<0.045 
 		   && fabs(analysisTree.electron_dz[imv] < 0.2 && relIso< 0.3 &&   OSCharge)) //removed from last recipe
 		DiElVeto=true;
@@ -913,12 +913,13 @@ int main(int argc, char * argv[]) {
 	    double relIsoV = IsoWithEA/analysisTree.electron_pt[iev];
 
 
-	    bool electronMvaId = electronMvaIdWP90(analysisTree.electron_pt[iev], analysisTree.electron_superclusterEta[iev], analysisTree.electron_mva_id_nontrigPhys14[iev]);
-
+	//    bool electronMvaId = electronMvaIdWP90(analysisTree.electron_pt[iev], analysisTree.electron_superclusterEta[iev], analysisTree.electron_mva_id_nontrigPhys14[iev]);
+	bool electronMvaId = analysisTree.electron_mva_wp90_nontrig_Spring15_v1[iev];
 
 	    if ( (int)el_index != (int)iev && analysisTree.electron_pt[iev] > 10 &&  fabs(analysisTree.electron_eta[iev]) < 2.5 && fabs(analysisTree.electron_dxy[iev])<0.045
 		 && fabs(analysisTree.electron_dz[iev]) < 0.2 && relIsoV< 0.3 && electronMvaId && analysisTree.electron_pass_conversion[iev] 
 		 && analysisTree.electron_nmissinginnerhits[iev] <=1) ThirdLeptVeto=true;
+
 
 	  }
 	}
@@ -936,8 +937,8 @@ int main(int argc, char * argv[]) {
 	    double relIso = absIso/analysisTree.muon_pt[imvv];
 
 
-	    if (  analysisTree.muon_isMedium[imvv] &&  analysisTree.muon_pt[imvv]> 10 &&  fabs(analysisTree.muon_eta[imvv])< 2.4 && fabs(analysisTree.muon_dxy[imvv])<0.045 
-		 && fabs(analysisTree.muon_dz[imvv] < 0.2 && relIso< 0.3 && analysisTree.muon_isMedium[imvv]) ) ThirdLeptVeto=true;
+    	    if ( (int)imvv != (int)mu_index &&  analysisTree.muon_isMedium[imvv] &&  analysisTree.muon_pt[imvv]> 10 &&  fabs(analysisTree.muon_eta[imvv])< 2.4 && fabs(analysisTree.muon_dxy[imvv])<0.045 
+    		 && fabs(analysisTree.muon_dz[imvv] < 0.2 && relIso< 0.3 ) ) ThirdLeptVeto=true;
 	  }
 	}
       }
@@ -992,7 +993,7 @@ int main(int argc, char * argv[]) {
 	genTauV.SetXYZT(analysisTree.gentau_px[gt], analysisTree.gentau_py[gt], analysisTree.gentau_pz[gt], analysisTree.gentau_e[gt]);
 	double Drr=deltaR(analysisTree.tau_eta[tau_index],analysisTree.tau_phi[tau_index],
 			  genTauV.Eta(), genTauV.Phi());
-	if (Drr < 0.3) isTauMatched = true;
+	if (Drr < 0.2) isTauMatched = true;
 
       	}
 	}
@@ -1019,7 +1020,7 @@ int main(int argc, char * argv[]) {
       iCut++;
 
       ///////////apply TopPtWeight
-      if (!isData && ( string::npos != filen.find("TTJets")  || string::npos != filen.find("TTPowHeg")) ) 
+      if (!isData && ( string::npos != filen.find("TTJets")  || string::npos != filen.find("TTPowHeg")) || string::npos != filen.find("TT_") ) 
 	{
 
 	  if (topPt>0.&&antitopPt>0.) {
