@@ -823,11 +823,12 @@ int main(int argc, char * argv[]) {
 
       bool isdRLeptonMatched = false;
       for (unsigned int iT=0; iT<analysisTree.trigobject_count; ++iT) {
-	if (analysisTree.trigobject_filters[iT][nMainTrigger]) { // Mu17 Leg
+	if (analysisTree.trigobject_filters[iT][nMainTrigger] &&  analysisTree.electron_pt[el_index] > 24 &&
+			analysisTree.trigobject_pt[iT]>singleElectronTriggerPtCut
+			) { // Mu17 Leg
 	  double dRtrig = deltaR(analysisTree.electron_eta[el_index],analysisTree.electron_phi[el_index],
-				 analysisTree.trigobject_eta[iT],analysisTree.trigobject_phi[iT]);
-
-	  if (analysisTree.trigobject_pt[iT]>singleElectronTriggerPtCut && fabs( analysisTree.trigobject_eta[iT])<singleElectronTriggerEtaCut  && dRtrig<deltaRTrigMatch)
+			  analysisTree.trigobject_eta[iT],analysisTree.trigobject_phi[iT]);
+	  if ( dRtrig<deltaRTrigMatch)
 	  //if (analysisTree.trigobject_pt[iT]>singleElectronTriggerPtCut   && dRtrig<deltaRTrigMatch)
 	    isdRLeptonMatched = true;
 
