@@ -48,7 +48,7 @@ class analyzer {
 		const double electronMass = 0;
 		const double muonMass = 0.10565837;
 		const double pionMass = 0.1396;
-		const double bTagCut  = 0.8000
+		const double bTagCut  = 0.8000;
 
 
 		// Fixed size dimensions of array or collections stored in the TTree if any.

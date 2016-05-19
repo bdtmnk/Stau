@@ -90,7 +90,7 @@ sed -i 's/FILEIN/'$file'/g' analyzer*
 sed -i 's/LEPTONHERE/false/g' analyzer.C
 sed -i 's/SIGNHERE/OS/g' analyzer.C
 sed -i 's/CHANNELHERE/'$channel'/g' analyzer*
-sed -i 's/BTAGCUT/0.89/g' analyzer.h
+sed -i 's/BTAGCUT/0.89/g' analyzer*
 
 
 
@@ -120,7 +120,7 @@ sed -i 's/FILEIN/'$file'/g' analyzer*
 sed -i 's/LEPTONHERE/false/g' analyzer.C
 sed -i 's/SIGNHERE/OS/g' analyzer.C
 sed -i 's/CHANNELHERE/'$channel'/g' analyzer*
-sed -i 's/BTAGCUT/'$btag'/g' analyzer.h
+sed -i 's/BTAGCUT/'$btag'/g' analyzer*
 
 rm plots.root
 root -l -q -b runme.C 
@@ -140,7 +140,7 @@ sed -i 's/FILEIN/'$file'/g' analyzer*
 sed -i 's/LEPTONHERE/false/g' analyzer.C
 sed -i 's/SIGNHERE/SS/g' analyzer.C
 sed -i 's/CHANNELHERE/'$channel'/g' analyzer*
-sed -i 's/BTAGCUT/'$btag'/g' analyzer.h
+sed -i 's/BTAGCUT/'$btag'/g' analyzer*
 
 rm plots.root
 root -l -q -b runme.C 
@@ -163,7 +163,7 @@ sed -i 's/FILEIN/'$file'/g' analyzer*
 sed -i 's/LEPTONHERE/true/g' analyzer.C
 sed -i 's/SIGNHERE/SS/g' analyzer.C
 sed -i 's/CHANNELHERE/'$channel'/g' analyzer*
-sed -i 's/BTAGCUT/'$btag'/g' analyzer.h
+sed -i 's/BTAGCUT/'$btag'/g' analyzer*
 
 rm plots.root
 root -l -q -b runme.C 
@@ -188,7 +188,7 @@ sed -i 's/FILEIN/'$file'/g' analyzer*
 sed -i 's/LEPTONHERE/true/g' analyzer.C
 sed -i 's/SIGNHERE/OS/g' analyzer.C
 sed -i 's/CHANNELHERE/'$channel'/g' analyzer*
-sed -i 's/BTAGCUT/'$btag'/g' analyzer.h
+sed -i 's/BTAGCUT/'$btag'/g' analyzer*
 
 rm plots.root
 root -l -q -b runme.C 
@@ -198,11 +198,9 @@ mv plots.root $dir/plots_$channel/${fileB}_C.root
 
 fi
 
-
-
-
 fi
 
-cd $dir
+cd ${dir}
+
 rm -fr dir_$line
 done<$1

@@ -226,7 +226,7 @@
 </bin>
 
 
-<bin name="taufakerate" file="AnalysisMacro_taufakerate.cpp">
+<bin name="SUSYTFR" file="AnalysisMacro_taufakerateMu.cpp">
  <use name="PhysicsTools/Utilities"/>
  <use name="rootgraphics"/>
  <use name="root"/>

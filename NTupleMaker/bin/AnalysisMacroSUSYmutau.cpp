@@ -80,9 +80,7 @@ int main(int argc, char * argv[]) {
 
   const string dataBaseDir = cfg.get<string>("DataBaseDir");
 
-  string TrigLeg  ;
-  if (!isData) TrigLeg  = cfg.get<string>("Mu17LegMC");
-  if (isData) TrigLeg  = cfg.get<string>("Mu18LegData");
+  const string TrigLeg  = cfg.get<string>("SingleMuonFilterName") ;
   const string SingleMuonTriggerFile  = cfg.get<string>("SingMuonTriggEff");
   const float singleMuonTriggerPtCut = cfg.get<float>("SingleMuonTriggerPtCut");
   const float singleMuonTriggerEtaCut = cfg.get<float>("SingleMuonTriggerEtaCut");
@@ -711,6 +709,7 @@ int main(int argc, char * argv[]) {
 
 
 	double relIso = absIso/analysisTree.muon_pt[im];
+
 	if (relIso<isoMuonLowCut) continue;
 
 	if (applyMuonId && !analysisTree.muon_isMedium[im]) continue;
@@ -882,13 +881,16 @@ int main(int argc, char * argv[]) {
       //     cout<<" here before "<<analysisTree.trigobject_count<<endl;
 
       bool isdRLeptonMatched = false;
+      /////////////////////////fix the online/offline
       for (unsigned int iT=0; iT<analysisTree.trigobject_count; ++iT) {
-	if (analysisTree.trigobject_filters[iT][nMainTrigger]) { // Mu17 Leg
+	if (analysisTree.trigobject_filters[iT][nMainTrigger]   && analysisTree.muon_pt[mu_index]>19 &&
+	      analysisTree.trigobject_pt[iT]>ptMuonHighCut) { // IsoMu Leg
+
 	  double dRtrig = deltaR(analysisTree.muon_eta[mu_index],analysisTree.muon_phi[mu_index],
 				 analysisTree.trigobject_eta[iT],analysisTree.trigobject_phi[iT]);
-
-	  if (analysisTree.trigobject_pt[iT]>singleMuonTriggerPtCut &&  fabs( analysisTree.trigobject_eta[iT])<singleMuonTriggerEtaCut && dRtrig<deltaRTrigMatch)
+	//  if (analysisTree.trigobject_pt[iT]>singleMuonTriggerPtCut &&  fabs( analysisTree.trigobject_eta[iT])<singleMuonTriggerEtaCut && dRtrig<deltaRTrigMatch)
 	  //if (analysisTree.trigobject_pt[iT]>singleMuonTriggerPtCut && dRtrig<deltaRTrigMatch)
+	if (dRtrig<deltaRTrigMatch)
 	    isdRLeptonMatched = true;
 
 	  //if (isData && dRtrig<deltaRTrigMatch) isdRLeptonMatched=true;
@@ -949,7 +951,7 @@ int main(int argc, char * argv[]) {
 	      if ( analysisTree.muon_isGlobal[imv]    && analysisTree.muon_isTracker[imv] && analysisTree.muon_isPF[imv]   
 			      &&  analysisTree.muon_isGlobal[mu_index] && analysisTree.muon_isTracker[mu_index] && analysisTree.muon_isPF[mu_index]
 		   &&  analysisTree.muon_pt[imv]> 15    &&  fabs(analysisTree.muon_eta[imv])< 2.4 && fabs(analysisTree.muon_dxy[imv])<0.045 
-		   && fabs(analysisTree.muon_dz[imv] < 0.2 && relIso< 0.3 && analysisTree.muon_isMedium[imv]) && dRr > 0.15 && OSCharge) //removed from last recipe
+		   && fabs(analysisTree.muon_dz[imv] < 0.2 && relIso< 0.3) && dRr > 0.15 && OSCharge) //removed from last recipe
 		MuVeto=true;
 	    }
 	  }
@@ -981,8 +983,8 @@ int main(int argc, char * argv[]) {
 	    double relIsoV = IsoWithEA/analysisTree.electron_pt[iev];
 
 
-	    bool electronMvaId = electronMvaIdWP90(analysisTree.electron_pt[iev], analysisTree.electron_superclusterEta[iev], analysisTree.electron_mva_id_nontrigPhys14[iev]);
-
+//	    bool electronMvaId = electronMvaIdWP90(analysisTree.electron_pt[iev], analysisTree.electron_superclusterEta[iev], analysisTree.electron_mva_id_nontrigPhys14[iev]);
+		bool electronMvaId = analysisTree.electron_mva_wp90_nontrig_Spring15_v1[iev];
 
 	    if ( analysisTree.electron_pt[iev] > 10 &&  fabs(analysisTree.electron_eta[iev]) < 2.5 && fabs(analysisTree.electron_dxy[iev])<0.045
 		 && fabs(analysisTree.electron_dz[iev]) < 0.2 && relIsoV< 0.3 && electronMvaId && analysisTree.electron_pass_conversion[iev] 
@@ -1005,7 +1007,7 @@ int main(int argc, char * argv[]) {
 
 
 	    if ( (int)imvv != (int)mu_index &&  analysisTree.muon_isMedium[imvv] &&  analysisTree.muon_pt[imvv]> 10 &&  fabs(analysisTree.muon_eta[imvv])< 2.4 && fabs(analysisTree.muon_dxy[imvv])<0.045 
-		 && fabs(analysisTree.muon_dz[imvv] < 0.2 && relIso< 0.3 && analysisTree.muon_isMedium[imvv]) ) ThirdLeptVeto=true;
+		 && fabs(analysisTree.muon_dz[imvv] < 0.2 && relIso< 0.3 ) ) ThirdLeptVeto=true;
 	  }
 	}
       }
@@ -1066,7 +1068,7 @@ int main(int argc, char * argv[]) {
 
 	  double Drr=deltaR(analysisTree.tau_eta[tau_index],analysisTree.tau_phi[tau_index],
 			    genTauV.Eta(), genTauV.Phi());
-	  if (Drr < 0.3) isTauMatched = true;
+	  if (Drr < 0.2) isTauMatched = true;
 
 	}
       }//!isData
@@ -1094,7 +1096,7 @@ int main(int argc, char * argv[]) {
       iCut++;
 
 
-      if (!isData && ( string::npos != filen.find("TTJets")  || string::npos != filen.find("TTPowHeg")) ) 
+      if (!isData && ( string::npos != filen.find("TTJets")  || string::npos != filen.find("TTPowHeg") || string::npos != filen.find("TT_")) ) 
 	{
 
 	  if (topPt>0.&&antitopPt>0.) {
