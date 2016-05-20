@@ -69,14 +69,11 @@ void analyzer::Loop(){
 	CutList.push_back("Lepton SF");
 	CutList.push_back("TauFakeRate");
 	CutList.push_back("topPtRwgt");
-	//CutList.push_back("LSF + TFR + topRwgt");
 	CutList.push_back("Cleaned jets");
-	//CutList.push_back("b-Veto");
 	CutList.push_back("Jets lt 1");
 	CutList.push_back("MT window");
 	CutList.push_back("MET gt 30");
 	CutList.push_back("MET gt 50");
-	//CutList.push_back("MET gt 140");
 	CutList.push_back("tau pT gt 50");
 	CutList.push_back("MCTb gt 60");
 	CutList.push_back("MT gt 130");
