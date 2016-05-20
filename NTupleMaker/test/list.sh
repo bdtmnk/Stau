@@ -27,8 +27,8 @@ done
 done
 
 
-ls $source2/SingleMuon*/*.root > ${dir}/SingleMuon
-ls $source2/SingleEl*/*.root > ${dir}/SingleElectron
+ls $source2/SingleMuon*Run2015D*/*.root > ${dir}/SingleMuon
+ls $source2/SingleEl*Run2015D*/*.root > ${dir}/SingleElectron
 #ls $source/METw*/*.root > ${dir}/MET
 #echo MET > MET
 echo SingleMuon  > SingleMuon
@@ -37,7 +37,7 @@ echo SingleElectron > SingleElectron
 rm GC*
 rm ${dir}/GC*
 
-rm *Glu
+rm *Glu*
 rm $dir/*Glu*
 
 rm AToZh*
