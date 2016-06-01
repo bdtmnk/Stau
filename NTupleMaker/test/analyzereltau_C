@@ -61,7 +61,7 @@ void analyzer::Loop(){
 	CutList.clear();
 	CutList.push_back("No cut");
 	CutList.push_back("No cut after PU");
-	CutList.push_back("mu-tau");
+	CutList.push_back("el-tau");
 	CutList.push_back("2nd lepV");
 	CutList.push_back("3rd lepV");
 	CutList.push_back("Trigger SF");
@@ -133,16 +133,16 @@ void analyzer::Loop(){
 
 	TFile * filein = new TFile("/nfs/dust/cms/user/alkaloge/TauAnalysis/new/new/CMSSW_7_6_3_patch2/src/DesyTauAnalyses/NTupleMaker/test/CHANNELHERE/FILEIN","read");
 
-	TH1D * histW = (TH1D*)filein->Get("mutau/histWeightsH");
-	TH1D * hxsecW = (TH1D*)filein->Get("mutau/xsec");
-	TH1D * CutFlow = (TH1D*)filein->Get("mutau/CutFlowUnW");
+	TH1D * histW = (TH1D*)filein->Get("eltau/histWeightsH");
+	TH1D * hxsecW = (TH1D*)filein->Get("eltau/xsec");
+	TH1D * CutFlow = (TH1D*)filein->Get("eltau/CutFlowUnW");
 	TFile * file = new TFile("plots.root","recreate");
 	//TFile * file = new TFile(hist_,"update");
 
 	//cout<<"  "<<old<<"  "<<datasetName->c_str()<<"  "<<hist_<<"  "<<CutFlow->GetName()<<"  "<<CutFlow->GetBinContent(1)<<endl;
 		
 	//filein->ls();
-	string Channel = "mutau";
+	string Channel = "eltau";
 	file->mkdir(Channel.c_str());
 	file->cd(Channel.c_str());
 	//histW->Write();
@@ -192,7 +192,6 @@ void analyzer::Loop(){
 		}
 		//}
 
-		//cout<<" size "<<JetsMV.size()<<"  "<<gen_weight<<"  "<<jentry<<"  "<<nentries<<"  "<<int(mu_count)<<"  "<<int(muon_index)<<endl;
 	
 
 			MuV.SetPxPyPzE(0.,0.,0.,0.);
@@ -208,10 +207,10 @@ if (taus_index>-1)			TauV.SetPtEtaPhiM(ta_pt[taus_index], ta_eta[taus_index], ta
 //		cout<<" e " <<jentry<<" from "<<nentries<<"  weights "<<all_weights<<" same ? "<< gen_weight*trig_weight*pu_weight*top_weight*LSF_weight*TFR_weight <<" PU "<<pu_weight<<" top "<<top_weight<<" LSF "<<LSF_weight<<" TFR "<<TFR_weight<<" gen "<<gen_weight<<" trig  "<<trig_weight<<endl;
 		int iCut = 2;
 		
-		if (mu_relIso[0] > 0.1 && !InvertLeptonIso) continue;
-		if (mu_relIso[0] < 0.1 && InvertLeptonIso) continue;
-		//if ( fabs(mu_dxy[muon_index]) > 0.01) continue;
-		//if ( fabs(mu_dz[muon_index]) > 0.01) continue;
+		if (el_relIso[0] > 0.1 && !InvertLeptonIso) continue;
+		if (el_relIso[0] < 0.1 && InvertLeptonIso) continue;
+		//if ( fabs(el_dxy[muon_index]) > 0.01) continue;
+		//if ( fabs(el_dz[muon_index]) > 0.01) continue;
 
 		///remove from the all_weight the LSF  + TFR + top +trig_weig
 		all_weights = pu_weight * gen_weight ;
@@ -219,10 +218,10 @@ if (taus_index>-1)			TauV.SetPtEtaPhiM(ta_pt[taus_index], ta_eta[taus_index], ta
 		//if (ta_IsoFlag < 0.5) continue;
 		//if (event_leptonDrTrigger<0.5) continue;
 
-		if ( abs(mu_charge[muon_index]) !=1 ) continue;
+		if ( abs(el_charge[electron_index]) !=1 ) continue;
 		if ( abs(ta_charge[taus_index]) !=1 ) continue;
 
-		float charge_ =mu_charge[muon_index]  * ta_charge[taus_index];
+		float charge_ =el_charge[electron_index]  * ta_charge[taus_index];
 
 		if ( charge_ < 0. && Sign == "SS") continue;
 		if ( charge_ > 0. && Sign == "OS") continue;
@@ -308,8 +307,7 @@ if (taus_index>-1)			TauV.SetPtEtaPhiM(ta_pt[taus_index], ta_eta[taus_index], ta
 			if (!jet_isLoose[jet]) continue;
 
 
-			double Dr=deltaR(mu_eta[muon_index],mu_phi[muon_index],
-			//double Dr=deltaR(el_eta[electron_index],el_phi[electron_index],
+			double Dr=deltaR(el_eta[electron_index],el_phi[electron_index],
 					jet_eta[jet],jet_phi[jet]);
 			if (  Dr  < DRmax)  continue;
 
@@ -383,7 +381,7 @@ if (taus_index>-1)			TauV.SetPtEtaPhiM(ta_pt[taus_index], ta_eta[taus_index], ta
                 iCFCounter[iCut]++;
 		iCut++;
 
-		double mcta = sqrt( 2*mu_pt[muon_index]*ta_pt[taus_index]*(1+cos(mu_phi[muon_index]-ta_phi[taus_index])) );
+		double mcta = sqrt( 2*el_pt[electron_index]*ta_pt[taus_index]*(1+cos(el_phi[electron_index]-ta_phi[taus_index])) );
 		//cout<<"  "<<mcta<<endl;
 		if (mcta<60) continue;
 		FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index);
@@ -420,7 +418,7 @@ if (taus_index>-1)			TauV.SetPtEtaPhiM(ta_pt[taus_index], ta_eta[taus_index], ta
 
 
 
-                 double Dr=deltaR(mu_eta[muon_index],mu_phi[muon_index],
+                 double Dr=deltaR(el_eta[electron_index],el_phi[electron_index],
                                         ta_eta[taus_index],ta_phi[taus_index]);
 		if (Dr>3.5 || Dr<3) continue;
 
@@ -452,14 +450,14 @@ if (taus_index>-1)			TauV.SetPtEtaPhiM(ta_pt[taus_index], ta_eta[taus_index], ta
 
 	
 /*		double HText =sumpT;
-    	        HText += mu_pt[muon_index];
-		double RhT = mu_pt[muon_index]/HText;
-                double PtOHT =  mu_pt[muon_index]/sumpT;
+    	        HText += el_pt[electron_index];
+		double RhT = el_pt[electron_index]/HText;
+                double PtOHT =  el_pt[electron_index]/sumpT;
 		double HTOMET  = sumpT/sqrt(METV.Pt());
 		//cout<<" RHT "<< RhT<<endl;
 		
-		if (  fabs(mu_dxy[muon_index])> 0.02) continue;
-		if (  fabs(mu_dz[muon_index])> 0.02) continue;
+		if (  fabs(el_dxy[electron_index])> 0.02) continue;
+		if (  fabs(el_dz[electron_index])> 0.02) continue;
 		if (met <100) continue;
 		//if (PtOHT<2.) continue;
 		FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index);
