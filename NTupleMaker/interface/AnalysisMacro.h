@@ -110,6 +110,7 @@ unsigned int el_index=-1;
    Float_t 	   event_thirdLeptonVeto;
    Float_t 	   event_leptonDrTrigger;
    Float_t	   genTauMatched;
+   Int_t 	   npartons;
 
 
 
@@ -577,6 +578,7 @@ T  = new TTree("T","T");
   T->Branch("datasetName", &datasetName);
   T->Branch("regionName", &regionName);
   T->Branch("genTauMatched", &genTauMatched);
+  T->Branch("npartons",&npartons,"npartons/I");
 
 
 
