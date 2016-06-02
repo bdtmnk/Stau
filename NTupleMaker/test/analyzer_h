@@ -54,6 +54,8 @@ class analyzer {
 		// Fixed size dimensions of array or collections stored in the TTree if any.
 
 		// Declaration of leaf types
+   		Int_t	   nbtag;
+	        Int_t	   njets;
 		Float_t         met_ex;
 		Float_t         met_ey;
 		Float_t         met_ez;
@@ -131,6 +133,10 @@ class analyzer {
 		string * datasetName = new std::string(); 
 		string          *regionName;
 		Float_t 	genTauMatched;
+   		Float_t	   qcdweight;
+		Float_t	   qcdweightup;
+   		Float_t	   qcdweightdown;
+   		Int_t 	   npartons;
 
 		// List of branches
 		TBranch        *b_met_ex;   //!
@@ -210,6 +216,12 @@ class analyzer {
 		TBranch        *b_event_thirdLeptonVeto;   //!
 		TBranch        *b_event_leptonDrTrigger;   //!
 		TBranch        *b_genTauMatched;   //!
+		TBranch        *b_qcdweight;   //!
+		TBranch        *b_qcdweightup;   //!
+		TBranch        *b_qcdweightdown;   //!
+		TBranch        *b_npartons;   //!
+		TBranch        *b_nbtag;   //!
+		TBranch        *b_njets;   //!
 
 		analyzer(TTree *tree=0);
 		virtual ~analyzer();
@@ -696,20 +708,10 @@ class analyzer {
 				double dPhiJ=dPhiFrom2P( JetsV.at(ij).Px(), JetsV.at(ij).Py(), MetV.Px(),  MetV.Py() );
 				hdPhiJMET[CutIndex]->Fill(dPhiJ,EvWeight);
 			}
-			/*
-			   for (unsigned int ij=0;ij<jet_count;ij++){
-
-			   for (int in = 0 ; in<btag_index.size();in++){
-			   if (jet_btag[ij] > BTAGCUT)   
-			   {
-			   bjets++;
-			//cout<<" Jet pT from .h "<<ij<<"  "<<jet_pt[ij]<<endl;
-			}
-			}
-
-			}*/
 			//	cout<<"  " <<btag_index.size()<<endl;
-			bjets = btag_index.size();
+
+			//bjets = btag_index.size();
+			bjets = nbtag;
 			hnBJet[CutIndex]->Fill(bjets,EvWeight);
 
 			hHT[CutIndex]->Fill(sumpT,EvWeight);
@@ -871,6 +873,7 @@ class analyzer {
 			fChain->SetBranchAddress("mu_dz", mu_dz, &b_mu_dz);
 			fChain->SetBranchAddress("mu_relIso", mu_relIso, &b_mu_relIso);
 			fChain->SetBranchAddress("jet_count", &jet_count, &b_jet_count);
+  			fChain->SetBranchAddress("njets", &njets, &b_njets);
 			fChain->SetBranchAddress("jet_e", jet_e, &b_jet_e);
 			fChain->SetBranchAddress("jet_px", jet_px, &b_jet_px);
 			fChain->SetBranchAddress("jet_py", jet_py, &b_jet_py);
@@ -914,6 +917,16 @@ class analyzer {
 			fChain->SetBranchAddress("event_thirdLeptonVeto", &event_thirdLeptonVeto, &b_event_thirdLeptonVeto);
 			fChain->SetBranchAddress("event_leptonDrTrigger", &event_leptonDrTrigger, &b_event_leptonDrTrigger);
 			fChain->SetBranchAddress("genTauMatched", &genTauMatched, &b_genTauMatched);
+
+			
+   			fChain->SetBranchAddress("qcdweight", &qcdweight, &b_qcdweight);
+			fChain->SetBranchAddress("qcdweightup", &qcdweightup, &b_qcdweightup);
+			fChain->SetBranchAddress("qcdweightdown", &qcdweightdown, &b_qcdweightdown);
+		        fChain->SetBranchAddress("nbtag", &nbtag, &b_nbtag);
+
+		        fChain->SetBranchAddress("nbtag", &nbtag, &b_nbtag);
+  			fChain->SetBranchAddress("npartons",&npartons,&b_npartons);
+
 			Notify();
 		}
 

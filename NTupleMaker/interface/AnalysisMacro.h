@@ -37,6 +37,8 @@ unsigned int el_index=-1;
    Int_t	   electron_index;
    Int_t	   taus_index;
    Int_t           mu_count;
+   Int_t	   nbtag;
+   Int_t	   njets;
    Float_t         mu_px[20];   //[mu_count]
    Float_t         mu_py[20];   //[mu_count]
    Float_t         mu_pz[20];   //[mu_count]
@@ -110,6 +112,9 @@ unsigned int el_index=-1;
    Float_t 	   event_thirdLeptonVeto;
    Float_t 	   event_leptonDrTrigger;
    Float_t	   genTauMatched;
+   Float_t	   qcdweight;
+   Float_t	   qcdweightup;
+   Float_t	   qcdweightdown;
    Int_t 	   npartons;
 
 
@@ -533,6 +538,7 @@ T  = new TTree("T","T");
 
 
   T->Branch("jet_count", &jet_count, "jet_count/I");
+  T->Branch("njets", &njets, "njets/I");
   T->Branch("jet_e", jet_e, "jet_e[30]/F");
   T->Branch("jet_px", jet_px, "jet_px[30]/F");
   T->Branch("jet_py", jet_py, "jet_py[30]/F");
@@ -574,7 +580,11 @@ T  = new TTree("T","T");
   T->Branch("ta_charge", ta_charge, "ta_charge[20]/F");
   T->Branch("ta_relIso", ta_relIso, "ta_relIso[20]/F");
   T->Branch("ta_IsoFlag", &ta_IsoFlag, "ta_IsoFlag/F");
- 
+  T->Branch("qcdweight", &qcdweight, "qcdweight/F");
+  T->Branch("qcdweightup", &qcdweightup, "qcdweightup/F");
+  T->Branch("qcdweightdown", &qcdweightdown, "qcdweightdown/F");
+  T->Branch("nbtag", &nbtag, "nbtag/I");
+
   T->Branch("datasetName", &datasetName);
   T->Branch("regionName", &regionName);
   T->Branch("genTauMatched", &genTauMatched);
