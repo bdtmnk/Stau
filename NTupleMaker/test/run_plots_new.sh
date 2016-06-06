@@ -30,7 +30,13 @@ cd /nfs/dust/cms/user/alkaloge/TauAnalysis/new/new/CMSSW_7_6_3_patch2/src/DesyTa
 dir="/nfs/dust/cms/user/alkaloge/TauAnalysis/new/new/CMSSW_7_6_3_patch2/src/DesyTauAnalyses/NTupleMaker/test"
 
 channel=$2
+channel2=$2
 btag="0.800"
+
+if [[ $2 == "Ttemplate" ]]
+then
+	channel2="muel"
+fi
 
 while read line
 do
@@ -59,7 +65,7 @@ cp $dir/analyzer${channel}_C .
 #cp $dir/analyzer_InvMET_C .
 
 sed -i 's/CHIMASSS/'$lsp'/g' analyzer*C
-sed -i 's/CHANNELHERE/'$channel'/g' analyzer*
+sed -i 's/CHANNELHERE/'$channel2'/g' analyzer*
 
 
 cp $dir/runme.C .
@@ -89,7 +95,7 @@ echo the signal filein : $file , the fileout : ${fileB}_B.root
 sed -i 's/FILEIN/'$file'/g' analyzer*
 sed -i 's/LEPTONHERE/false/g' analyzer.C
 sed -i 's/SIGNHERE/OS/g' analyzer.C
-sed -i 's/CHANNELHERE/'$channel'/g' analyzer*
+sed -i 's/CHANNELHERE/'$channel2'/g' analyzer*
 sed -i 's/BTAGCUT/0.89/g' analyzer*
 
 
@@ -119,7 +125,7 @@ echo the filein : $file , the fileout : ${fileB}_B.root NonInvertedLepton OS
 sed -i 's/FILEIN/'$file'/g' analyzer*
 sed -i 's/LEPTONHERE/false/g' analyzer.C
 sed -i 's/SIGNHERE/OS/g' analyzer.C
-sed -i 's/CHANNELHERE/'$channel'/g' analyzer*
+sed -i 's/CHANNELHERE/'$channel2'/g' analyzer*
 sed -i 's/BTAGCUT/'$btag'/g' analyzer*
 
 rm plots.root
@@ -139,7 +145,7 @@ echo the filein : $file , the fileout : ${fileB}_A.root , NonInvertedLepton SS
 sed -i 's/FILEIN/'$file'/g' analyzer*
 sed -i 's/LEPTONHERE/false/g' analyzer.C
 sed -i 's/SIGNHERE/SS/g' analyzer.C
-sed -i 's/CHANNELHERE/'$channel'/g' analyzer*
+sed -i 's/CHANNELHERE/'$channel2'/g' analyzer*
 sed -i 's/BTAGCUT/'$btag'/g' analyzer*
 
 rm plots.root
@@ -162,7 +168,7 @@ echo the filein : $file , the fileout : ${fileB}_D.root InvertedLepton SS
 sed -i 's/FILEIN/'$file'/g' analyzer*
 sed -i 's/LEPTONHERE/true/g' analyzer.C
 sed -i 's/SIGNHERE/SS/g' analyzer.C
-sed -i 's/CHANNELHERE/'$channel'/g' analyzer*
+sed -i 's/CHANNELHERE/'$channel2'/g' analyzer*
 sed -i 's/BTAGCUT/'$btag'/g' analyzer*
 
 rm plots.root
@@ -187,7 +193,7 @@ echo the filein : $file , the fileout : ${fileB}_C.root  InvertedLepton OS
 sed -i 's/FILEIN/'$file'/g' analyzer*
 sed -i 's/LEPTONHERE/true/g' analyzer.C
 sed -i 's/SIGNHERE/OS/g' analyzer.C
-sed -i 's/CHANNELHERE/'$channel'/g' analyzer*
+sed -i 's/CHANNELHERE/'$channel2'/g' analyzer*
 sed -i 's/BTAGCUT/'$btag'/g' analyzer*
 
 rm plots.root
