@@ -45,7 +45,7 @@ class analyzer {
 
 		const double MuMass = 0.105658367;
 		const double tauMass = 1.776;
-		const double electronMass = 0;
+		const double electronMass = 0.51100e-3;
 		const double muonMass = 0.10565837;
 		const double pionMass = 0.1396;
 		const double bTagCut  = 0.8000;
@@ -237,13 +237,13 @@ class analyzer {
 
 		void FillHists(int CutIndex, Double_t EvWeight, TLorentzVector  elV, TLorentzVector  muV, TLorentzVector tauV, vector<TLorentzVector>  &JetsV, TLorentzVector  &MetV, double Chimass, double mintermediate, string & Sel, int  mIndex, int eIndex, int  tIndex){
 
-
 			AllJets_Lepton_noMet.clear();
 			for (unsigned int i = 0; i <   JetsV.size(); i++) AllJets_Lepton_noMet.push_back (JetsV.at(i));
 
 
 			if (Sel=="mutau" )    AllJets_Lepton_noMet.push_back (muV);
 			if (Sel=="eltau" )    AllJets_Lepton_noMet.push_back (elV);
+			if (Sel=="muel" )   { AllJets_Lepton_noMet.push_back (muV);AllJets_Lepton_noMet.push_back (elV);};
 
 			//cout<<"  "<<muon_index<<"  "<<electron_index<<"  "<<taus_index<<"  "<<jet_count<<"  "<<met_ex<<"  "<<met_ey<<endl;
 
@@ -257,12 +257,11 @@ class analyzer {
 
 			hnJet[CutIndex]->Fill(JetsV.size(),EvWeight);
 			hnMu[CutIndex]->Fill(mu_count,EvWeight);
-			hnTau[CutIndex]->Fill(ta_count,EvWeight);
+	if (ta_count >-1)	hnTau[CutIndex]->Fill(ta_count,EvWeight);
 			hnEl[CutIndex]->Fill(el_count,EvWeight);
 			hnLep[CutIndex]->Fill(el_count+mu_count,EvWeight);
 
 			hWeights[CutIndex]->Fill(EvWeight);
-
 
 
 			//Float_T mT  = double Lester::mTBound(...)
@@ -277,13 +276,13 @@ class analyzer {
 			if (Sel=="mutau"){
 
 
-				/*
-				   Mt2::Basic_Mt2_332_Calculator mt2Calculator;
-				   Mt2::LorentzTransverseVector  vis_A(Mt2::TwoVector(muV.Px(), muV.Py()), muonMass);
-				   Mt2::LorentzTransverseVector  vis_B(Mt2::TwoVector(tauV.Px(), tauV.Py()), tauMass);
-				   Mt2::TwoVector                pT_Miss(MetV.Px(), MetV.Py());    
-				   double mt2  = mt2Calculator.mt2_332(vis_A, vis_B, pT_Miss, Chimass);
-				 */
+				
+				//   Mt2::Basic_Mt2_332_Calculator mt2Calculator;
+				//   Mt2::LorentzTransverseVector  vis_A(Mt2::TwoVector(muV.Px(), muV.Py()), muonMass);
+				//   Mt2::LorentzTransverseVector  vis_B(Mt2::TwoVector(tauV.Px(), tauV.Py()), tauMass);
+				//   Mt2::TwoVector                pT_Miss(MetV.Px(), MetV.Py());    
+				//   double mt2  = mt2Calculator.mt2_332(vis_A, vis_B, pT_Miss, Chimass);
+				 
 
 				double v1[4] = {muV.Px(),muV.Py(),muV.Pz(),muonMass};
 				double v2[4] = {tauV.Px(),tauV.Py(),tauV.Pz(),tauMass};
@@ -296,14 +295,14 @@ class analyzer {
 				double Mt2as = 0; Mt2as = asymm_mt2_lester_bisect::get_mT2(muonMass, muV.Px(), muV.Py(),tauMass,tauV.Px(),tauV.Py(),MetV.Px(),MetV.Py(),Chimass,Chimass,0);
 				double mcta = sqrt( 2*muV.Pt()*tauV.Pt()*(1+cos(muV.Phi()-tauV.Phi())) );
 
-				/*
-				   cout<<"MCTa  = "<<mcta<<" MCT = "<<mct(v1,v2)
-				   <<", MCTcorr = "<<mctcorr(v1,v2,vds,ptm,ecm,mxlo)
-				   <<", MT2 = "<<mt2(v1,v2,vds,ptm,ecm,mxlo)<<"  Mt2 lester "<<Mt2as
-				   <<", MCy = "<<mcy(v1,v2,vds,ptm)
-				   <<", MCx = "<<mcx(v1,v2,vds,ptm)
-				   <<endl;
-				 */
+				
+				//   cout<<"MCTa  = "<<mcta<<" MCT = "<<mct(v1,v2)
+				//   <<", MCTcorr = "<<mctcorr(v1,v2,vds,ptm,ecm,mxlo)
+				//   <<", MT2 = "<<mt2(v1,v2,vds,ptm,ecm,mxlo)<<"  Mt2 lester "<<Mt2as
+				//   <<", MCy = "<<mcy(v1,v2,vds,ptm)
+				 //  <<", MCx = "<<mcx(v1,v2,vds,ptm)
+				 //  <<endl;
+				 
 				double MT2v =0 ; MT2v = mt2(v1,v2,vds,ptm,ecm,mxlo);
 
 				hMt2mutau[CutIndex]->Fill(MT2v,EvWeight);
@@ -321,8 +320,7 @@ class analyzer {
 				//double mTB = Lester::mTBound(muV.E(), muV.Px(), muV.Py(), muV.Pz(), tauV.E(),tauV.Px(),tauV.Py(),tauV.Pz(),MetV.Px(),MetV.Py(), mintermediate);
 				//hTBoundmutau[CutIndex]->Fill(mTB,EvWeight);
 				//cout<<"  "<<mTB<<endl;
-
-				//	     	double Dr= deltaR(MuV.at(mIndex).Eta(), MuV.at(mIndex).Phi(),TauV.at(mIndex).Eta(),TauV.at(mIndex).Phi());
+			//	     	double Dr= deltaR(MuV.at(mIndex).Eta(), MuV.at(mIndex).Phi(),TauV.at(mIndex).Eta(),TauV.at(mIndex).Phi());
 				//double Dr= deltaR(MuV.at(0).Eta(), MuV.at(0).Phi(),TauV.at(0).Eta(),TauV.at(0).Phi());
 				//double Dr = MuV.at(mIndex).DeltaR(TauV.at(tIndex));
 				double Dr = muV.DeltaR(tauV);
@@ -399,16 +397,29 @@ class analyzer {
 				}
 
 			}
-
-
-
-			if (Sel=="eltau" ){
+			if (Sel=="eltau" && eIndex > -1 && tIndex>-1){
+			//	cout<<"==============================================================================================="<<endl;
 				//double Dr= deltaR(ElV.at(eIndex).Eta(), ElV.at(eIndex).Phi(),TauV.at(tIndex).Eta(),TauV.at(tIndex).Phi());
-
-				double Mt2as = 0;
-				Mt2as =asymm_mt2_lester_bisect::get_mT2(electronMass, elV.Px(), elV.Py(),tauMass,tauV.Px(),tauV.Py(),MetV.Px(),MetV.Py(),Chimass,Chimass,0);
+				double v1[4] = {elV.Px(),elV.Py(),elV.Pz(),electronMass};
+				double v2[4] = {tauV.Px(),tauV.Py(),tauV.Pz(),tauMass};
+				double ecm = 13000.0;
+				double mxlo = Chimass;
+				double ptm[2] = {MetV.Px(),MetV.Py()};
+				double vds[4] = {0,0,0,0};
+				// TMctLib t;
+			
+				double Mt2as = 0 ; Mt2as = asymm_mt2_lester_bisect::get_mT2(electronMass, elV.Px(), elV.Py(),tauMass,tauV.Px(),tauV.Py(),MetV.Px(),MetV.Py(),Chimass,Chimass,0);
 				//   cout<<" Will call with Mt2 "<<Mt2<<"   "<<Chimass<<endl;
 				hMt2eltau[CutIndex]->Fill(Mt2as,EvWeight);
+				double mcta = sqrt( 2*elV.Pt()*tauV.Pt()*(1+cos(elV.Phi()-tauV.Phi())) );
+				double MT2v =0 ; MT2v = mt2(v1,v2,vds,ptm,ecm,mxlo);
+				hMt2eltau[CutIndex]->Fill(MT2v,EvWeight);
+				hMt2lestereltau[CutIndex]->Fill(Mt2as,EvWeight);
+			
+				hMCTeltau[CutIndex]->Fill(mct(v1,v2),EvWeight);
+				hMCTxeltau[CutIndex]->Fill(mcx(v1,v2,vds,ptm),EvWeight);
+				hMCTyeltau[CutIndex]->Fill(mcy(v1,v2,vds,ptm),EvWeight);
+				hMCTbeltau[CutIndex]->Fill(mcta,EvWeight);
 
 				double Centr = Centrality(AllJets_Lepton_noMet);
 				hCentrality[CutIndex]->Fill(Centr,EvWeight);
@@ -484,16 +495,11 @@ class analyzer {
 
 
 			if (Sel=="muel"){
+	//		cout<<" Helo there  "<<endl;
 
 
-				/*
-				   Mt2::Basic_Mt2_332_Calculator mt2Calculator;
-				   Mt2::LorentzTransverseVector  vis_A(Mt2::TwoVector(muV.Px(), muV.Py()), muonMass);
-				   Mt2::LorentzTransverseVector  vis_B(Mt2::TwoVector(elV.Px(), elV.Py()), electronMass);
-				   Mt2::TwoVector                pT_Miss(MetV.Px(), MetV.Py());    
-				   double mt2  = mt2Calculator.mt2_332(vis_A, vis_B, pT_Miss, Chimass);
-				 */
 
+				TLorentzVector DiL = muV  + elV;
 				double v1[4] = {muV.Px(),muV.Py(),muV.Pz(),muonMass};
 				double v2[4] = {elV.Px(),elV.Py(),elV.Pz(),electronMass};
 				double ecm = 13000.0;
@@ -505,14 +511,6 @@ class analyzer {
 				double Mt2as = 0; Mt2as = asymm_mt2_lester_bisect::get_mT2(muonMass, muV.Px(), muV.Py(),electronMass,elV.Px(),elV.Py(),MetV.Px(),MetV.Py(),Chimass,Chimass,0);
 				double mcta = sqrt( 2*muV.Pt()*elV.Pt()*(1+cos(muV.Phi()-elV.Phi())) );
 
-				/*
-				   cout<<"MCTa  = "<<mcta<<" MCT = "<<mct(v1,v2)
-				   <<", MCTcorr = "<<mctcorr(v1,v2,vds,ptm,ecm,mxlo)
-				   <<", MT2 = "<<mt2(v1,v2,vds,ptm,ecm,mxlo)<<"  Mt2 lester "<<Mt2as
-				   <<", MCy = "<<mcy(v1,v2,vds,ptm)
-				   <<", MCx = "<<mcx(v1,v2,vds,ptm)
-				   <<endl;
-				 */
 				double MT2v =0 ; MT2v = mt2(v1,v2,vds,ptm,ecm,mxlo);
 
 				hMt2muel[CutIndex]->Fill(MT2v,EvWeight);
@@ -536,16 +534,15 @@ class analyzer {
 				//double Dr = MuV.at(mIndex).DeltaR(TauV.at(tIndex));
 				double Dr = muV.DeltaR(elV);
 				//
-				TLorentzVector DiL = muV  + elV;
 				double dPhi=dPhiFrom2P( DiL.Px(), DiL.Py(), MetV.Px(),  MetV.Py() );
 				double MT = TMath::Sqrt(2*DiL.Pt()*MetV.Pt()*(1-TMath::Cos(dPhi)));
 				hMTmuel[CutIndex]->Fill(MT,EvWeight);
-				hInvMassMuTau[CutIndex]->Fill(DiL.M(),EvWeight);
+				hInvMassMuEl[CutIndex]->Fill(DiL.M(),EvWeight);
 				hdR_muel[CutIndex]->Fill(Dr,EvWeight);
 
 				hdRmt_dPhi[CutIndex]->Fill(Dr,dPhi,EvWeight);
 
-				TLorentzVector WBos = MetV + muV;
+				TLorentzVector WBos = MetV + DiL;
 
 				dPhi=dPhiFrom2P( mu_px[muon_index], mu_py[muon_index], met_ex,  met_ey );
 				//dPhi=dPhiFrom2P( muV.Px(), muV.Py(), MetV.Px(),  MetV.Py() );
@@ -594,9 +591,8 @@ class analyzer {
 				hDZeta[CutIndex]->Fill(dzeta,EvWeight);
 
 
-				//	cout<<"  MUV SIZE ==================== "<<MuV.size()<<"  iCut "<<CutIndex<<"  mIndex  "<<mIndex<<" tIndex  "<<tIndex<<endl;
 
-			}
+			}/////////////////end of muel channel
 
 
 
@@ -664,7 +660,6 @@ class analyzer {
 
 
 			int bjets=0;
-			//if (jet_count>0){
 			if (JetsV.size()>0){
 
 				double dPhiJ=dPhiFrom2P( JetsV.at(0).Px(), JetsV.at(0).Py(), MetV.Px(),  MetV.Py() );
@@ -700,7 +695,6 @@ class analyzer {
 				hdPhiJ3MET[CutIndex]->Fill(dPhiJ,EvWeight);
 			}
 
-			//for (unsigned int ij=0;ij<jet_count;ij++){
 			for (unsigned int ij=0;ij<JetsV.size();ij++){
 				//sumpT+=jet_pt[ij];
 				sumpT+=JetsV.at(ij).Pt();
@@ -708,14 +702,11 @@ class analyzer {
 				double dPhiJ=dPhiFrom2P( JetsV.at(ij).Px(), JetsV.at(ij).Py(), MetV.Px(),  MetV.Py() );
 				hdPhiJMET[CutIndex]->Fill(dPhiJ,EvWeight);
 			}
-			//	cout<<"  " <<btag_index.size()<<endl;
 
-			//bjets = btag_index.size();
 			bjets = nbtag;
 			hnBJet[CutIndex]->Fill(bjets,EvWeight);
 
 			hHT[CutIndex]->Fill(sumpT,EvWeight);
-
 
 			double HText =sumpT;
 			if (Sel=="mutau" && mIndex !=-1)    HText += mu_pt[mIndex];
@@ -750,7 +741,6 @@ class analyzer {
 				hMeffElOsqrMET[CutIndex]->Fill( -1,EvWeight);
 				hMeffTauOsqrMET[CutIndex]->Fill( -1,EvWeight);
 			}
-
 			// hMT[CutIndex]->Fill(MT,EvWeight);
 			//  hDZeta->Fill(DZeta,EvWeight);
 

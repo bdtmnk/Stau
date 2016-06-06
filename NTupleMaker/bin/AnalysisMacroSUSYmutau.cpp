@@ -349,6 +349,7 @@ int main(int argc, char * argv[]) {
   int selEventsIdMuons = 0;
   int selEventsIsoMuons = 0;
   bool lumi=false;
+  bool sel_74 = true;
   bool isLowIsoMu=false;
   bool isHighIsoMu = false;
   bool isLowIsoTau=false;
@@ -710,7 +711,9 @@ int main(int argc, char * argv[]) {
       int mu_index = -1;
 
       float isoMuMin  = 1e+10;
-      float isoTauMin = 1e+10;
+      float isoTauMin = 1; 
+      if (sel_74) isoTauMin = 1e+10;
+      if (!sel_74) isoTauMin = -10;
       float ptMu = 0;
       float ptTau = 0;
       //      if (muons.size()>1||electrons.size()>1)
@@ -776,7 +779,11 @@ int main(int argc, char * argv[]) {
 	  if (!trigMatch) continue;
 	  
 
-	  float isoTau = analysisTree.tau_byCombinedIsolationDeltaBetaCorrRaw3Hits[tIndex];
+	  float isoTau =1;
+
+
+	if (sel_74){
+  isoTau= analysisTree.tau_byCombinedIsolationDeltaBetaCorrRaw3Hits[tIndex];
 
 	  if (int(mIndex)!=(int)mu_index) {
 	    if (relIsoMu==isoMuMin) {
@@ -814,7 +821,51 @@ int main(int argc, char * argv[]) {
 	  }
 	  
 	}
+	if (!sel_74){
+   isoTau = analysisTree.tau_byIsolationMVArun2v1DBoldDMwLTraw[tIndex];
+
+          if (int(mIndex)!=mu_index) {
+            if (relIsoMu==isoMuMin) {
+              if (analysisTree.muon_pt[mIndex]>ptMu) {
+                isoMuMin  = relIsoMu;
+                ptMu = analysisTree.muon_pt[mIndex];
+                mu_index = int(mIndex);
+                isoTauMin = isoTau;
+                ptTau = analysisTree.tau_pt[tIndex];
+                tau_index = int(tIndex);
+              }
+            }
+            else if (relIsoMu<isoMuMin) {
+              isoMuMin  = relIsoMu;
+              ptMu = analysisTree.muon_pt[mIndex];
+              mu_index = int(mIndex);
+              isoTauMin = isoTau;
+              ptTau = analysisTree.tau_pt[tIndex];
+              tau_index = int(tIndex);
+            }
+          }
+          else {
+            if (isoTau==isoTauMin) {
+              if (analysisTree.tau_pt[tIndex]>ptTau) {
+                ptTau = analysisTree.tau_pt[tIndex];
+                isoTauMin = isoTau;
+                tau_index = int(tIndex);
+              }
+            }
+            else if (isoTau>isoTauMin) {
+              ptTau = analysisTree.tau_pt[tIndex];
+              isoTauMin = isoTau;
+              tau_index = int(tIndex);
+            }
+          }
+
+        }
+
       }
+ }
+
+
+
 
         //    std::cout << "mIndex = " << mu_index << "   tau_index = " << tau_index << std::endl;
 
@@ -826,8 +877,8 @@ int main(int argc, char * argv[]) {
 ////////////////////mu-tau selection
 
 	
-	bool muonPass = isoMuMin<isoMuonHighCut;
-	if (!muonPass) continue;
+	//bool muonPass = isoMuMin<isoMuonHighCut;
+	//if (!muonPass) continue;
 
 	bool tauPass = 
 	  //	  analysisTree.tau_againstElectronVLooseMVA6[tau_index]>0.5 &&

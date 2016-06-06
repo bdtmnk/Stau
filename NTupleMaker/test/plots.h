@@ -79,7 +79,7 @@ if (  fabs(eta) > 1.2 && fabs(eta) < 2.4 )
 }
 */
 
-if (sel =="mutau"){
+if (sel =="mutau" || sel == "eltau"){
 
 if (  fabs(eta) < 0.9 ) 
 	{
@@ -115,28 +115,28 @@ return SF;
 
 
 
-float Dzeta(TLorentzVector tauV, TLorentzVector muV, TLorentzVector MetV)
+float Dzeta(TLorentzVector LV, TLorentzVector muV, TLorentzVector MetV)
 	{
-				float tauUnitX = tauV.Px()/tauV.Pt();
-				float tauUnitY = tauV.Py()/tauV.Pt();
+				float LUnitX = LV.Px()/LV.Pt();
+				float LUnitY = LV.Py()/LV.Pt();
 
 				//	cout<<" CHECK =========== "<<tauV.Pt()<<"  "<<ta_pt[tIndex]<<endl;	
 				float muonUnitX = muV.Px()/muV.Pt();
 				float muonUnitY = muV.Py()/muV.Pt();
 
-				float zetaX = tauUnitX + muonUnitX;
-				float zetaY = tauUnitY + muonUnitY;
+				float zetaX = LUnitX + muonUnitX;
+				float zetaY = LUnitY + muonUnitY;
 
 				float normZeta = TMath::Sqrt(zetaX*zetaX+zetaY*zetaY);
 
 				zetaX = zetaX/normZeta;
 				zetaY = zetaY/normZeta;
 
-				float vectorX = MetV.Px() + muV.Px() + tauV.Px();
-				float vectorY = MetV.Py() + muV.Py() + tauV.Py();
+				float vectorX = MetV.Px() + muV.Px() + LV.Px();
+				float vectorY = MetV.Py() + muV.Py() + LV.Py();
 
-				float vectorVisX = muV.Px() + tauV.Px();
-				float vectorVisY = muV.Py() + tauV.Py();
+				float vectorVisX = muV.Px() + LV.Px();
+				float vectorVisY = muV.Py() + LV.Py();
 
 				// computation of DZeta variable
 				// pfmet
@@ -649,7 +649,7 @@ for(int cj = 0; cj < CutNer; cj++)
       hMTmuel[cj] = new TH1D ("MTmuel_"+nCut,"MTmuel "+cutName,30,0,300);
       hMTmuel[cj]->Sumw2();
        
-      hMTeltau[cj] = new TH1D ("MTeltau_"+nCut,"MTmeltau "+cutName,30,0,300);
+      hMTeltau[cj] = new TH1D ("MTeltau_"+nCut,"MTeltau "+cutName,30,0,300);
       hMTeltau[cj]->Sumw2();
       
       hMTtautau[cj] = new TH1D ("MTtautau_"+nCut,"MTtautau "+cutName,50,0,1000);
@@ -693,6 +693,18 @@ for(int cj = 0; cj < CutNer; cj++)
       hTBoundmutau[cj] ->Sumw2();
       hMt2eltau[cj] = new TH1D ("Mt2eltau_"+nCut,"Mt2eltau "+cutName,25,0,500);
       hMt2eltau[cj]->Sumw2();
+      hMt2lestereltau[cj] = new TH1D ("Mt2lestereltau_"+nCut,"Mt2lestereltau "+cutName,30,0,600);
+      hMt2lestereltau[cj]->Sumw2();
+ 
+      hMCTeltau[cj] = new TH1D ("MCTeltau_"+nCut,"MCTeltau "+cutName,25,0,500);
+      hMCTeltau[cj]->Sumw2();
+      hMCTxeltau[cj] = new TH1D ("MCTxeltau_"+nCut,"MCTxeltau "+cutName,25,0,500);
+      hMCTxeltau[cj]->Sumw2();
+      hMCTyeltau[cj] = new TH1D ("MCTyeltau_"+nCut,"MCTyeltau "+cutName,25,0,500);
+      hMCTyeltau[cj]->Sumw2();
+      
+      hMCTbeltau[cj] = new TH1D ("MCTbeltau_"+nCut,"MCTbeltau "+cutName,25,0,500);
+      hMCTbeltau[cj]->Sumw2();
 
       /*       hDZeta[CutN]= new TH1D ("DZeta_"+nCut,"DZeta "+cutName,300,-400,200);
 	       hDZeta[cj]->Sumw2();
