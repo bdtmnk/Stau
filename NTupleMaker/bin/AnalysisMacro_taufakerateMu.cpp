@@ -76,10 +76,7 @@ int main(int argc, char * argv[]) {
   const bool applyMuonId     = cfg.get<bool>("ApplyMuonId");
 
 
-
-  string TrigLeg  ;
-  if (!isData) TrigLeg  = cfg.get<string>("Mu17LegMC");
-  if (isData) TrigLeg  = cfg.get<string>("Mu18LegData");
+  const string TrigLeg  = cfg.get<string>("SingleMuonFilterName") ;
   const float singleMuonTriggerPtCut = cfg.get<float>("SingleMuonTriggerPtCut");
   const float singleMuonTriggerEtaCut = cfg.get<float>("SingleMuonTriggerEtaCut");
 
@@ -659,8 +656,8 @@ int main(int argc, char * argv[]) {
 	  mu_index = int(im);
 	  mu_iso=true;
 	  muons.push_back(im);
-	  MuV.SetPtEtaPhiM(analysisTree.muon_pt[mu_index], analysisTree.muon_eta[mu_index], analysisTree.muon_phi[mu_index], muonMass);
-	  MuMV.push_back(MuV);
+	  //MuV.SetPtEtaPhiM(analysisTree.muon_pt[mu_index], analysisTree.muon_eta[mu_index], analysisTree.muon_phi[mu_index], muonMass);
+	  //MuMV.push_back(MuV);
 	  LeptMV.push_back(MuV);
 	}
 
@@ -734,14 +731,16 @@ int main(int argc, char * argv[]) {
 	  if (analysisTree.tau_againstElectronVLooseMVA5[it]<againstElectronVLooseMVA5) continue;
 	  if (analysisTree.tau_againstMuonTight3[it]<againstMuonTight3) continue;
 	*/
-	double  tauIso = analysisTree.tau_byCombinedIsolationDeltaBetaCorrRaw3Hits[it];
+	//double  tauIso = analysisTree.tau_byCombinedIsolationDeltaBetaCorrRaw3Hits[it];
+	double  tauIso = analysisTree.tau_byIsolationMVArun2v1DBoldDMwLTraw[it];
 
 				
 
 	isLoose  = true;
 	tau_loose = (int)it;
 
-	if (isLoose && analysisTree.tau_byMediumCombinedIsolationDeltaBetaCorr3Hits [it]> 0.5  && analysisTree.tau_againstElectronVLooseMVA5[it]>againstElectronVLooseMVA5 
+	//if (isLoose && analysisTree.tau_byMediumCombinedIsolationDeltaBetaCorr3Hits [it]> 0.5  && analysisTree.tau_againstElectronVLooseMVA5[it]>againstElectronVLooseMVA5 
+	if (isLoose && analysisTree.tau_byTightIsolationMVArun2v1DBoldDMwLT [it]> 0.5  && analysisTree.tau_againstElectronVLooseMVA6[it]>0.5 
 	    && analysisTree.tau_againstMuonTight3[it]>againstMuonTight3) {isTight = true;	  tau_tight = (int)it;}
 
 
@@ -766,6 +765,8 @@ int main(int argc, char * argv[]) {
       if (isTight) hTightIndex->Fill((int)tau_tight,weight);
       //	if ((int)tau_tight != (int)tau_loose) continue; ////require that the tau that is identified a loose is the same that is the tight one
       if (fabs(analysisTree.tau_charge[tau_loose]) !=1) continue;
+      if (fabs(analysisTree.muon_charge[mu_index]) !=1) continue;
+
       //if (isTight &&  fabs(analysisTree.tau_charge[tau_tight]) !=1) continue;
       double q = analysisTree.tau_charge[tau_loose] * analysisTree.muon_charge[mu_index];
       if (q > 0) continue;

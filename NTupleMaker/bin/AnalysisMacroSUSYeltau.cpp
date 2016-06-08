@@ -96,6 +96,7 @@ int main(int argc, char * argv[]) {
   const double decayModeFinding    = cfg.get<double>("decayModeFinding");
   const double   decayModeFindingNewDMs  = cfg.get<double>("decayModeFindingNewDMs");
   const double   againstElectronVLooseMVA5  = cfg.get<double>("againstElectronVLooseMVA5");
+  const double  againstElectronVLooseMVA6  = cfg.get<double>("againstElectronVLooseMVA6");
   const double   againstMuonTight3  = cfg.get<double>("againstMuonTight3");
   const double   vertexz =  cfg.get<double>("vertexz");
   const double   byCombinedIsolationDeltaBetaCorrRaw3Hits = cfg.get<double>("byCombinedIsolationDeltaBetaCorrRaw3Hits");
@@ -455,6 +456,7 @@ int main(int argc, char * argv[]) {
 */
       //isData= false;
       bool lumi=false;
+      bool sel_74 = false;
       isLowIsoEl=false;
       isHighIsoEl = false;
       isLowIsoTau=false;
@@ -703,7 +705,9 @@ int main(int argc, char * argv[]) {
 
 
       float isoElecMin  = 1e+10;
-      float isoTauMin = 1e+10;
+      float isoTauMin = 1; 
+      if (sel_74) isoTauMin = 1e+10;
+      if (!sel_74) isoTauMin = -10;
       float ptMu = 0;
       float ptTau = 0;
       //      if (electrons.size()>1||electrons.size()>1)
@@ -753,8 +757,10 @@ int main(int argc, char * argv[]) {
 	
 	  if (!trigMatch) continue;
 	  
-	  float isoTau = analysisTree.tau_byCombinedIsolationDeltaBetaCorrRaw3Hits[tIndex];
-	  //	  float isoTau = analysisTree.tau_byIsolationMVArun2v1DBoldDMwLTraw[tIndex];
+	
+	  float isoTau =1;
+	if (sel_74){
+	isoTau = analysisTree.tau_byCombinedIsolationDeltaBetaCorrRaw3Hits[tIndex];
 
 	  if ( (int) mIndex!= (int)el_index) {
 	    if (relIsoElec==isoElecMin) {
@@ -792,31 +798,83 @@ int main(int argc, char * argv[]) {
 	  }
 	  
 	}
-      }
 
+
+
+	if (!sel_74){
+   isoTau = analysisTree.tau_byIsolationMVArun2v1DBoldDMwLTraw[tIndex];
+
+	  if ( (int) mIndex!= (int)el_index) {
+	    if (relIsoElec==isoElecMin) {
+	      if (analysisTree.electron_pt[mIndex]>ptMu) {
+		isoElecMin  = relIsoElec;
+		ptMu = analysisTree.electron_pt[mIndex];
+		el_index = int(mIndex);
+		isoTauMin = isoTau;
+		ptTau = analysisTree.tau_pt[tIndex];
+		tau_index = int(tIndex);
+	      }
+	    }
+
+	    else if (relIsoElec<isoElecMin) {
+	      isoElecMin  = relIsoElec;
+	      ptMu = analysisTree.electron_pt[mIndex];
+	      el_index = int(mIndex);
+	      isoTauMin = isoTau;
+	      ptTau = analysisTree.tau_pt[tIndex];
+	      tau_index = int(tIndex);
+	    }
+          }
+          else {
+            if (isoTau==isoTauMin) {
+              if (analysisTree.tau_pt[tIndex]>ptTau) {
+                ptTau = analysisTree.tau_pt[tIndex];
+                isoTauMin = isoTau;
+                tau_index = int(tIndex);
+              }
+            }
+            else if (isoTau<isoTauMin) {
+              ptTau = analysisTree.tau_pt[tIndex];
+              isoTauMin = isoTau;
+              tau_index = int(tIndex);
+            }
+          }
+
+        }
+
+      }
+      }
       //      std::cout << "mIndex = " << el_index << "   tau_index = " << tau_index << std::endl;
 
       if ((int)tau_index<0) continue;
       if ((int)el_index<0) continue;
 
 
-	bool tauPass = 
-	  //	  analysisTree.tau_againstElectronVLooseMVA6[tau_index]>0.5 &&
-	  analysisTree.tau_againstElectronVLooseMVA5[tau_index]>0.5 &&
-	  analysisTree.tau_againstMuonTight3[tau_index]>0.5 &&
-	  //	  analysisTree.tau_byCombinedIsolationDeltaBetaCorrRaw3Hits[tau_index]<isoTauCut;
-	  analysisTree.tau_byMediumCombinedIsolationDeltaBetaCorr3Hits[tau_index] > 0.5;
-	  //	  analysisTree.tau_byTightIsolationMVArun2v1DBoldDMwLT[tau_index] > 0.5;
-	if (!tauPass) continue;
-	
-//	bool electronPass = isoElecMin<isoElectronHighCut;
-//	if (!electronPass) continue;
-	//	if (!os) continue;
+	bool tauPass =false;float isoTau = -999;
 
+	if (!sel_74)
+	{
+		tauPass=
+	  	  analysisTree.tau_againstElectronVLooseMVA6[tau_index]>0.5 &&
+	 	  analysisTree.tau_againstMuonTight3[tau_index]>0.5 &&
+	  	  analysisTree.tau_byTightIsolationMVArun2v1DBoldDMwLT[tau_index] > 0.5;
 
-      ta_IsoFlag=analysisTree.tau_byMediumCombinedIsolationDeltaBetaCorr3Hits[tau_index];
  
-      float isoTau = analysisTree.tau_byCombinedIsolationDeltaBetaCorrRaw3Hits[tau_index];
+       isoTau = analysisTree.tau_byIsolationMVArun2v1DBoldDMwLTraw[tau_index];
+       ta_IsoFlag=analysisTree.tau_byTightIsolationMVArun2v1DBoldDMwLT[tau_index];
+	}
+
+	if (sel_74)
+	{
+		tauPass=
+	 	 analysisTree.tau_againstElectronVLooseMVA5[tau_index]>0.5 &&
+	  	 analysisTree.tau_againstMuonTight3[tau_index]>0.5 &&
+	         analysisTree.tau_byMediumCombinedIsolationDeltaBetaCorr3Hits[tau_index] > 0.5;
+
+          isoTau = analysisTree.tau_byCombinedIsolationDeltaBetaCorrRaw3Hits[tau_index];
+          ta_IsoFlag=analysisTree.tau_byMediumCombinedIsolationDeltaBetaCorr3Hits[tau_index];
+	}
+
       ta_relIso[0]= isoTauMin;
       el_relIso[0] = isoElecMin;
 

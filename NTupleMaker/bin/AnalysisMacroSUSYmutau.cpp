@@ -349,7 +349,7 @@ int main(int argc, char * argv[]) {
   int selEventsIdMuons = 0;
   int selEventsIsoMuons = 0;
   bool lumi=false;
-  bool sel_74 = true;
+  bool sel_74 = false;
   bool isLowIsoMu=false;
   bool isHighIsoMu = false;
   bool isLowIsoTau=false;
@@ -694,9 +694,9 @@ int main(int argc, char * argv[]) {
       vector<int> taus; taus.clear();
       for (unsigned int it = 0; it<analysisTree.tau_count; ++it) {
 
+	if (analysisTree.tau_decayModeFinding[it]<decayModeFindingNewDMs) continue;
 	if (analysisTree.tau_pt[it] < ptTauLowCut ) continue; 
 	if (fabs(analysisTree.tau_eta[it])> etaTauCut) continue;
-	if (analysisTree.tau_decayModeFinding[it]<decayModeFindingNewDMs) continue;
 	if ( fabs(analysisTree.tau_leadchargedhadrcand_dz[it])> leadchargedhadrcand_dz) continue;
         if ( fabs(analysisTree.tau_charge[it]) != 1 ) continue;
 	  taus.push_back((int)it);
@@ -880,18 +880,36 @@ int main(int argc, char * argv[]) {
 	//bool muonPass = isoMuMin<isoMuonHighCut;
 	//if (!muonPass) continue;
 
-	bool tauPass = 
-	  //	  analysisTree.tau_againstElectronVLooseMVA6[tau_index]>0.5 &&
-	  analysisTree.tau_againstElectronVLooseMVA5[tau_index]>0.5 &&
-	  analysisTree.tau_againstMuonTight3[tau_index]>0.5 &&
-	  //	  analysisTree.tau_byCombinedIsolationDeltaBetaCorrRaw3Hits[tau_index]<isoTauCut;
-	  analysisTree.tau_byMediumCombinedIsolationDeltaBetaCorr3Hits[tau_index] > 0.5;
-	  //	  analysisTree.tau_byTightIsolationMVArun2v1DBoldDMwLT[tau_index] > 0.5;
+	bool tauPass =false;float isoTau = -999;
+
+	if (!sel_74)
+	{
+		tauPass=
+	  	  analysisTree.tau_againstElectronVLooseMVA6[tau_index]>0.5 &&
+	 	  analysisTree.tau_againstMuonTight3[tau_index]>0.5 &&
+	  	  analysisTree.tau_byTightIsolationMVArun2v1DBoldDMwLT[tau_index] > 0.5;
+
+ 
+       isoTau = analysisTree.tau_byIsolationMVArun2v1DBoldDMwLTraw[tau_index];
+       ta_IsoFlag=analysisTree.tau_byTightIsolationMVArun2v1DBoldDMwLT[tau_index];
+	}
+
+	if (sel_74)
+	{
+		tauPass=
+	 	 analysisTree.tau_againstElectronVLooseMVA5[tau_index]>0.5 &&
+	  	 analysisTree.tau_againstMuonTight3[tau_index]>0.5 &&
+	         analysisTree.tau_byMediumCombinedIsolationDeltaBetaCorr3Hits[tau_index] > 0.5;
+
+          isoTau = analysisTree.tau_byCombinedIsolationDeltaBetaCorrRaw3Hits[tau_index];
+          ta_IsoFlag=analysisTree.tau_byMediumCombinedIsolationDeltaBetaCorr3Hits[tau_index];
+	}
+
 	if (!tauPass) continue;
 
-      ta_IsoFlag=analysisTree.tau_byMediumCombinedIsolationDeltaBetaCorr3Hits[tau_index];
  
-      float isoTau = analysisTree.tau_byCombinedIsolationDeltaBetaCorrRaw3Hits[tau_index];
+
+
       ta_relIso[0]=isoTauMin;
       mu_relIso[0]=isoMuMin;
       
