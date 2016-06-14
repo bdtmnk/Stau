@@ -874,7 +874,8 @@ int main(int argc, char * argv[]) {
           isoTau = analysisTree.tau_byCombinedIsolationDeltaBetaCorrRaw3Hits[tau_index];
           ta_IsoFlag=analysisTree.tau_byMediumCombinedIsolationDeltaBetaCorr3Hits[tau_index];
 	}
-
+	
+     if (!tauPass) continue;
       ta_relIso[0]= isoTauMin;
       el_relIso[0] = isoElecMin;
 
