@@ -27,6 +27,8 @@
 #include "DesyTauAnalyses/NTupleMaker/interface/ScaleFactor.h"
 #include "DesyTauAnalyses/NTupleMaker/interface/Jets.h"
 #include "DesyTauAnalyses/NTupleMaker/interface/AnalysisMacro.h"
+#include "CondFormats/BTauObjects/interface/BTagCalibration.h"
+#include "CondFormats/BTauObjects/interface/BTagCalibrationReader.h"
 
 int main(int argc, char * argv[]) {
 
@@ -253,6 +255,29 @@ int main(int argc, char * argv[]) {
   TH1D * PU_mc = (TH1D *)filePUdistribution_MC->Get("pileup");
   PUofficial->set_h_data(PU_data);
   PUofficial->set_h_MC(PU_mc);
+
+  // BTag scale factors
+  BTagCalibration calib("csvv2", cmsswBase+"/src/DesyTauAnalyses/NTupleMaker/data/CSVv2.csv");
+  BTagCalibrationReader reader_BC(&calib,BTagEntry::OP_MEDIUM,"mujets","central");           // systematics type
+  BTagCalibrationReader reader_Light(&calib,BTagEntry::OP_MEDIUM,"incl","central");           // systematics type
+
+  //  std::cout << "SF_light (eta=0.6,pt=20.1) : " << reader_Light.eval(BTagEntry::FLAV_UDSG, 0.5, 20.1) << std::endl;
+  //  std::cout << "SF_light (eta=2.1,pt=20.1) : " << reader_Light.eval(BTagEntry::FLAV_UDSG, 2.1, 20.1) << std::endl;
+  //  std::cout << "SF_bc    (eta=0.6,pt=30.1) : " << reader_BC.eval(BTagEntry::FLAV_B, 0.5, 30.1) << std::endl;
+  //  std::cout << "SF_bc    (eta=2.1,pt=30.1) : " << reader_BC.eval(BTagEntry::FLAV_B, 2.1, 30.1) << std::endl;
+
+  TFile * fileTagging = new TFile(TString(cmsswBase)+TString("/src/DesyTauAnalyses/NTupleMaker/data/tagging_efficiencies.root"));
+  TH1F * tagEff_B = (TH1F*)fileTagging->Get("btag_eff_b");
+  TH1F * tagEff_C = (TH1F*)fileTagging->Get("btag_eff_c");
+  TH1F * tagEff_Light = (TH1F*)fileTagging->Get("btag_eff_oth");
+  TRandom3 rand;
+	
+  float MaxBJetPt = 670.;
+  float MaxLJetPt = 1000.;
+  float MinLJetPt = 20.;
+  float MinBJetPt = 30.;
+
+
 
 
 
@@ -1226,7 +1251,6 @@ int main(int argc, char * argv[]) {
       /////////////////////////////////////////////////////////
 
       ////////jets cleaning 
-      vector<int> jets; jets.clear();
       TLorentzVector leptonsV, muonJ, jetsLV;
 
 
@@ -1238,10 +1262,28 @@ int main(int argc, char * argv[]) {
       JetsMV.clear();
 
       float jetEtaCut = 2.4;
+      float jetEta = 2.4;
       float DRmax = 0.5;
       int countjets = 0;
       bool dRmuJet = false;
       bool dRtauJet = false;
+      float bJetEtaCut = ptJetCut;
+
+      vector<unsigned int> jets; jets.clear();
+      vector<unsigned int> jetspt20; jetspt20.clear();
+      vector<unsigned int> bjets; bjets.clear();
+      vector<unsigned int> bjets_nocleaned; bjets_nocleaned.clear();
+
+      int indexLeadingJet = -1;
+      float ptLeadingJet = -1;
+
+      int indexSubLeadingJet = -1;
+      float ptSubLeadingJet = -1;
+      
+      int indexLeadingBJet = -1;
+      float ptLeadingBJet = -1;
+
+
       for (unsigned int jet=0; jet<analysisTree.pfjet_count; ++jet) {
 	float absJetEta = fabs(analysisTree.pfjet_eta[jet]);
 
@@ -1256,24 +1298,108 @@ int main(int argc, char * argv[]) {
 	//				cout<<" 1- jet is Loose "<<isPFJetId<<"  "<<jet_isLoose[jet]<<"  iEntry "<<iEntry<<endl;
 	if (!isPFJetId) continue;
 	jet_isLoose[jet] = isPFJetId;
+	bool cleanedJet = true;
 	//				cout<<"  jet is Loose "<<isPFJetId<<"  "<<jet_isLoose[jet]<<"  "<<iEntry<<endl;
-	//for (unsigned int lep=0;LeptMV.size();lep++){
-	//double Dr=(LeptMV.at(lep).Eta(),LeptMV.at(lep).Phi(),
 	double Dr=deltaR(analysisTree.muon_eta[mu_index],analysisTree.muon_phi[mu_index],
 			 analysisTree.pfjet_eta[jet],analysisTree.pfjet_phi[jet]);
-	if (  Dr  < DRmax)  continue;
+	if (  Dr  < DRmax)  cleanedJet=false;
 
 	double Drr=deltaR(analysisTree.tau_eta[tau_index],analysisTree.tau_phi[tau_index],
 			  analysisTree.pfjet_eta[jet],analysisTree.pfjet_phi[jet]);
-	if (  Drr  < DRmax)  continue;
 
+	if (  Drr  < DRmax)  cleanedJet=false;
+
+	if (!cleanedJet) continue;
+
+	if (absJetEta<bJetEtaCut) { // jet within b-tagging acceptance
 
 	if (analysisTree.pfjet_btag[jet][0]  > bTag) btagged = true;
+
+
+	  if (!isData) {
+	    int flavor = abs(analysisTree.pfjet_flavour[jet]);
+
+	    double jet_scalefactor = 1;
+	    double JetPtForBTag = ptJetCut;
+	    double tageff = 1;
+
+	    if (flavor==5) {
+	      if (JetPtForBTag>MaxBJetPt) JetPtForBTag = MaxBJetPt - 0.1;
+	      if (JetPtForBTag<MinBJetPt) JetPtForBTag = MinBJetPt + 0.1;
+	      jet_scalefactor = reader_BC.eval(BTagEntry::FLAV_B, absJetEta, JetPtForBTag);
+	      tageff = tagEff_B->Interpolate(JetPtForBTag,absJetEta);
+	    }
+	    else if (flavor==4) {
+	      if (JetPtForBTag>MaxBJetPt) JetPtForBTag = MaxBJetPt - 0.1;
+	      if (JetPtForBTag<MinBJetPt) JetPtForBTag = MinBJetPt + 0.1;
+	      jet_scalefactor = reader_BC.eval(BTagEntry::FLAV_C, absJetEta, JetPtForBTag);
+	      tageff = tagEff_C->Interpolate(JetPtForBTag,absJetEta);
+	    }
+	    else {
+	      if (JetPtForBTag>MaxLJetPt) JetPtForBTag = MaxLJetPt - 0.1;
+	      if (JetPtForBTag<MinLJetPt) JetPtForBTag = MinLJetPt + 0.1;
+	      jet_scalefactor = reader_Light.eval(BTagEntry::FLAV_UDSG, absJetEta, JetPtForBTag);
+	      tageff = tagEff_Light->Interpolate(JetPtForBTag,absJetEta);
+	    }
+	    
+	    if (tageff<1e-5)      tageff = 1e-5;
+	    if (tageff>0.99999)   tageff = 0.99999;
+	    rand.SetSeed((int)((jetEta+5)*100000));
+	    double rannum = rand.Rndm();
+	    
+	    if (jet_scalefactor<1 && btagged) { // downgrade
+	      double fraction = 1-jet_scalefactor;
+	      if (rannum<fraction) {
+		btagged = false;
+		//		std::cout << "downgrading " << std::endl;
+	      }
+	    }
+	    if (jet_scalefactor>1 && !btagged) { // upgrade
+	      double fraction = (jet_scalefactor-1.0)/(1.0/tageff-1.0);
+	      if (rannum<fraction) { 
+		btagged = true;
+		//		std::cout << "upgrading " << std::endl;
+	      }
+	    }
+	  }
+
+	  if (btagged) {
+	    if (cleanedJet) { 
+	      bjets.push_back(jet);
+	      if (ptJetCut>ptLeadingBJet) {
+		ptLeadingBJet = ptJetCut;
+		indexLeadingBJet = jet;
+	      }
+	    }
+	  }
+	}
+
+	if (!cleanedJet) continue;
+
+	  jets.push_back(jet);
+
+	if (indexLeadingJet>=0) {
+	  if (ptJetCut<ptLeadingJet&&ptJetCut>ptSubLeadingJet) {
+	    indexSubLeadingJet = jet;
+	    ptSubLeadingJet = ptJetCut;
+	  }
+	}
+
+	if (ptJetCut>ptLeadingJet) {
+	  indexLeadingJet = jet;
+	  ptLeadingJet = ptJetCut;
+	}
+	
+      njets = jets.size();
+      countjets = jets.size();
+      jet_count = jets.size();
+      //njetspt20 = jetspt20.size();
+      nbtag = bjets.size();
+      //nbtag_nocleaned = bjets_nocleaned.size();
+
 	JetsV.SetPxPyPzE(analysisTree.pfjet_px[jet], analysisTree.pfjet_py[jet], analysisTree.pfjet_pz[jet], analysisTree.pfjet_e[jet]);
 	JetsMV.push_back(JetsV);
-	countjets++;
       }
-
       T->Fill();
 
       continue;
