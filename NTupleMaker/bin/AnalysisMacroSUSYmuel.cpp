@@ -156,8 +156,8 @@ int main(int argc, char * argv[]) {
   const string Electron17TriggerFile = cfg.get<string>("Electron17TriggerEff");
   const string Electron12TriggerFile = cfg.get<string>("Electron12TriggerEff");
 
-  const string MuonIdIsoFile = cfg.get<string>("MuonIdIsoEff");
-  const string ElectronIdIsoFile = cfg.get<string>("ElectronIdIsoEff");
+  const string MuonIdIsoFile = cfg.get<string>("MuonIdIsoEffMuEl");
+  const string ElectronIdIsoFile = cfg.get<string>("ElectronIdIsoEffMuEl");
 
 
 

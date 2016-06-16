@@ -152,7 +152,7 @@ int main(int argc, char * argv[]) {
   string cmsswBase = (getenv ("CMSSW_BASE"));
   string fullPathToJsonFile = cmsswBase + "/src/DesyTauAnalyses/NTupleMaker/test/json/" + jsonFile;
 
-  const string ElectronIdIsoFile = cfg.get<string>("ElectronIdIsoEff");
+  const string ElectronIdIsoFile = cfg.get<string>("ElectronIdIsoEffElTau");
   const string TauFakeRateFile = cfg.get<string>("TauFakeRateEff");
 
   // Run-lumi selector
