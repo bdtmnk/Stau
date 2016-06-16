@@ -279,7 +279,7 @@ int main(int argc, char * argv[]) {
 
 
 
-
+/*
 
 
   TFile *f10= new TFile(TString(cmsswBase)+"/src/DesyTauAnalyses/NTupleMaker/data/"+muonSfDataBarrel);  // mu SF barrel data
@@ -302,6 +302,7 @@ int main(int argc, char * argv[]) {
   mcEffBarrel = hEffBarrelMC->GetY();
   mcEffEndcap = hEffEndcapMC->GetY();
 
+*/
 
   // Lepton Scale Factors 
 

@@ -116,7 +116,7 @@ int main(int argc, char * argv[]) {
   const string Region  = cfg.get<string>("Region");
   const string Sign  = cfg.get<string>("Sign");
 
-  const string SingleElectronTriggerFile  = cfg.get<string>("SingleElectronTriggEff");
+  const string SingleElectronTriggerFile  = cfg.get<string>("trigEffFileEl");
 
   const double leadchargedhadrcand_dz = cfg.get<double>("leadchargedhadrcand_dz");
   const double leadchargedhadrcand_dxy = cfg.get<double>("leadchargedhadrcand_dxy");
