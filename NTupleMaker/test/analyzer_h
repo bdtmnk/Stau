@@ -89,6 +89,7 @@ class analyzer {
 		Float_t         mu_dz[20];
 		Float_t         mu_relIso[20];
 		Int_t           jet_count;
+		Int_t           jets_cleaned[30];
 		Float_t         jet_e[30];
 		Float_t         jet_px[30];
 		Float_t         jet_py[30];
@@ -172,6 +173,7 @@ class analyzer {
 		TBranch        *b_mu_dz;   //!
 		TBranch        *b_mu_relIso;   //!
 		TBranch        *b_jet_count;   //!
+		TBranch        *b_jets_cleaned;   //!
 		TBranch        *b_jet_e;   //!
 		TBranch        *b_jet_px;   //!
 		TBranch        *b_jet_py;   //!
@@ -918,6 +920,7 @@ class analyzer {
 			fChain->SetBranchAddress("mu_dz", mu_dz, &b_mu_dz);
 			fChain->SetBranchAddress("mu_relIso", mu_relIso, &b_mu_relIso);
 			fChain->SetBranchAddress("jet_count", &jet_count, &b_jet_count);
+			fChain->SetBranchAddress("jets_cleaned", &jets_cleaned, &b_jets_cleaned);
   			fChain->SetBranchAddress("njets", &njets, &b_njets);
 			fChain->SetBranchAddress("jet_e", jet_e, &b_jet_e);
 			fChain->SetBranchAddress("jet_px", jet_px, &b_jet_px);

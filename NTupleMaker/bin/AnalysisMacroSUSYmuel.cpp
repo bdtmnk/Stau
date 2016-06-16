@@ -1235,6 +1235,7 @@ int main(int argc, char * argv[]) {
 
       JetsMV.clear();
 
+
       float jetEtaCut = 2.4;
       float jetEta = 2.4;
       float DRmax = 0.5;
@@ -1257,10 +1258,9 @@ int main(int argc, char * argv[]) {
       int indexLeadingBJet = -1;
       float ptLeadingBJet = -1;
 
-
+      int counter_cleaned_jets = 0;
       for (unsigned int jet=0; jet<analysisTree.pfjet_count; ++jet) {
 	float absJetEta = fabs(analysisTree.pfjet_eta[jet]);
-
 	if (absJetEta > etaJetCut) continue;
 	if (fabs(analysisTree.pfjet_pt[jet])<ptJetCut) continue;
 
@@ -1274,6 +1274,7 @@ int main(int argc, char * argv[]) {
 	jet_isLoose[jet] = isPFJetId;
 	bool cleanedJet = true;
 	//				cout<<"  jet is Loose "<<isPFJetId<<"  "<<jet_isLoose[jet]<<"  "<<iEntry<<endl;
+
 	double Dr=deltaR(analysisTree.muon_eta[mu_index],analysisTree.muon_phi[mu_index],
 			 analysisTree.pfjet_eta[jet],analysisTree.pfjet_phi[jet]);
 	if (  Dr  < DRmax)  cleanedJet=false;
@@ -1348,8 +1349,10 @@ int main(int argc, char * argv[]) {
 	}
 
 	if (!cleanedJet) continue;
+	counter_cleaned_jets++;
 
 	  jets.push_back(jet);
+      	jets_cleaned[counter_cleaned_jets]=jet;
 
 	if (indexLeadingJet>=0) {
 	  if (ptJetCut<ptLeadingJet&&ptJetCut>ptSubLeadingJet) {
@@ -1363,21 +1366,22 @@ int main(int argc, char * argv[]) {
 	  ptLeadingJet = ptJetCut;
 	}
 	
+
+	JetsV.SetPxPyPzE(analysisTree.pfjet_px[jet], analysisTree.pfjet_py[jet], analysisTree.pfjet_pz[jet], analysisTree.pfjet_e[jet]);
+	JetsMV.push_back(JetsV);
+      }
+
       njets = jets.size();
       countjets = jets.size();
       jet_count = jets.size();
       //njetspt20 = jetspt20.size();
       nbtag = bjets.size();
       //nbtag_nocleaned = bjets_nocleaned.size();
-
-	JetsV.SetPxPyPzE(analysisTree.pfjet_px[jet], analysisTree.pfjet_py[jet], analysisTree.pfjet_pz[jet], analysisTree.pfjet_e[jet]);
-	JetsMV.push_back(JetsV);
-      }
-
       T->Fill();
 
       continue;
       /////////////////////////////////////////////////
+
 
 
       selEvents++;
