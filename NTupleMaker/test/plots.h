@@ -78,7 +78,7 @@ if (  fabs(eta) > 1.2 && fabs(eta) < 2.4 )
 	}
 }
 */
-
+/*  76 with 74 tauID
 if (sel =="mutau" || sel == "eltau"){
 
 if (  fabs(eta) < 0.9 ) 
@@ -106,11 +106,43 @@ if (  fabs(eta) > 1.2 && fabs(eta) < 2.4 )
 		if (pt>60 )	    SF = 1.25883;
 	}
 }
+*/
+
+
+if (sel =="mutau" || sel == "eltau"){
+
+if (  fabs(eta) < 0.9 ) 
+	{
+		if (pt>20 && pt<30) SF = 0.96674;
+		if (pt>30 && pt<50) SF = 1.0599;
+		if (pt>50 && pt<60) SF = 0.962611;
+		if (pt>60 )	    SF = 1.17004;
+	}
+if (  fabs(eta) > 0.9 && fabs(eta) < 1.2 ) 
+	{
+
+		if (pt>20 && pt<30) SF = 1.11293;
+		if (pt>30 && pt<50) SF = 0.871997;
+		if (pt>50 && pt<60) SF = 0.656603;
+		if (pt>60 )	    SF = 0.75073;
+	}
+
+if (  fabs(eta) > 1.2 && fabs(eta) < 2.4 ) 
+	{
+
+		if (pt>20 && pt<30) SF = 1.22315;
+		if (pt>30 && pt<50) SF = 1.44608;
+		if (pt>50 && pt<60) SF = 1.13316;
+		if (pt>60 )	    SF = 1.19482;
+	}
+}
+
 
 return SF;
 
 
 }
+
 
 
 
@@ -313,6 +345,7 @@ TH1D *hdPhiTauMET[CutN];
 
 TH1D *hMT[CutN];
 TH1D *hMTsum[CutN];
+TH1D *hMTtot[CutN];
 TH1D *hMTel[CutN];
 TH1D *hMTmu[CutN];
 TH1D *hMTtau[CutN];
@@ -360,6 +393,18 @@ TH1D *hnrho[CutN];
 
 
 TH2D *hmet_MT[CutN];
+TH2D *hmet_MTsum[CutN];
+TH2D *hmet_MTtot[CutN];
+TH2D *hmet_DZeta[CutN];
+TH2D *hmet_MCTb[CutN];
+TH2D *hDZeta_MTsum[CutN];
+TH2D *hDZeta_MTtot[CutN];
+
+TH2D *hDZeta_MCTb[CutN];
+
+TH2D *hMTsum_MCTb[CutN];
+TH2D *hMTtot_MCTb[CutN];
+
 TH2D *hmet_MTel[CutN];
 TH2D *hmet_MTmu[CutN];
 TH2D *hmet_MTtau[CutN];
@@ -381,7 +426,11 @@ TH2D *hMT_dPhimu[CutN];
 TH2D *hMT_dPhitau[CutN];
 
 TH2D *hIso_sign[CutN];
-  
+ 
+     
+
+
+
 TH1D *CutFlow= new TH1D("CutFlow","Cut Flow",CutN,1,CutN+1);
 TH1D *CutFlowUnW= new TH1D("CutFlowUnW","Cut Flow",CutN,1,CutN+1);
 TH1D *CutFlowUnWNorm= new TH1D("CutFlowUnWNorm","Cut Flow",CutN,1,CutN+1);
@@ -633,6 +682,8 @@ for(int cj = 0; cj < CutNer; cj++)
       //
       hMTsum[cj] = new TH1D ("MTsum_"+nCut,"MTsum "+cutName,30,0,300);
       hMTsum[cj]->Sumw2();
+      hMTtot[cj] = new TH1D ("MTtot_"+nCut,"MTtot "+cutName,30,0,300);
+      hMTtot[cj]->Sumw2();
       hMT[cj] = new TH1D ("MT_"+nCut,"MT "+cutName,30,0,300);
       hMT[cj]->Sumw2();
       hMTel[cj] = new TH1D ("MTel_"+nCut,"MTel "+cutName,30,0,300);
@@ -757,6 +808,52 @@ for(int cj = 0; cj < CutNer; cj++)
       hnrho[cj]= new TH1D ("nrho_"+nCut,"nrho "+cutName,100,-0.5,99.5);;
       hnrho[cj]->Sumw2();
  
+
+
+   int nBinsmet = 3;
+   double binsmet[4] = {0, 50,100,1000};
+
+   int nBinsMTsum = 3;
+   double binsMTsum[4] = {0, 150,300,1000};
+
+   int nBinsMCTb = 3;
+   double binsMCTb[4] = {0, 50,100,1000};
+
+   int nBinsMT = 3;
+   double binsMT[4] = {0, 50,100,1000};
+
+   int nBinsDZeta = 4;
+   double binsDZeta[5] = {-500, -150,-100,100,1000};
+
+
+      //hmet_MT[cj] = new TH2D ("met_MT_"+nCut,"met_MT "+cutName,40.0,0.0,800.0,10,0,200);
+      hmet_MT[cj] = new TH2D ("met_MT_"+nCut,"met_MT "+cutName, nBinsmet, binsmet ,nBinsMT,binsMT);
+      hmet_MT[cj]->Sumw2();
+
+      hmet_MTsum[cj] = new TH2D ("met_MTsum_"+nCut,"met_MTsum "+cutName, nBinsmet, binsmet , nBinsMTsum,binsMTsum);
+      hmet_MTsum[cj]->Sumw2();
+      hmet_MTtot[cj] = new TH2D ("met_MTtot_"+nCut,"met_MTtot "+cutName, nBinsmet, binsmet , nBinsMTsum,binsMTsum);
+      hmet_MTtot[cj]->Sumw2();
+      
+      hmet_DZeta[cj] = new TH2D ("met_DZeta_"+nCut,"met_DZeta "+cutName, nBinsmet, binsmet , nBinsDZeta,binsDZeta);
+      hmet_DZeta[cj] -> Sumw2();
+     
+      hmet_MCTb[cj] = new TH2D ("met_MCTb_"+nCut,"met_MCTb "+cutName, nBinsmet, binsmet , nBinsMCTb,binsMCTb);
+      hmet_MCTb[cj] ->Sumw2();
+   
+     
+      hDZeta_MCTb[cj] = new TH2D ("DZeta_MCTb_"+nCut,"DZeta_MCTb "+cutName, nBinsDZeta, binsDZeta , nBinsMCTb,binsMCTb);
+      hDZeta_MCTb[cj] ->Sumw2();
+  
+      hDZeta_MTsum[cj] = new TH2D ("DZeta_MTsum_"+nCut,"DZeta_MTsum "+cutName, nBinsDZeta, binsDZeta , nBinsMTsum,binsMTsum);
+      hDZeta_MTsum[cj] ->Sumw2();
+      hDZeta_MTtot[cj] = new TH2D ("DZeta_MTtot_"+nCut,"DZeta_MTtot "+cutName, nBinsDZeta, binsDZeta , nBinsMTsum,binsMTsum);
+      hDZeta_MTtot[cj] ->Sumw2();
+
+      hMTsum_MCTb[cj] = new TH2D ("MTsum_MCTb_"+nCut,"MTsum_MCTb "+cutName, nBinsMTsum, binsMTsum , nBinsMCTb,binsMCTb);
+      hMTsum_MCTb[cj] ->Sumw2();
+      hMTtot_MCTb[cj] = new TH2D ("MTtot_MCTb_"+nCut,"MTtot_MCTb "+cutName, nBinsMTsum, binsMTsum , nBinsMCTb,binsMCTb);
+      hMTtot_MCTb[cj] ->Sumw2();
       
       hdRmt_dPhi[cj] = new TH2D ("dRm_dPhi_"+nCut,"dRm_dPhi "+cutName,60,0.0,6.0,64,0.0,3.2);
       hdRmt_dPhi[cj]->Sumw2();
@@ -769,8 +866,6 @@ for(int cj = 0; cj < CutNer; cj++)
  
       hmet_dPhi[cj] = new TH2D ("met_dPhi_"+nCut,"met_dPhi "+cutName,40.0,0.0,800.0,64,0.0,3.2);
       hmet_dPhi[cj]->Sumw2();
-      hmet_MT[cj] = new TH2D ("met_MT_"+nCut,"met_MT "+cutName,40.0,0.0,800.0,10,0,200);
-      hmet_MT[cj]->Sumw2();
 
       hmet_dPhiel[cj] = new TH2D ("met_dPhiel_"+nCut,"met_dPhiel "+cutName,40.0,0.0,800.0,64,0.0,3.2);
       hmet_dPhiel[cj]->Sumw2();
