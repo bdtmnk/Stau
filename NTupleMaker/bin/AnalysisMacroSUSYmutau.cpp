@@ -112,8 +112,8 @@ int main(int argc, char * argv[]) {
   const string TrigLeg  = cfg.get<string>("SingleMuonFilterName") ;
 
 
-  const string idIsoEffFile = cfg.get<string>("idIsoEffFile");
-  const string trigEffFile = cfg.get<string>("trigEffFile");
+  const string idIsoEffFile = cfg.get<string>("MuonIdIsoEffMuTau");
+  const string trigEffFile = cfg.get<string>("trigEffFileMu");
 
 
   const string Region  = cfg.get<string>("Region");
