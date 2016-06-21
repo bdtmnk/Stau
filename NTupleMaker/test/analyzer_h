@@ -257,7 +257,7 @@ class analyzer {
 			double sumElpT=0;
 			double sumTaupT=0;  
 
-			hnJet[CutIndex]->Fill(JetsV.size(),EvWeight);
+			hnJet[CutIndex]->Fill(njets,EvWeight);
 			hnMu[CutIndex]->Fill(mu_count,EvWeight);
 	if (ta_count >-1)	hnTau[CutIndex]->Fill(ta_count,EvWeight);
 			hnEl[CutIndex]->Fill(el_count,EvWeight);
@@ -423,7 +423,7 @@ class analyzer {
 				double vds[4] = {0,0,0,0};
 				// TMctLib t;
 			
-				double Mt2as = 0 ; Mt2as = 0; asymm_mt2_lester_bisect::get_mT2(electronMass, elV.Px(), elV.Py(),tauMass,tauV.Px(),tauV.Py(),MetV.Px(),MetV.Py(),Chimass,Chimass,0);
+				double Mt2as = 0 ; Mt2as = asymm_mt2_lester_bisect::get_mT2(electronMass, elV.Px(), elV.Py(),tauMass,tauV.Px(),tauV.Py(),MetV.Px(),MetV.Py(),Chimass,Chimass,0);
 				//   cout<<" Will call with Mt2 "<<Mt2<<"   "<<Chimass<<endl;
 				hMt2eltau[CutIndex]->Fill(Mt2as,EvWeight);
 				double mcta = sqrt( 2*elV.Pt()*tauV.Pt()*(1+cos(elV.Phi()-tauV.Phi())) );
@@ -761,7 +761,7 @@ class analyzer {
 			}
 
 			bjets = nbtag;
-			hnBJet[CutIndex]->Fill(bjets,EvWeight);
+			hnBJet[CutIndex]->Fill(nbtag,EvWeight);
 
 			hHT[CutIndex]->Fill(sumpT,EvWeight);
 
