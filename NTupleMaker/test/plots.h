@@ -113,29 +113,30 @@ if (sel =="mutau" || sel == "eltau"){
 
 if (  fabs(eta) < 0.9 ) 
 	{
-		if (pt>20 && pt<30) SF = 0.96674;
-		if (pt>30 && pt<50) SF = 1.0599;
-		if (pt>50 && pt<60) SF = 0.962611;
-		if (pt>60 )	    SF = 1.17004;
+		if (pt>20 && pt<30) SF = 0.951389;
+		if (pt>30 && pt<50) SF = 1.02132;
+		if (pt>50 && pt<60) SF = 1.01055;
+		if (pt>60 )	    SF = 1.23687;
 	}
 if (  fabs(eta) > 0.9 && fabs(eta) < 1.2 ) 
 	{
 
-		if (pt>20 && pt<30) SF = 1.11293;
-		if (pt>30 && pt<50) SF = 0.871997;
-		if (pt>50 && pt<60) SF = 0.656603;
-		if (pt>60 )	    SF = 0.75073;
+		if (pt>20 && pt<30) SF = 1.13632;
+		if (pt>30 && pt<50) SF = 0.893702;
+		if (pt>50 && pt<60) SF = 0.641584;
+		if (pt>60 )	    SF = 0.734287;
 	}
 
 if (  fabs(eta) > 1.2 && fabs(eta) < 2.4 ) 
 	{
 
-		if (pt>20 && pt<30) SF = 1.22315;
-		if (pt>30 && pt<50) SF = 1.44608;
-		if (pt>50 && pt<60) SF = 1.13316;
-		if (pt>60 )	    SF = 1.19482;
+		if (pt>20 && pt<30) SF = 1.26976;
+		if (pt>30 && pt<50) SF = 1.37512;
+		if (pt>50 && pt<60) SF = 1.2002;
+		if (pt>60 )	    SF = 1.24742;
 	}
 }
+
 
 
 return SF;
@@ -522,7 +523,7 @@ for(int cj = 0; cj < CutNer; cj++)
       htau_dxy[cj] = new TH1D ("htau_dxy_"+nCut,"htau_dxy "+cutName,20,-.2,.2);
       
       htau_dz[cj] = new TH1D ("htau_dz_"+nCut,"htau_dz "+cutName,20,-.2,.2);
-      hel_dz[cj] = new TH1D ("hel_dz_"+nCut,"hel_dz "+cutName,20,-.2,2.2);
+      hel_dz[cj] = new TH1D ("hel_dz_"+nCut,"hel_dz "+cutName,20,-.2,.2);
       hmu_dz[cj] = new TH1D ("hmu_dz_"+nCut,"hmu_dz "+cutName,20,-.2,.2);
 
       hHTOsqrMET[cj] = new TH1D ("hHTOsqrMET_"+nCut,"hHTOsqrMET "+cutName,10,0.0,100.0);

@@ -379,7 +379,6 @@ int main(int argc, char * argv[]) {
   // count number of files --->
   while (fileList0 >> dummy) nTotalFiles++;
  
-  SetupHists(CutNumb); 
   if (argv[4] != NULL  && atoi(argv[4])< nTotalFiles) nTotalFiles=atoi(argv[4]);
   //if (nTotalFiles>50) nTotalFiles=50;
   //nTotalFiles = 10;
@@ -587,8 +586,6 @@ int main(int argc, char * argv[]) {
       METV.SetPhi(analysisTree.pfmet_phi);
     
       
-      if(fillplots)
-      FillMainHists(iCut, weight, ElMV, MuMV, TauMV,JetsMV,METV, ChiMass,mIntermediate,analysisTree, Channel, mu_index,el_index,tau_index);
       CFCounter[iCut]+= weight;
       iCFCounter[iCut]++;
       iCut++;
@@ -631,8 +628,6 @@ int main(int argc, char * argv[]) {
       
 
       // vector <string> ss; ss.push_back(.c_str());
-      if(fillplots)
-      FillMainHists(iCut, weight, ElMV, MuMV, TauMV,JetsMV,METV, ChiMass,mIntermediate,analysisTree, Channel, mu_index,el_index,tau_index);
       CFCounter[iCut]+= weight;
       iCFCounter[iCut]++;
       iCut++;
@@ -666,7 +661,6 @@ int main(int argc, char * argv[]) {
 	return(-1);
       }
 
-      /////now clear the Mu.El.Jets again to fill them again after cleaning
         MuMV.clear();
         ElMV.clear();
         TauMV.clear();
@@ -737,8 +731,6 @@ int main(int argc, char * argv[]) {
 //cout<<"  Iso check  "<<relIso<<" InvertLeptonIso "<<InvertLeptonIso<<" isHighIsoMu "<<isHighIsoMu<<" isLowIsoMu "<<isLowIsoMu<<" cutQCD "<<isoMuonHighCutQCD<<endl;
 
 
-      if(fillplots)
-      FillMainHists(iCut, weight, ElMV, MuMV, TauMV,JetsMV,METV, ChiMass,mIntermediate,analysisTree, Channel, mu_index,el_index,tau_index);
       CFCounter[iCut]+= weight;
       iCFCounter[iCut]++;
       iCut++;
@@ -853,8 +845,6 @@ continue;
       bool regionC = (q<0 && isHighIsoMu);
       bool regionD = (q>0 && isHighIsoMu);
 
-      if(fillplots)
-      FillMainHists(iCut, weight, ElMV, MuMV, TauMV,JetsMV,METV, ChiMass,mIntermediate,analysisTree, Channel, mu_index,el_index,tau_index);
       CFCounter[iCut]+= weight;
       iCFCounter[iCut]++;
       iCut++;
@@ -900,8 +890,6 @@ continue;
 
 
 
-	if(fillplots)
-      FillMainHists(iCut, weight, ElMV, MuMV, TauMV,JetsMV,METV, ChiMass,mIntermediate,analysisTree, Channel, mu_index,el_index,tau_index);
       CFCounter[iCut]+= weight;
       iCFCounter[iCut]++;
       iCut++;
@@ -942,8 +930,6 @@ continue;
       }
       if (MuVeto) continue;
 
-      if(fillplots)
-      FillMainHists(iCut, weight, ElMV, MuMV, TauMV,JetsMV,METV, ChiMass,mIntermediate,analysisTree, Channel, mu_index,el_index,tau_index);
       CFCounter[iCut]+= weight;
       iCFCounter[iCut]++;
       iCut++;
@@ -1002,8 +988,6 @@ continue;
       if (ThirdLeptVeto) continue;
 
 
-      if(fillplots)
-      FillMainHists(iCut, weight, ElMV, MuMV, TauMV,JetsMV,METV, ChiMass,mIntermediate,analysisTree, Channel, mu_index,el_index,tau_index);
       CFCounter[iCut]+= weight;
       iCFCounter[iCut]++;
       iCut++;
@@ -1019,8 +1003,6 @@ continue;
 	  MuSF_IdIso_Mu1H->Fill(IdIsoSF_mu1);
 	  weight = weight*IdIsoSF_mu1;
 	}
-      if(fillplots)
-      FillMainHists(iCut, weight, ElMV, MuMV, TauMV,JetsMV,METV, ChiMass,mIntermediate,analysisTree, Channel, mu_index,el_index,tau_index);
       CFCounter[iCut]+= weight;
       iCFCounter[iCut]++;
       iCut++;
@@ -1044,8 +1026,6 @@ continue;
 	  //cout<<"  "<<TFRSF_mu1<<"  for  eta  "<<etaTau1<<  " pT  "<< ptTau1<<endl;
 	}
 
-      if(fillplots)
-      FillMainHists(iCut, weight, ElMV, MuMV, TauMV,JetsMV,METV, ChiMass,mIntermediate,analysisTree, Channel, mu_index,el_index,tau_index);
       CFCounter[iCut]+= weight;
       iCFCounter[iCut]++;
       iCut++;
@@ -1063,15 +1043,11 @@ continue;
 
 		}
 
-      if(fillplots)
-      FillMainHists(iCut, weight, ElMV, MuMV, TauMV,JetsMV,METV, ChiMass,mIntermediate,analysisTree, Channel, mu_index,el_index,tau_index);
       CFCounter[iCut]+= weight;
       iCFCounter[iCut]++;
       iCut++;
 
       if (MTv<60 ) continue;
-      if(fillplots)
-      FillMainHists(iCut, weight, ElMV, MuMV, TauMV,JetsMV,METV, ChiMass,mIntermediate,analysisTree, Channel, mu_index,el_index,tau_index);
       CFCounter[iCut]+= weight;
       iCFCounter[iCut]++;
       iCut++;
@@ -1096,8 +1072,6 @@ continue;
       if (!InvertMET && ETmiss < 100. ) continue;  //that is the nominal selection ie MET > 100
 
 
-      if(fillplots)
-      FillMainHists(iCut, weight, ElMV, MuMV, TauMV,JetsMV,METV, ChiMass,mIntermediate,analysisTree, Channel, mu_index,el_index,tau_index);
       CFCounter[iCut]+= weight;
       iCFCounter[iCut]++;
       iCut++;
@@ -1148,16 +1122,12 @@ continue;
 	      }	 
 
       if (countjets >2 ) continue;
-      if(fillplots)
-      FillMainHists(iCut, weight, ElMV, MuMV, TauMV,JetsMV,METV, ChiMass,mIntermediate,analysisTree, Channel, mu_index,el_index,tau_index);
       CFCounter[iCut]+= weight;
       iCFCounter[iCut]++;
       iCut++;
 
       if (btagged ) continue;
 	
-      if(fillplots)
-      FillMainHists(iCut, weight, ElMV, MuMV, TauMV,JetsMV,METV, ChiMass,mIntermediate,analysisTree, Channel, mu_index,el_index,tau_index);
       CFCounter[iCut]+= weight;
       iCFCounter[iCut]++;
       iCut++;
@@ -1170,8 +1140,6 @@ continue;
 
       TLorentzVector diL = muVc + tauVc;
       if ( diL.M() < 100 ) continue;
-      if(fillplots)
-      FillMainHists(iCut, weight, ElMV, MuMV, TauMV,JetsMV,METV, ChiMass,mIntermediate,analysisTree, Channel, mu_index,el_index,tau_index);
       CFCounter[iCut]+= weight;
       iCFCounter[iCut]++;
       iCut++;
@@ -1180,7 +1148,6 @@ continue;
 
      /* if (ETmiss < 100) continue;
       if (ETmiss < 120) continue;
-      FillMainHists(iCut, weight, ElMV, MuMV, TauMV,JetsMV,METV, ChiMass,mIntermediate,analysisTree, Channel, mu_index,el_index,tau_index);
       CFCounter[iCut]+= weight;
       iCFCounter[iCut]++;
       iCut++;
@@ -1194,8 +1161,6 @@ continue;
 
       if (dRr>3 ) continue;
       
-      if(fillplots)
-      FillMainHists(iCut, weight, ElMV, MuMV, TauMV,JetsMV,METV, ChiMass,mIntermediate,analysisTree, Channel, mu_index,el_index,tau_index);
       CFCounter[iCut]+= weight;
       iCFCounter[iCut]++;
       iCut++;

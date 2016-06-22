@@ -233,7 +233,18 @@
 </bin>
 
 
-<bin name="SUSYTFR" file="AnalysisMacro_taufakerateMu.cpp">
+<bin name="SUSYTFRMu" file="AnalysisMacro_taufakerateMu.cpp">
+ <use name="PhysicsTools/Utilities"/>
+ <use name="rootgraphics"/>
+ <use name="root"/>
+ <use name="rootmath"/>
+ <use name="roottmva"/>
+ <use name="boost" />
+ <use name="boost_program_options"/>
+ <use name="DesyTauAnalyses/NTupleMaker"/>
+</bin>
+
+<bin name="SUSYTFREl" file="AnalysisMacro_taufakerateEl.cpp">
  <use name="PhysicsTools/Utilities"/>
  <use name="rootgraphics"/>
  <use name="root"/>
