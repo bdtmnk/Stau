@@ -313,6 +313,8 @@ class analyzer {
 				hMCTxmutau[CutIndex]->Fill(mcx(v1,v2,vds,ptm),EvWeight);
 				hMCTymutau[CutIndex]->Fill(mcy(v1,v2,vds,ptm),EvWeight);
 				hMCTbmutau[CutIndex]->Fill(mcta,EvWeight);
+				hMT2lester_met[CutIndex]->Fill(Mt2as,MetV.Pt(),EvWeight);
+				hMT2lester_MCTb[CutIndex]->Fill(Mt2as,mcta,EvWeight);
 
 				//cout<<" asym "<<Mt2as<<"  "<<mt2<<endl;
 
@@ -387,6 +389,8 @@ class analyzer {
 				float pzetamiss = MetV.Px()*zetaX + MetV.Py()*zetaY;
 				float pzetavis = vectorVisX*zetaX + vectorVisY*zetaY;
 				float dzeta = pzetamiss - 0.85*pzetavis;
+			
+				hMT2lester_DZeta[CutIndex]->Fill(Mt2as,dzeta,EvWeight);
 
 				hDZeta[CutIndex]->Fill(dzeta,EvWeight);
 
@@ -435,6 +439,9 @@ class analyzer {
 				hMCTxeltau[CutIndex]->Fill(mcx(v1,v2,vds,ptm),EvWeight);
 				hMCTyeltau[CutIndex]->Fill(mcy(v1,v2,vds,ptm),EvWeight);
 				hMCTbeltau[CutIndex]->Fill(mcta,EvWeight);
+
+				hMT2lester_met[CutIndex]->Fill(Mt2as,MetV.PT(),EvWeight);
+				hMT2lester_MCTb[CutIndex]->Fill(Mt2as,mcta,EvWeight);
 
 				double Centr = Centrality(AllJets_Lepton_noMet);
 				hCentrality[CutIndex]->Fill(Centr,EvWeight);
@@ -503,6 +510,7 @@ class analyzer {
 				float pzetavis = vectorVisX*zetaX + vectorVisY*zetaY;
 				float dzeta = pzetamiss - 0.85*pzetavis;
 
+				hMT2lester_DZeta[CutIndex]->Fill(Mt2as,dzeta,EvWeight);
 				hDZeta[CutIndex]->Fill(dzeta,EvWeight);
 
 				hmet_MT[CutIndex]->Fill(MetV.Pt(),MT,EvWeight);
@@ -551,6 +559,8 @@ class analyzer {
 				hMCTxmuel[CutIndex]->Fill(mcx(v1,v2,vds,ptm),EvWeight);
 				hMCTymuel[CutIndex]->Fill(mcy(v1,v2,vds,ptm),EvWeight);
 				hMCTbmuel[CutIndex]->Fill(mcta,EvWeight);
+				hMT2lester_met[CutIndex]->Fill(Mt2as,MetV.PT(),EvWeight);
+				hMT2lester_MCTb[CutIndex]->Fill(Mt2as,mcta,EvWeight);
 
 				//cout<<" asym "<<Mt2as<<"  "<<mt2<<endl;
 
@@ -632,6 +642,7 @@ class analyzer {
 				float pzetavis = vectorVisX*zetaX + vectorVisY*zetaY;
 				float dzeta = pzetamiss - 0.85*pzetavis;
 
+				hMT2lester_DZeta[CutIndex]->Fill(Mt2as,dzeta,EvWeight);
 				hDZeta[CutIndex]->Fill(dzeta,EvWeight);
 
 
