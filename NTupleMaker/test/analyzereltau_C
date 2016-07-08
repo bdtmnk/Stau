@@ -71,7 +71,9 @@ void analyzer::Loop(){
 	//CutList.push_back("Cleaned jets");
 	CutList.push_back("Jets lt 1 and 0btag");
 	CutList.push_back("MT window");
+	CutList.push_back("dR lt 3.5");
 	CutList.push_back("MET gt 30");
+	CutList.push_back("MET gt 40");
 	CutList.push_back("MET gt 50");
 	CutList.push_back("tau pT gt 50");
 	CutList.push_back("MCTb gt 60");
@@ -308,13 +310,30 @@ if (taus_index>-1)			TauV.SetPtEtaPhiM(ta_pt[taus_index], ta_eta[taus_index], ta
                 iCFCounter[iCut]++;
 		iCut++;
 
+                 double Dr=deltaR(el_eta[electron_index],el_phi[electron_index],
+                                        ta_eta[taus_index],ta_phi[taus_index]);
+		if (Dr>3.5 ) continue;
+
+		FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index);
+		CFCounter[iCut]+= all_weights;
+		CFCounter_[iCut]+= all_weights;
+                iCFCounter[iCut]++;
+		iCut++;
+
 		if (met<30.) continue;
 		FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index);
 		CFCounter[iCut]+= all_weights;
 		CFCounter_[iCut]+= all_weights;
                 iCFCounter[iCut]++;
 		iCut++;
-	
+
+		if (met<40.) continue;
+		FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index);
+		CFCounter[iCut]+= all_weights;
+		CFCounter_[iCut]+= all_weights;
+                iCFCounter[iCut]++;
+		iCut++;
+		continue;
 		if (met<50.) continue;
 		FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index);
 		CFCounter[iCut]+= all_weights;
@@ -359,15 +378,6 @@ if (taus_index>-1)			TauV.SetPtEtaPhiM(ta_pt[taus_index], ta_eta[taus_index], ta
 
 	continue;
 		
-                 double Dr=deltaR(el_eta[electron_index],el_phi[electron_index],
-                                        ta_eta[taus_index],ta_phi[taus_index]);
-		if (Dr>3.5 || Dr<3) continue;
-
-		FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index);
-		CFCounter[iCut]+= all_weights;
-		CFCounter_[iCut]+= all_weights;
-                iCFCounter[iCut]++;
-		iCut++;
 
 
 

@@ -440,7 +440,7 @@ class analyzer {
 				hMCTyeltau[CutIndex]->Fill(mcy(v1,v2,vds,ptm),EvWeight);
 				hMCTbeltau[CutIndex]->Fill(mcta,EvWeight);
 
-				hMT2lester_met[CutIndex]->Fill(Mt2as,MetV.PT(),EvWeight);
+				hMT2lester_met[CutIndex]->Fill(Mt2as,MetV.Pt(),EvWeight);
 				hMT2lester_MCTb[CutIndex]->Fill(Mt2as,mcta,EvWeight);
 
 				double Centr = Centrality(AllJets_Lepton_noMet);
@@ -559,7 +559,7 @@ class analyzer {
 				hMCTxmuel[CutIndex]->Fill(mcx(v1,v2,vds,ptm),EvWeight);
 				hMCTymuel[CutIndex]->Fill(mcy(v1,v2,vds,ptm),EvWeight);
 				hMCTbmuel[CutIndex]->Fill(mcta,EvWeight);
-				hMT2lester_met[CutIndex]->Fill(Mt2as,MetV.PT(),EvWeight);
+				hMT2lester_met[CutIndex]->Fill(Mt2as,MetV.Pt(),EvWeight);
 				hMT2lester_MCTb[CutIndex]->Fill(Mt2as,mcta,EvWeight);
 
 				//cout<<" asym "<<Mt2as<<"  "<<mt2<<endl;
@@ -680,6 +680,7 @@ class analyzer {
 				sumElpT +=elV.Pt();
 				hLeppt[CutIndex]->Fill(el_pt[eIndex],EvWeight);
 				hLepeta[CutIndex]->Fill(el_eta[eIndex],EvWeight);
+				hIsoEl[CutIndex]->Fill(el_relIso[0],EvWeight);
 
 			}
 
@@ -698,6 +699,7 @@ class analyzer {
 				sumMuonpT +=muV.Pt();
 				hLeppt[CutIndex]->Fill(muV.Pt(),EvWeight);
 				hLepeta[CutIndex]->Fill(muV.Eta(),EvWeight);
+				hIsoMu[CutIndex]->Fill(mu_relIso[0],EvWeight);
 
 
 				//cout<<" Inside  "<<relIsoL<<"  Cut"<<"  "<<CutIndex<<endl;
@@ -723,6 +725,7 @@ class analyzer {
 				sumTaupT +=tauV.Pt();
 				hLeppt[CutIndex]->Fill(tauV.Pt(),EvWeight);
 				hLepeta[CutIndex]->Fill(tauV.Eta(),EvWeight);
+				hIsoTau[CutIndex]->Fill(tau_relIso[0],EvWeight);
 
 			}
 

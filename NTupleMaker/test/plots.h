@@ -288,6 +288,10 @@ TH1D *hPtJ1[CutN];
 TH1D *hPtJ2[CutN];
 TH1D *hPtJ3[CutN];
 
+TH1D *hIsoMu[CutN];
+TH1D *hIsoEl[CutN];
+TH1D *hIsoTau[CutN];
+
 TH1D *hInvMassMuTau[CutN];
 TH1D *hInvMassMuEl[CutN];
 TH1D *hInvMassTauTau[CutN];
@@ -430,6 +434,9 @@ TH2D *hIso_sign[CutN];
  
      
 
+TH2D *hMT2lester_MCTb[CutN];
+TH2D *hMT2lester_met[CutN];
+TH2D *hMT2lester_DZeta[CutN];
 
 
 TH1D *CutFlow= new TH1D("CutFlow","Cut Flow",CutN,1,CutN+1);
@@ -635,6 +642,12 @@ for(int cj = 0; cj < CutNer; cj++)
       hEleta[cj] = new TH1D ("Eleta_"+nCut,"El eta "+cutName,40,-4,4);
       hEleta[cj]->Sumw2();
        
+      hIsoMu[cj] = new TH1D ("IsoMu_"+nCut,"Mu Iso "+cutName,100,0,5);
+      hIsoMu[cj]->Sumw2();
+      hIsoEl[cj] = new TH1D ("IsoEl_"+nCut,"El Iso "+cutName,100,0,5);
+      hIsoEl[cj]->Sumw2();
+      hIsotau[cj] = new TH1D ("IsoTau_"+nCut,"Tau Iso "+cutName,100,0,5);
+      hIsoTau[cj]->Sumw2();
        
       hMET[cj] = new TH1D("MET_"+nCut,"MET "+cutName,40.0,0.0,800.0);
       hMET[cj]->Sumw2();
@@ -833,6 +846,7 @@ for(int cj = 0; cj < CutNer; cj++)
 
       hmet_MTsum[cj] = new TH2D ("met_MTsum_"+nCut,"met_MTsum "+cutName, nBinsmet, binsmet , nBinsMTsum,binsMTsum);
       hmet_MTsum[cj]->Sumw2();
+
       hmet_MTtot[cj] = new TH2D ("met_MTtot_"+nCut,"met_MTtot "+cutName, nBinsmet, binsmet , nBinsMTsum,binsMTsum);
       hmet_MTtot[cj]->Sumw2();
       
@@ -841,7 +855,15 @@ for(int cj = 0; cj < CutNer; cj++)
      
       hmet_MCTb[cj] = new TH2D ("met_MCTb_"+nCut,"met_MCTb "+cutName, nBinsmet, binsmet , nBinsMCTb,binsMCTb);
       hmet_MCTb[cj] ->Sumw2();
-   
+      
+       hMT2lester_MCTb[cj] = new TH2D ("MT2lester_MCTb_"+nCut,"MT2lester_MCTb "+cutName, nBinsmet, binsmet , nBinsMCTb,binsMCTb);
+       hMT2lester_MCTb[cj]->Sumw2();
+
+       hMT2lester_met[cj] = new TH2D ("MT2lester_met_"+nCut,"MT2lester_met "+cutName, nBinsmet, binsmet , nBinsmet, binsmet);
+       hMT2lester_met[cj]->Sumw2();
+
+       hMT2lester_DZeta[cj] = new TH2D ("MT2lester_DZeta_"+nCut,"MT2lester_DZeta "+cutName, nBinsmet, binsmet , nBinsDZeta,binsDZeta);
+	hMT2lester_DZeta[cj]->Sumw2();
      
       hDZeta_MCTb[cj] = new TH2D ("DZeta_MCTb_"+nCut,"DZeta_MCTb "+cutName, nBinsDZeta, binsDZeta , nBinsMCTb,binsMCTb);
       hDZeta_MCTb[cj] ->Sumw2();
