@@ -1,9 +1,4 @@
 
-//#include "DesyTauAnalyses/NTupleMaker/interface/Config.h"
-//#include "DesyTauAnalyses/NTupleMaker/interface/AC1B.h"
-//#include "DesyTauAnalyses/NTupleMaker/interface/Basic_Mt2_332_Calculator.h"
-//#include "DesyTauAnalyses/NTupleMaker/interface/Basic_MPairProd_Calculator.h"
-
 #include "/nfs/dust/cms/user/alkaloge/TauAnalysis/new/new/CMSSW_7_4_14/src/DesyTauAnalyses/NTupleMaker/interface/functions.h"
 #include "/nfs/dust/cms/user/alkaloge/TauAnalysis/new/new/CMSSW_7_4_14/src/DesyTauAnalyses/NTupleMaker/interface/lester_mt2_bisect.h"
 #include "/nfs/dust/cms/user/alkaloge/TauAnalysis/new/new/CMSSW_7_4_14/src/DesyTauAnalyses/NTupleMaker/interface/Basic_Mt2_332_Calculator.h"
@@ -409,6 +404,7 @@ TH2D *hDZeta_MCTb[CutN];
 
 TH2D *hMTsum_MCTb[CutN];
 TH2D *hMTtot_MCTb[CutN];
+TH2D *hMT_MCTb[CutN];
 
 TH2D *hmet_MTel[CutN];
 TH2D *hmet_MTmu[CutN];
@@ -646,7 +642,7 @@ for(int cj = 0; cj < CutNer; cj++)
       hIsoMu[cj]->Sumw2();
       hIsoEl[cj] = new TH1D ("IsoEl_"+nCut,"El Iso "+cutName,100,0,5);
       hIsoEl[cj]->Sumw2();
-      hIsotau[cj] = new TH1D ("IsoTau_"+nCut,"Tau Iso "+cutName,100,0,5);
+      hIsoTau[cj] = new TH1D ("IsoTau_"+nCut,"Tau Iso "+cutName,100,0,5);
       hIsoTau[cj]->Sumw2();
        
       hMET[cj] = new TH1D("MET_"+nCut,"MET "+cutName,40.0,0.0,800.0);
@@ -828,16 +824,19 @@ for(int cj = 0; cj < CutNer; cj++)
    double binsmet[4] = {0, 50,100,1000};
 
    int nBinsMTsum = 3;
-   double binsMTsum[4] = {0, 150,300,1000};
+   double binsMTsum[4] = {0, 100,250,1000};
+
+   int nBinsMTtot = 3;
+   double binsMTtot[4] = {0, 80,180,1000};
 
    int nBinsMCTb = 3;
-   double binsMCTb[4] = {0, 50,100,1000};
+   double binsMCTb[4] = {0, 20,60,1000};
 
    int nBinsMT = 3;
-   double binsMT[4] = {0, 50,100,1000};
+   double binsMT[4] = {20, 60, 120,1000};
 
-   int nBinsDZeta = 4;
-   double binsDZeta[5] = {-500, -150,-100,100,1000};
+   int nBinsDZeta = 3;
+   double binsDZeta[5] = {-500, -100, 0,1000};
 
 
       //hmet_MT[cj] = new TH2D ("met_MT_"+nCut,"met_MT "+cutName,40.0,0.0,800.0,10,0,200);
@@ -847,7 +846,7 @@ for(int cj = 0; cj < CutNer; cj++)
       hmet_MTsum[cj] = new TH2D ("met_MTsum_"+nCut,"met_MTsum "+cutName, nBinsmet, binsmet , nBinsMTsum,binsMTsum);
       hmet_MTsum[cj]->Sumw2();
 
-      hmet_MTtot[cj] = new TH2D ("met_MTtot_"+nCut,"met_MTtot "+cutName, nBinsmet, binsmet , nBinsMTsum,binsMTsum);
+      hmet_MTtot[cj] = new TH2D ("met_MTtot_"+nCut,"met_MTtot "+cutName, nBinsmet, binsmet , nBinsMTtot,binsMTtot);
       hmet_MTtot[cj]->Sumw2();
       
       hmet_DZeta[cj] = new TH2D ("met_DZeta_"+nCut,"met_DZeta "+cutName, nBinsmet, binsmet , nBinsDZeta,binsDZeta);
@@ -870,13 +869,15 @@ for(int cj = 0; cj < CutNer; cj++)
   
       hDZeta_MTsum[cj] = new TH2D ("DZeta_MTsum_"+nCut,"DZeta_MTsum "+cutName, nBinsDZeta, binsDZeta , nBinsMTsum,binsMTsum);
       hDZeta_MTsum[cj] ->Sumw2();
-      hDZeta_MTtot[cj] = new TH2D ("DZeta_MTtot_"+nCut,"DZeta_MTtot "+cutName, nBinsDZeta, binsDZeta , nBinsMTsum,binsMTsum);
+      hDZeta_MTtot[cj] = new TH2D ("DZeta_MTtot_"+nCut,"DZeta_MTtot "+cutName, nBinsDZeta, binsDZeta , nBinsMTtot,binsMTtot);
       hDZeta_MTtot[cj] ->Sumw2();
 
       hMTsum_MCTb[cj] = new TH2D ("MTsum_MCTb_"+nCut,"MTsum_MCTb "+cutName, nBinsMTsum, binsMTsum , nBinsMCTb,binsMCTb);
       hMTsum_MCTb[cj] ->Sumw2();
-      hMTtot_MCTb[cj] = new TH2D ("MTtot_MCTb_"+nCut,"MTtot_MCTb "+cutName, nBinsMTsum, binsMTsum , nBinsMCTb,binsMCTb);
+      hMTtot_MCTb[cj] = new TH2D ("MTtot_MCTb_"+nCut,"MTtot_MCTb "+cutName, nBinsMTtot, binsMTtot , nBinsMCTb,binsMCTb);
       hMTtot_MCTb[cj] ->Sumw2();
+      hMT_MCTb[cj] = new TH2D ("MT_MCTb_"+nCut,"MT_MCTb "+cutName, nBinsMT, binsMT , nBinsMCTb,binsMCTb);
+      hMT_MCTb[cj] ->Sumw2();
       
       hdRmt_dPhi[cj] = new TH2D ("dRm_dPhi_"+nCut,"dRm_dPhi "+cutName,60,0.0,6.0,64,0.0,3.2);
       hdRmt_dPhi[cj]->Sumw2();
