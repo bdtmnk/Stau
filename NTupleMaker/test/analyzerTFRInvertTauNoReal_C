@@ -1,0 +1,808 @@
+#define analyzer_cxx
+#include "analyzer.h"
+#include <TH2.h>
+#include <TStyle.h>
+#include <TCanvas.h>
+#include <TString.h>
+#include <cmath>
+#include <sstream>
+#include <iomanip>
+#include "TChain.h"
+#include "TH1.h"
+#include "TTree.h"
+#include "TKey.h"
+#include "Riostream.h"
+#include "TCanvas.h"
+#include "TFile.h"
+#include "TLegend.h"
+#include "TROOT.h"
+#include "TFrame.h"
+#include "TGaxis.h"
+#include "TStyle.h"
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include "TList.h"
+#include <string>
+#include "TObject.h"
+#include "TBranch.h"
+#include <functional>
+#include "TAxis.h"
+#include "TChain.h"
+#include "TMath.h"
+#include "Riostream.h"
+#include <iostream>
+#include <fstream>
+
+
+
+
+using namespace std;
+
+
+
+void analyzer::Loop(){
+
+
+	if (fChain == 0) return;
+
+
+	FakeList.clear();
+	FakeList.push_back("Unknown");
+	FakeList.push_back("#tau_{h}, #tau #rightarrow l");
+	FakeList.push_back("#tau_{h}, Prompt l");
+	FakeList.push_back("#tau_{h}, G #rightarrow l");
+	FakeList.push_back("#tau_{h}, HFQ #rightarrow l");
+	FakeList.push_back("#tau_{h}, LFQ #rightarrow l");
+	FakeList.push_back("Jet #rightarrow #tau, #tau #rightarrow l");
+	FakeList.push_back("Jet #rightarrow #tau, Prompt l");
+	FakeList.push_back("Jet #rightarrow #tau, G #rightarrow l");
+	FakeList.push_back("Jet #rightarrow #tau, HFQ #rightarrow l");
+	FakeList.push_back("Jet #rightarrow #tau, LFQ #rightarrow l");
+	FakeList.push_back("Jet #rightarrow #tau, h #rightarrow l");
+	FakeList.push_back("Jet #rightarrow #tau, X #rightarrow l");
+	FakeList.push_back("#mu #rightarrow #tau, #tau #rightarrow l");
+	FakeList.push_back("#mu #rightarrow #tau, Prompt l");
+	FakeList.push_back("#mu #rightarrow #tau, G #rightarrow l");
+	FakeList.push_back("#mu #rightarrow #tau, HFQ #rightarrow l");
+	FakeList.push_back("#mu #rightarrow #tau, LFQ #rightarrow l");
+	FakeList.push_back("e #rightarrow #tau, #tau #rightarrow l");
+	FakeList.push_back("e #rightarrow #tau, Prompt l");
+	FakeList.push_back("e #rightarrow #tau, G #rightarrow l");
+	FakeList.push_back("e #rightarrow #tau, HFQ #rightarrow l");
+	FakeList.push_back("e #rightarrow #tau, LFQ #rightarrow l");
+	FakeList.push_back("G #rightarrow #tau, #tau #rightarrow l");
+	FakeList.push_back("G #rightarrow #tau, Prompt l");
+	FakeList.push_back("G #rightarrow #tau, G #rightarrow l");
+	FakeList.push_back("G #rightarrow #tau, HFQ #rightarrow l");
+	FakeList.push_back("G #rightarrow #tau, LFQ #rightarrow l");
+	FakeList.push_back("G #rightarrow #tau, h #rightarrow l");
+	FakeList.push_back("G #rightarrow #tau, X #rightarrow l");
+	FakeList.push_back("");
+
+	FakeListJet.clear();
+	FakeListJet.push_back("G #rightarrow #tau, #tau #rightarrow l");
+	FakeListJet.push_back("G #rightarrow #tau, Prompt l");
+	FakeListJet.push_back("G #rightarrow #tau, G #rightarrow l");
+	FakeListJet.push_back("G #rightarrow #tau, HFQ #rightarrow l");
+	FakeListJet.push_back("G #rightarrow #tau, LFQ #rightarrow l");
+	FakeListJet.push_back("G #rightarrow #tau, !Prompt l");
+	FakeListJet.push_back("LFQ #rightarrow #tau, #tau #rightarrow l");
+	FakeListJet.push_back("LFQ #rightarrow #tau, Prompt l");
+	FakeListJet.push_back("LFQ #rightarrow #tau, G #rightarrow l");
+	FakeListJet.push_back("LFQ #rightarrow #tau, HFQ #rightarrow l");
+	FakeListJet.push_back("LFQ #rightarrow #tau, LFQ #rightarrow l");
+	FakeListJet.push_back("LFQ #rightarrow #tau, !Prompt l");
+	FakeListJet.push_back("HFQ #rightarrow #tau, #tau #rightarrow l");
+	FakeListJet.push_back("HFQ #rightarrow #tau, Prompt l");
+	FakeListJet.push_back("HFQ #rightarrow #tau, G #rightarrow l");
+	FakeListJet.push_back("HFQ #rightarrow #tau, HFQ #rightarrow l");
+	FakeListJet.push_back("HFQ #rightarrow #tau, LFQ #rightarrow l");
+	FakeListJet.push_back("HFQ #rightarrow #tau, !Prompt l");
+	FakeListJet.push_back("");
+
+
+	CutList.clear();
+	CutList.push_back("Nocut");
+	CutList.push_back("PU");
+	CutList.push_back("#mu#tau");
+	CutList.push_back("2ndlepV");
+	CutList.push_back("3rdlepV");
+	CutList.push_back("TriggerSF");
+	CutList.push_back("LeptonSF");
+	CutList.push_back("Tau-id");
+	CutList.push_back("LeptonTauFakeRate");
+	CutList.push_back("METrecoil");
+	CutList.push_back("ZpTcorrection");
+	CutList.push_back("topPtRwgt");
+	CutList.push_back("MTb");
+	CutList.push_back("dPhi");
+	CutList.push_back("njets_lt_3");
+	CutList.push_back("met_gt_40");
+
+	string Channel = "mutau";
+	string channel = "mutau";
+
+
+	ChiMass = 0.;
+	//cout<<" THE MASS IS ========================= "<<ChiMass<<endl;
+	 int CutNumb = int(CutList.size());
+	 int CutNumbF = int(FakeList.size());
+	 int CutNumbFJet = int(FakeListJet.size());
+         int iCFCounter[CutNumb];
+	 double CFCounter[CutNumb];
+
+	 for (int i=0;i < CutNumb; i++){
+                        CFCounter[i] = 0;
+			CFCounter_[i] = 0;
+			CFCounterL_[i] = 0;
+			CFCounterT_[i] = 0;
+         	        iCFCounter[i] = 0;
+        }
+	fChain->GetEntry(0);  
+	string old = datasetName->c_str();
+	int counter = 0;
+	
+
+	//char hist_[100];
+	bool isData = false;
+	bool isTT = false;
+	bool isWJ = false;
+	bool isDY = false;
+	bool isDYee = false;
+	bool isDYmm = false;
+	bool isDYnunu = false;
+	bool isDYhigh = false;
+	bool isDYlow = false;
+	bool isZTT = false;
+	bool isDYNJ = false;
+	bool isWNJ = false;
+	bool isNJ = false;
+	bool isSignal = false;
+	bool isSUSY = false;
+	bool cut_btag = true;
+	
+	bool t = true;
+	bool f = false;
+	bool InvertLeptonIso = LEPTONHERE;
+	//bool HighInvertLeptonIso = HIGHISO;
+	string Sign = "SIGNHERE";
+	
+	
+	string systematic="MuEnUp";
+
+	string cut = to_string(t);
+	cout <<"  "<<cut.c_str()<<endl;
+	char plots_[100];
+	string data = "Single";
+	string tt = "TT_TuneCUETP8M2T4_13TeV-powheg-pythia8";
+	string wj = "WJetsToLNu";
+	string wj1 = "W1JetsToLNu";
+	string wj2 = "W2JetsToLNu";
+	string wj3 = "W3JetsToLNu";
+	string wj4 = "W4JetsToLNu";
+	string dyj = "DYJetsToLL";
+	string dyjhigh = "DYJetsToLL_M-50";
+	string dyjlow = "DYJetsToLL_M-5to";
+	string dyjlow2 = "DYJetsToLL_M-10to";
+	string dyj1 = "DY1JetsToLL";
+	string dyj2 = "DY2JetsToLL";
+	string dyj3 = "DY3JetsToLL";
+	string dyj4 = "DY4JetsToLL";
+	string ztt = "isZTT";
+	string ttw = "TTWJetsToLNu";
+	string signal = "stau";
+	string signalC1 = "C1";
+	string signalChi = "Chi";
+	string N0part = "0Parton";
+	string N1part = "1Parton";
+	string N2part = "2Parton";
+	string N3part = "3Parton";
+	string N4part = "4Parton";
+	string HT0to70 = "0To70";
+	string HT70to100 = "70To100";
+	string HT100to200 = "100To200";
+	string HT200to400 = "200To400";
+	string HT400to600 = "400To600";
+	string HT600to800 = "600To800";
+	string HT800to1200 = "800To1200";
+
+	bool isW0Part = false;
+	bool isW1Part = false;
+	bool isW2Part = false;
+	bool isW3Part = false;
+	bool isW4Part = false;
+	bool isDY0Part = false;
+	bool isDY1Part = false;
+	bool isDY2Part = false;
+	bool isDY3Part = false;
+	bool isDY4Part = false;
+	bool isHTz = false;
+	bool isHTa = false;
+	bool isHTb = false;
+	bool isHTc = false;
+	bool isHTd = false;
+	bool isHTe = false;
+	bool isHTf = false;
+
+	if (string::npos != old.find(data)) isData= true;
+	if (string::npos != old.find(signal) && string::npos != systematic.find("genMET")) isSignal= true;
+	if (string::npos != old.find(signalC1) && string::npos != systematic.find("genMET")) isSignal= true;
+	if (string::npos != old.find(signalChi) && string::npos != systematic.find("genMET")) isSignal= true;
+	
+	if (string::npos != old.find(signal)) isSUSY = true;
+	if (string::npos != old.find(signalC1)) isSUSY = true;
+	if (string::npos != old.find(signalChi)) isSUSY = true;
+
+	if (string::npos != old.find(tt)) isTT= true;
+	if (string::npos != old.find(wj)) isWJ= true;
+	if (string::npos != old.find(ttw)) isWJ= false;
+	if (string::npos != old.find(dyj)) isDY= true;
+	if (string::npos != old.find(dyjhigh)) isDYhigh= true;
+	if (string::npos != old.find(dyjlow) || string::npos != old.find(dyjlow2)) isDYlow= true;
+	if (string::npos != old.find(dyj1) || string::npos != old.find(dyj2) || string::npos != old.find(dyj3) || string::npos != old.find(dyj4)) isDYNJ = true;
+	if ((string::npos != old.find(wj1) || string::npos != old.find(wj2) || string::npos != old.find(wj3) || string::npos != old.find(wj4)) && string::npos == old.find(ttw)) isWNJ= true;
+	isNJ = isDYNJ || isWNJ;
+
+
+	if (isSignal) cout<<" YOU HAVE FOUND ITTTTTTTTT is it signal ???  "<<isSignal<<" systematic "<<systematic<<endl;
+	if (isData) cout<<" YOU HAVE FOUND a DATA "<<endl;
+
+
+
+
+	TString fileinName = "/nfs/dust/cms/user/alkaloge/TauAnalysis/new/new/StauAnalysis/New8025/CMSSW_8_0_25/src/DesyTauAnalyses/NTupleMaker/test/mutau/adgraphMLM-pythia8_isZTT_B_OS.root";
+	if (systematic == "JetEnUp" || systematic == "JetEnDown"  || systematic == "UnclEnDown" || systematic == "UnclEnDown" || systematic == "TauEnUp" || systematic == "TauEnDown" || systematic == "ElEnUp" || systematic == "ElEnDown" || systematic == "MuEnUp" || systematic == "MuEnDown") 
+	{fileinName ="/nfs/dust/cms/user/alkaloge/TauAnalysis/new/new/StauAnalysis/New8025/CMSSW_8_0_25/src/DesyTauAnalyses/NTupleMaker/test/mutau_"+systematic+"/adgraphMLM-pythia8_isZTT_B_OS.root";}
+
+
+	TFile * filein = new TFile(fileinName,"read");
+	string fln = filein->GetName();
+	if (string::npos != fln.find(ztt)) isZTT= true;
+	if (string::npos == fln.find(ztt)) isZTT= false;
+
+	TH1D * histW   , *histPt;
+	if (systematic == "ScalesUp" ) histW = (TH1D*)filein->Get("mutau/histWeightsScalesUp");
+	else if (systematic == "ScalesDown" ) histW = (TH1D*)filein->Get("mutau/histWeightsScalesDown");
+	else if (systematic == "PDFUp" ) histW = (TH1D*)filein->Get("mutau/histWeightsPDFUp");
+	else if (systematic == "PDFDown" ) histW = (TH1D*)filein->Get("mutau/histWeightsPDFDown");
+	else  {histW = (TH1D*)filein->Get("mutau/histWeightsH");}
+
+	if (string::npos != fln.find(N0part) && (isWJ || isWNJ)) isW0Part= true;
+	if (string::npos != fln.find(N1part) && (isWJ || isWNJ)) isW1Part= true;
+	if (string::npos != fln.find(N2part) && (isWJ || isWNJ)) isW2Part= true;
+	if (string::npos != fln.find(N3part) && (isWJ || isWNJ)) isW3Part= true;
+	if (string::npos != fln.find(N4part) && (isWJ || isWNJ)) isW4Part= true;
+	if (string::npos != fln.find(N0part) && isDYhigh) isDY0Part= true;
+	if (string::npos != fln.find(N1part) && isDYhigh) isDY1Part= true;
+	if (string::npos != fln.find(N2part) && isDYhigh) isDY2Part= true;
+	if (string::npos != fln.find(N3part) && isDYhigh) isDY3Part= true;
+	if (string::npos != fln.find(N4part) && isDYhigh) isDY4Part= true;
+
+	if (string::npos != fln.find(HT0to70)) isHTz= true;
+	if (string::npos != fln.find(HT70to100)) isHTa= true;
+	if (string::npos != fln.find(HT100to200)) isHTb= true;
+	if (string::npos != fln.find(HT200to400)) isHTc= true;
+	if (string::npos != fln.find(HT400to600)) isHTd= true;
+	if (string::npos != fln.find(HT600to800)) isHTe= true;
+	if (string::npos != fln.find(HT800to1200)) isHTf= true;
+
+	cout<<" check =============================== "<<fln<<" isWJ "<<isWJ<<" isW1 "<<isW1Part<<" isWNJ "<<isWNJ<<" is HT ? "<<isHTa<<"  "<<isHTb<<endl;
+
+	histW->SetName("histWeightsH");
+	histW->SetTitle("histWeightsH");
+
+	if (isSUSY) histPt = (TH1D*)filein->Get("mutau/histPt");
+	float Nw = 1;
+	if (isSUSY) { Nw = 1/histPt->GetSumOfWeights(); Nw *=histW->GetSumOfWeights();}
+
+	cout<<" The Systematic "<<systematic<<" histW "<<histW->GetSumOfWeights()<<endl;
+
+	TH1D * histTop , *histTopSq;
+	if (isTT) histTop = (TH1D*)filein->Get("mutau/histTopPt");
+	if (isTT && systematic == "TopPtUp" ) histTopSq = (TH1D*)filein->Get("mutau/histTopPtSq");
+	
+	//TH1D * CutFlow = (TH1D*)filein->Get("mutau/CutFlowUnW");
+	TFile * file = new TFile("plots.root","recreate");
+
+	//cout<<"  "<<old<<"  "<<datasetName->c_str()<<"  "<<hist_<<"  "<<CutFlow->GetName()<<"  "<<CutFlow->GetBinContent(1)<<endl;
+		
+	file->mkdir(Channel.c_str());
+	file->cd(Channel.c_str());
+	float top_w = 1.;
+	Long64_t nentries = fChain->GetEntriesFast();
+	SetupFakeHist();
+	SetupHists(CutNumb);
+
+	Long64_t nbytes = 0, nb = 0;
+
+	int is0partons=0;
+	int is1partons=0;
+	int is2partons=0;
+	int is3partons=0;
+	int is4partons=0;
+
+		cout<<" will process "<<nentries<<" dataset "<<datasetName->c_str()<< endl;
+
+
+
+	for (Long64_t jentry=0; jentry<nentries;jentry++) {
+		Long64_t ientry = LoadTree(jentry);
+		nb = fChain->GetEntry(jentry);   nbytes += nb;
+		float all_weights = 1.;
+
+
+		if (mu_relIso[0] > 0.15) continue;
+
+		bool isDYTauTau = false;
+		bool isDYll = false;
+
+		if ((isDY  ||  isDYNJ) && isDYTT>0.5) isDYTauTau = true;
+		if ((isDY  ||  isDYNJ) && isDYEE>0.5) isDYee = true;
+		if ((isDY  ||  isDYNJ) && isDYMM>0.5) isDYmm = true;
+		if ((isDY  ||  isDYNJ) && isDYNuNu>0.5) isDYnunu = true;
+
+		if ((isDY  ||  isDYNJ) && isDYTT<0.5) isDYll = true;
+		//cout<<" Again ..................... "<<isZTT<<" DYTT "<<isDYTauTau<<endl;
+		if ((isDY || isDYNJ) && isZTT && !isDYTauTau) continue;
+		if ((isDY || isDYNJ) && !isZTT && !isDYll) continue;
+
+
+		float charge_ =mu_charge[muon_index]  * ta_charge[taus_index];
+
+		if ( charge_ < 0. && Sign == "SS") continue;
+		if ( charge_ > 0. && Sign == "OS") continue;
+
+		if ( jentry%100000 ==0 ) 
+cout<<" working for you...processed " <<jentry<<" events from "<<nentries<<" dataset "<<datasetName->c_str()<<" weight "<<all_weights<< endl;
+
+/*
+		if (isWJ && (npartons>0 && npartons<5)) continue;
+
+		if ( isDYhigh  && (npartons>0 && npartons<5)) continue;
+		*/
+
+		if (npartons!=0 && (isW0Part || isDY0Part)) continue;
+		if (npartons!=1 && (isW1Part || isDY1Part)) continue;
+		if (npartons!=2 && (isW2Part || isDY2Part)) continue;
+		if (npartons!=3 && (isW3Part || isDY3Part)) continue;
+		if (npartons!=4 && (isW4Part || isDY4Part)) continue;
+
+		if (npartons==0) is0partons++;
+		if (npartons==1) is1partons++;
+		if (npartons==2) is2partons++;
+		if (npartons==3) is3partons++;
+		if (npartons==4) is4partons++;
+
+		if (isData && met_flag<0.5) continue;	
+
+		JetsMV.clear();
+		MuMV.clear();
+		ElMV.clear();
+		TauMV.clear();
+		btag_index.clear();
+
+			JetsV.SetPxPyPzE(0.,0.,0.,0.);
+			MuV.SetPxPyPzE(0.,0.,0.,0.);
+			ElV.SetPxPyPzE(0.,0.,0.,0.);
+			TauV.SetPxPyPzE(0.,0.,0.,0.);
+
+	for (int nj=0;nj<njets;++nj) {
+	int jet_index = jets_cleaned[nj];
+	JetsV.SetPxPyPzE(0.,0.,0.,0.);
+	JetsV.SetPxPyPzE(jet_px[jet_index], jet_py[jet_index],jet_pz[jet_index],jet_e[jet_index]);
+	JetsMV.push_back(JetsV);
+	}
+
+	
+		float met = -1;
+
+		METV.SetPx(met_ex);
+		METV.SetPy(met_ey);
+		met= sqrt(met_ex*met_ex + met_ey*met_ey);  
+
+
+//JetEnUp JetEnDown UnclEnUp UnclEnDown
+	if (systematic =="JetEnUp")
+		{
+		METV.SetPx(met_ex_JetEnUp);
+		METV.SetPy(met_ey_JetEnUp);
+		met = sqrt(met_ex_JetEnUp*met_ex_JetEnUp + met_ey_JetEnUp*met_ey_JetEnUp);      
+		}
+
+	if (systematic =="JetEnDown")
+		{
+		METV.SetPx(met_ex_JetEnDown);
+		METV.SetPy(met_ey_JetEnDown);
+		met = sqrt(met_ex_JetEnDown*met_ex_JetEnDown + met_ey_JetEnDown*met_ey_JetEnDown);     
+		}
+
+	if (systematic =="UnclEnUp")
+		{
+		METV.SetPx(met_ex_UnclusteredEnUp);
+		METV.SetPy(met_ey_UnclusteredEnUp);
+		met = sqrt(met_ex_UnclusteredEnUp*met_ex_UnclusteredEnUp + met_ey_UnclusteredEnUp*met_ey_UnclusteredEnUp);     
+		}
+
+	if (systematic =="UnclEnDown")
+		{
+		METV.SetPx(met_ex_UnclusteredEnDown);
+		METV.SetPy(met_ey_UnclusteredEnDown);
+		met = sqrt(met_ex_UnclusteredEnDown*met_ex_UnclusteredEnDown + met_ey_UnclusteredEnDown*met_ey_UnclusteredEnDown);
+		}
+
+if(muon_index>-1 )			MuV.SetPtEtaPhiM(mu_pt[muon_index], mu_eta[muon_index], mu_phi[muon_index], muonMass);
+if(electron_index>-1 )		ElV.SetPtEtaPhiM(el_pt[electron_index], el_eta[electron_index], el_phi[electron_index],electronMass);
+if (taus_index>-1 )			TauV.SetPtEtaPhiM(ta_pt[taus_index], ta_eta[taus_index], ta_phi[taus_index], ta_mass[taus_index]);
+
+		int iCut = 1;
+		int category = 0;
+		int categoryJet = 0;
+
+		
+		bool isRealTau  = (genTauMatched>0.5 && !isData) ;
+		bool isMuPromptLepton =  (genLeptonMatchedPromptMu >0.5 && genLeptonMatchedPromptEl<0.5 && !isData);
+		bool isElPromptLepton =  (genLeptonMatchedPromptEl >0.5 && genLeptonMatchedPromptMu<0.5 && !isData);
+
+		bool isMuFromTau =  (genMuMatchedToTauDecay > 0.5 && !isData);
+
+
+		bool isfakeTauFromPromptLepton = matchedTauToPromptEl>0.5 || matchedTauToPromptMu >0.5 ;
+	
+		bool isfakeTauFromJet = genTauMatched<0.5 && !isfakeTauFromPromptLepton ;
+		bool isfakeTauFromHadron = matchedTauToMuHadronDec > 0.5 || matchedTauToElHadronDec > 0.5;
+		bool isfakeTauFromGluon = matchedTauToGluon>0.5 ;
+		bool isfakeTauFromLFQ = isfakeTauFromJet && matchedTauToLFQ>0.5 ;
+		bool isfakeTauFromHFQ = isfakeTauFromJet && matchedTauToHFQ>0.5 ;
+		
+		//if (isfakeTauFromHadron) isfakeTauFromJet = true;
+
+		bool isfakeTauFromMu =  ( genTauMatched < 0.5 && matchedTauToPromptMu > 0.5 && !isfakeTauFromJet && !isData) ;
+		bool isfakeTauFromEl =  ( genTauMatched < 0.5 && matchedTauToPromptEl > 0.5 && !isfakeTauFromJet && !isData) ;
+	
+
+		bool isfakeMuFromGluon =  ( genLeptonMatchedGluon >0.5 && !isMuPromptLepton && !isData) ;
+		bool isfakeMuFromHFQ =  (  genLeptonMatchedHFQ >0.5 && !isMuPromptLepton && !isData) ;
+		bool isfakeMuFromLFQ =  (  genLeptonMatchedLFQ >0.5 && !isMuPromptLepton && !isData) ;
+
+		bool isLeptonFromLepton = (genLeptonMatched >0.5 && !isData);
+
+		bool isfakeMuFromHadron = ( (genMuMatchedHadrDecay > 0.5 || genTauMatchedHadrDecay > 0.5 || genElMatchedHadrDecay >0.5)&&  !isMuPromptLepton && !isData);
+
+		//category 1 : gen tau gen lepton		
+		if (isRealTau) {
+
+			if (isMuFromTau) category = 1;
+			if (isMuPromptLepton) category = 2;
+			if (isfakeMuFromGluon) category = 3;
+			if (isfakeMuFromHFQ) category = 4;
+			if (isfakeMuFromLFQ) category = 5;
+//cout<<" It is really a real Tau !! "<<isRealTau<<"  "<<isMuFromTau<<" isMuPromptLepton "<<isMuPromptLepton<<" category "<<category<<endl;
+
+		}
+
+int cJ = 0;
+		if (!isRealTau) {
+
+	if (!isfakeTauFromGluon){
+		if (isfakeTauFromJet && isMuFromTau) category = 6;
+		if (isfakeTauFromJet && isMuPromptLepton) category = 7;
+		if (isfakeTauFromJet && isfakeMuFromGluon) category = 8;
+		if (isfakeTauFromJet && isfakeMuFromHFQ) category = 9;
+		if (isfakeTauFromJet && isfakeMuFromLFQ) category = 10;
+		if (isfakeTauFromJet && isfakeMuFromHadron)  category = 11;
+		if (isfakeTauFromJet && !isMuFromTau && !isMuPromptLepton && !isfakeMuFromGluon && !isfakeMuFromHFQ && !isfakeMuFromLFQ && !isfakeMuFromHadron)  category = 12;
+		}
+
+
+if (isfakeTauFromGluon) cJ=0;
+if (isfakeTauFromLFQ) cJ=6;
+if (isfakeTauFromHFQ) cJ=12;
+		if (isfakeTauFromGluon && isMuFromTau) categoryJet = cJ;
+		if (isfakeTauFromGluon && isMuPromptLepton) categoryJet = 1+cJ;
+		if (isfakeTauFromGluon && isfakeMuFromGluon) categoryJet = 2+cJ;
+		if (isfakeTauFromGluon && isfakeMuFromHFQ) categoryJet = 3+cJ;
+		if (isfakeTauFromGluon && isfakeMuFromLFQ) categoryJet = 4+cJ;
+		if (isfakeTauFromGluon && isfakeMuFromHadron)  categoryJet = 5 +cJ;
+
+
+		if (isfakeTauFromMu && isMuFromTau) category = 13;
+		if (isfakeTauFromMu && isMuPromptLepton) category = 14;
+		if (isfakeTauFromMu && isfakeMuFromGluon) category = 15;
+		if (isfakeTauFromMu && isfakeMuFromHFQ) category = 16;
+		if (isfakeTauFromMu && isfakeMuFromLFQ) category = 17;
+
+		if (isfakeTauFromEl && isMuFromTau) category = 18;
+		if (isfakeTauFromEl && isMuPromptLepton) category = 19;
+		if (isfakeTauFromEl && isfakeMuFromGluon) category = 20;
+		if (isfakeTauFromEl && isfakeMuFromHFQ) category = 21;
+		if (isfakeTauFromEl && isfakeMuFromLFQ) category = 22;
+
+		if (isfakeTauFromGluon && isMuFromTau) category = 23;
+		if (isfakeTauFromGluon && isMuPromptLepton) category = 24;
+		if (isfakeTauFromGluon && isfakeMuFromGluon) category = 25;
+		if (isfakeTauFromGluon && isfakeMuFromHFQ) category = 26;
+		if (isfakeTauFromGluon && isfakeMuFromLFQ) category = 27;
+		if (isfakeTauFromGluon && isfakeMuFromHadron)  category = 28;
+		if (isfakeTauFromGluon && !isMuFromTau && !isMuPromptLepton && !isfakeMuFromGluon && !isfakeMuFromHFQ && !isfakeMuFromLFQ && !isfakeMuFromHadron)  category = 29;
+
+
+	}
+		
+		if (isData) category = 0;
+		if (isData) categoryJet = 0;
+		
+		bool  isTight= ta_IsoFlagTight[0] > 0.5;
+		bool  isLoose= ta_IsoFlagLoose[0] >0.5 && ta_IsoFlagTight[0] < 0.5;
+
+		if (isRealTau && !isData) continue;
+		float absEtaProbe = fabs(ta_eta[taus_index]);
+		int etaBin = binNumber(absEtaProbe,nEtaBins,etaBins);
+
+		all_weights = pu_weight * gen_weight ;
+
+		if (isTight) isLoose=true;
+
+
+		FillHistsFakesInvertTau(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, Channel,muon_index,electron_index,taus_index,category,categoryJet,isData,isTight,isLoose,etaBin);
+		CFCounter[iCut]+= all_weights;
+		if (isLoose) CFCounterL_[iCut]+= all_weights;
+		if (isTight) CFCounterT_[iCut]+= all_weights;
+                iCFCounter[iCut]++;
+		iCut++;
+		
+		if (mu_relIso[0] > 0.15 && !InvertLeptonIso) continue;
+		if (mu_relIso[0] < 0.15 && InvertLeptonIso) continue;
+
+		
+		//if (mu_relIso[0] > 0.5 && InvertLeptonIso && HighInvertLeptonIso) continue;
+
+		//if ( fabs(mu_dz[muon_index]) > 0.2) continue;
+		//if ( fabs(mu_dxy[muon_index]) > 0.045) continue;
+
+		if ( fabs(mu_charge[muon_index]) !=1 ) continue;
+		if ( fabs(ta_charge[taus_index]) !=1 ) continue;
+
+
+		FillHistsFakesInvertTau(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, Channel,muon_index,electron_index,taus_index,category,categoryJet,isData,isTight,isLoose,etaBin);
+		CFCounter[iCut]+= all_weights;
+		if (isLoose) CFCounterL_[iCut]+= all_weights;
+		if (isTight) CFCounterT_[iCut]+= all_weights;
+                iCFCounter[iCut]++;
+		iCut++;
+
+		if (event_secondLeptonVeto >0.5) continue;
+		FillHistsFakesInvertTau(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, Channel,muon_index,electron_index,taus_index,category,categoryJet,isData,isTight,isLoose,etaBin);
+		CFCounter[iCut]+= all_weights;
+		if (isLoose) CFCounterL_[iCut]+= all_weights;
+		if (isTight) CFCounterT_[iCut]+= all_weights;
+                iCFCounter[iCut]++;
+		iCut++;
+
+		if (event_thirdLeptonVeto >0.5) continue;
+		FillHistsFakesInvertTau(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, Channel,muon_index,electron_index,taus_index,category,categoryJet,isData,isTight,isLoose,etaBin);
+		CFCounter[iCut]+= all_weights;
+		if (isLoose)CFCounterL_[iCut]+= all_weights;
+		if (isTight) CFCounterT_[iCut]+= all_weights;
+                iCFCounter[iCut]++;
+		iCut++;
+		
+		if (!isData) all_weights *= trig_weight;
+		FillHistsFakesInvertTau(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, Channel,muon_index,electron_index,taus_index,category,categoryJet,isData,isTight,isLoose,etaBin);
+		CFCounter[iCut]+= all_weights;
+		if (isLoose) CFCounterL_[iCut]+= all_weights;
+		if (isTight) CFCounterT_[iCut]+= all_weights;
+                iCFCounter[iCut]++;
+		iCut++;
+
+		if (!isData) all_weights *= LSF_weight;
+		FillHistsFakesInvertTau(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, Channel,muon_index,electron_index,taus_index,category,categoryJet,isData,isTight,isLoose,etaBin);
+		CFCounter[iCut]+= all_weights;
+		if (isLoose) CFCounterL_[iCut]+= all_weights;
+		if (isTight) CFCounterT_[iCut]+= all_weights;
+                iCFCounter[iCut]++;
+		iCut++;
+
+		double ptTau1 = (double)ta_pt[taus_index];
+		double etaTau1 = (double)ta_eta[taus_index];
+		double ptMu1 = (double)mu_pt[muon_index];
+		double etaMu1 = (double)mu_eta[muon_index];
+
+	
+
+		string tID="MVA_Tight";
+
+		double tauId = TauiD(channel,tID);
+		//if (genTauMatched>0.5 && genLeptonMatched < 0.5 && !isData) all_weights *= tauId;
+		if (genTauMatched>0.5 && !isData) all_weights *= 0.95;
+		
+		FillHistsFakesInvertTau(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, Channel,muon_index,electron_index,taus_index,category,categoryJet,isData,isTight,isLoose,etaBin);
+		CFCounter[iCut]+= all_weights;
+		if (isLoose) CFCounterL_[iCut]+= all_weights;
+		if (isTight) CFCounterT_[iCut]+= all_weights;
+                iCFCounter[iCut]++;
+		iCut++;
+
+
+
+		double tfrmu  = MuonFakeRate(ptTau1,etaTau1);
+		double tfrel  = ElectronFakeRate(ptTau1,etaTau1);
+
+		if ( !isRealTau && isfakeTauFromMu  && !isfakeTauFromEl && !isData) all_weights *= tfrmu;
+		if ( !isRealTau && isfakeTauFromEl  && !isfakeTauFromMu && !isData) all_weights *= tfrel;
+
+		//if ( genTauMatched < 0.5 && !isfakeTauFromJet && (matchedTauToPromptMu > 0.5 && matchedTauToPromptEl < 0.5) && !isData) all_weights *= tfrmu;
+		//if ( genTauMatched < 0.5 && !isfakeTauFromJet && (matchedTauToPromptEl > 0.5 && matchedTauToPromptMu < 0.5) && !isData) all_weights *= tfrel;
+		FillHistsFakesInvertTau(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, Channel,muon_index,electron_index,taus_index,category,categoryJet,isData,isTight,isLoose,etaBin);
+		CFCounter[iCut]+= all_weights;
+		if (isLoose) CFCounterL_[iCut]+= all_weights;
+		if (isTight) CFCounterT_[iCut]+= all_weights;
+                iCFCounter[iCut]++;
+		iCut++;
+
+
+		if (isWJ || isDY || isWNJ || isDYNJ) {
+		
+		METV.SetPx(0.);
+		METV.SetPy(0.);
+		METV.SetPx(met_ex_recoil);
+		METV.SetPy(met_ey_recoil);
+		met=sqrt(met_ex_recoil*met_ex_recoil+met_ey_recoil*met_ey_recoil);
+
+	if (systematic =="JetEnUp")
+		{
+		METV.SetPx(met_ex_JetEnUp_recoil);
+		METV.SetPy(met_ey_JetEnUp_recoil);
+		met = sqrt(met_ex_JetEnUp_recoil*met_ex_JetEnUp_recoil + met_ey_JetEnUp_recoil*met_ey_JetEnUp_recoil);      
+		}
+
+	if (systematic =="JetEnDown")
+		{
+		METV.SetPx(met_ex_JetEnDown_recoil);
+		METV.SetPy(met_ey_JetEnDown_recoil);
+		met = sqrt(met_ex_JetEnDown_recoil*met_ex_JetEnDown_recoil + met_ey_JetEnDown_recoil*met_ey_JetEnDown_recoil);     
+		}
+
+	if (systematic =="UnclEnUp")
+		{
+		METV.SetPx(met_ex_UnclusteredEnUp_recoil);
+		METV.SetPy(met_ey_UnclusteredEnUp_recoil);
+		met = sqrt(met_ex_UnclusteredEnUp_recoil*met_ex_UnclusteredEnUp_recoil + met_ey_UnclusteredEnUp_recoil*met_ey_UnclusteredEnUp_recoil);     
+		}
+
+	if (systematic =="UnclEnDown")
+		{
+		METV.SetPx(met_ex_UnclusteredEnDown_recoil);
+		METV.SetPy(met_ey_UnclusteredEnDown_recoil);
+		met = sqrt(met_ex_UnclusteredEnDown_recoil*met_ex_UnclusteredEnDown_recoil + met_ey_UnclusteredEnDown_recoil*met_ey_UnclusteredEnDown_recoil);
+		}
+
+		}
+
+
+		FillHistsFakesInvertTau(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, Channel,muon_index,electron_index,taus_index,category,categoryJet,isData,isTight,isLoose,etaBin);
+		CFCounter[iCut]+= all_weights;
+		if (isLoose) CFCounterL_[iCut]+= all_weights;
+		if (isTight) CFCounterT_[iCut]+= all_weights;
+                iCFCounter[iCut]++;
+		iCut++;
+
+	if (isDY || isDYNJ){
+		if (systematic !="ZPtUp" && systematic !="ZPtDown" ) all_weights *= zptmassweight;
+		if (systematic =="ZPtUp") all_weights *= zptmassweight*zptmassweight;
+		}
+
+
+		FillHistsFakesInvertTau(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, Channel,muon_index,electron_index,taus_index,category,categoryJet,isData,isTight,isLoose,etaBin);
+		CFCounter[iCut]+= all_weights;
+		if (isLoose) CFCounterL_[iCut]+= all_weights;
+		if (isTight) CFCounterT_[iCut]+= all_weights;
+                iCFCounter[iCut]++;
+		iCut++;
+
+		if (systematic !="TopPtUp" && systematic !="TopPtDown" ) all_weights *= top_weight;
+		if (systematic =="TopPtUp") all_weights *= top_weight*top_weight;
+		if (systematic =="TopPtDown") all_weights *= 1;
+		FillHistsFakesInvertTau(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, Channel,muon_index,electron_index,taus_index,category,categoryJet,isData,isTight,isLoose,etaBin);
+		CFCounter[iCut]+= all_weights;
+		if (isLoose) CFCounterL_[iCut]+= all_weights;
+		if (isTight) CFCounterT_[iCut]+= all_weights;
+                iCFCounter[iCut]++;
+		iCut++;
+
+
+	        float dPhi = dPhiFrom2P( MuV.Px(), MuV.Py(), METV.Px(),  METV.Py() );
+		float  MT = TMath::Sqrt(2*MuV.Pt()*METV.Pt()*(1-TMath::Cos(dPhi)));
+		
+
+
+      		bool MTb = false;//(MT>60 && MT<120);
+		if (MT > 60. && MT < 120. ) MTb=true;
+		if (!MTb) continue;
+		FillHistsFakesInvertTau(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, Channel,muon_index,electron_index,taus_index,category,categoryJet,isData,isTight,isLoose,etaBin);
+		CFCounter[iCut]+= all_weights;
+		if (isLoose) CFCounterL_[iCut]+= all_weights;
+		if (isTight) CFCounterT_[iCut]+= all_weights;
+                iCFCounter[iCut]++;
+		iCut++;
+	
+	if (njets==0) continue;
+		float dPhiW = -99;
+		if (MuV.Pt()>0 && METV.Pt()>0) {
+    	        TLorentzVector Wb = MuV  + METV;
+			
+		dPhiW = dPhiFrom2P( Wb.Px(), Wb.Py(), JetsMV.at(0).Px(),  JetsMV.at(0).Py() );
+		}
+		if (dPhiW<2.5 ) continue;
+		FillHistsFakesInvertTau(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, Channel,muon_index,electron_index,taus_index,category,categoryJet,isData,isTight,isLoose,etaBin);
+		CFCounter[iCut]+= all_weights;
+		if (isLoose) CFCounterL_[iCut]+= all_weights;
+		if (isTight) CFCounterT_[iCut]+= all_weights;
+                iCFCounter[iCut]++;
+		iCut++;
+
+		if (njets>2) continue;
+		FillHistsFakesInvertTau(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, Channel,muon_index,electron_index,taus_index,category,categoryJet,isData,isTight,isLoose,etaBin);
+		CFCounter[iCut]+= all_weights;
+		if (isLoose) CFCounterL_[iCut]+= all_weights;
+		if (isTight) CFCounterT_[iCut]+= all_weights;
+                iCFCounter[iCut]++;
+		iCut++;
+
+		if (met<40) continue;
+		FillHistsFakesInvertTau(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, Channel,muon_index,electron_index,taus_index,category,categoryJet,isData,isTight,isLoose,etaBin);
+		CFCounter[iCut]+= all_weights;
+		if (isLoose) CFCounterL_[iCut]+= all_weights;
+		if (isTight) CFCounterT_[iCut]+= all_weights;
+                iCFCounter[iCut]++;
+		iCut++;
+
+
+	//cout<< " Found the correct one  "<<" cat  "<<category<<" isRealTau "<<isRealTau<<" Jetfake "<<isfakeTauFromJet<<" mufake "<<isfakeTauFromMu<<" elfake "<<isfakeTauFromEl<<" isMuFromTau "<<isMuFromTau<<" promptLepton "<<isMuPromptLepton<<" Gluon "<<isfakeMuFromGluon<< "  HFQ " <<isfakeMuFromHFQ<<" LFQ "<<isfakeMuFromLFQ<<" matchedTauToMuHadronDec "<<matchedTauToMuHadronDec<<"  Gluon Tau  "<<matchedTauToGluon<<" quark Tau LFQ "<<matchedTauToLFQ<<"  HFQ "<<matchedTauToHFQ<< "  MuToHadron "<<isfakeMuFromHadron<<"  Mu from Gluon "  <<genLeptonMatchedGluon  <<" Prompt Mu "<<isMuPromptLepton<<endl;
+
+//cout<<"  isL  "<<isLoose<<"  IsoFlagLoose "<<ta_IsoFlagLoose[0]<<" Tight "<<ta_IsoFlagTight[0]<<"  "<<ta_IsoFlag<<"  "<<CFCounterL_[iCut]<<"  "<<CFCounterT_[iCut]<<endl;
+	
+  }
+
+
+	float Lumi = 35864.;
+
+	if (isData) Lumi = 1.;
+
+		 for(int ci = 0; ci < CutNumb; ci++)
+                        {
+                                // tfile << CutList[ci]<<"\t & \t"
+                                //          << CFCounter[ci]  <<"\t & \t"<< statUnc[ci] <<"\t & \t"<< iCFCounter[ci] << endl;
+                                		CutFlowUnW->SetBinContent(1+ci,0);
+                        if (CutNumb < 2)       { CutFlowUnW->SetBinContent(1+ci,CFCounterL_[ci]);CutFlowUnWTight->SetBinContent(1+ci,CFCounterT_[ci]); CutFlowUnWLoose->SetBinContent(1+ci,CFCounterL_[ci]);}
+                           else  {
+ 					CutFlowUnW->SetBinContent(1+ci,float(CFCounter[ci]) );
+ 					CutFlowUnWLoose->SetBinContent(1+ci,float(CFCounterL_[ci]) );
+ 					CutFlowUnWTight->SetBinContent(1+ci,float(CFCounterT_[ci]) );
+				}
+
+					cout<<" Count "<<ci<<" binContent "<<CutFlowUnWLoose->GetBinContent(1+ci)<<"  CFCounterL_ "<<CFCounterL_[ci]<<" CFCounter "<<CFCounter[ci]<<" iCFCounter "<<iCFCounter[ci]<<" Name "<<CutFlowUnWLoose->GetXaxis()->GetBinLabel(1+ci)<<" entry  "<<CutFlowUnWLoose->GetBinContent(1+ci)<<endl;			
+
+}
+
+
+			cout<<"  end from TH1D "<<endl;
+
+		CutFlowUnW->Write();
+		CutFlowUnWTight->Write();
+		CutFlowUnWLoose->Write();
+/*
+for (int j=0;j<20;++j){
+		CutFlowUnWFakeRateInvert[j]->Write();
+		CutFlowUnWFakeRateJetInvert[j]->Write();
+		}
+*/
+		histW->Write();
+	if (isTT) histTop->Write();
+	if (isTT && systematic == "TopPtUp"  ) histTopSq->Write();
+		file->Write();
+		file->Close();
+		cout<<" Failed events  "<<counter<<endl;
+	}
+////////////////////////////////////////////
+

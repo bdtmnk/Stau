@@ -108,7 +108,7 @@ void analyzer::Loop()
 	string data = "Single";
 	if (string::npos != old.find(data)) isData= true;
 	
-	TFile * filein = new TFile("/nfs/dust/cms/user/alkaloge/TauAnalysis/new/new/CMSSW_7_4_14/src/DesyTauAnalyses/NTupleMaker/test/25ns/FILEIN","read");
+	TFile * filein = new TFile("/nfs/dust/cms/user/alkaloge/TauAnalysis/new/new/CMSSW_7_4_14/src/DesyTauAnalyses/NTupleMaker/test/25ns/adgraphMLM-pythia8_isZTT_B_OS.root","read");
 
 
 	TH1D * histW = (TH1D*)filein->Get("mutau/histWeightsH");

@@ -6,11 +6,11 @@ rm datasets${dir}
 #sources="/nfs/dust/cms/user/rasp/storage/76x_JECv2_MVAMET0p6/"
 
 #sources="/nfs/dust/cms/group/higgs-kit/80x_v1 /nfs/dust/cms/group/higgs-kit/80x_v2 /nfs/dust/cms/group/higgs-kit/80x_SUSY_v1 80x_wMETFilters_v1"
-sources="/nfs/dust/cms/group/higgs-kit/80x_wMETFilters_v1"
-
-source2="/nfs/dust/cms/group/higgs-kit/8020_23SeptReReco"
-source3="/nfs/dust/cms/group/higgs-kit/8020_23SeptReReco_v2"
-source3="/nfs/dust/cms/group/susy-desy/Run2/Stau/Data/25ns/8020_23SeptReReco"
+sources="/nfs/dust/cms/user/alkaloge/8025_Moriond17MC_v1 /nfs/dust/cms/user/rasp/ntuples/Moriond17_MC_v1/"
+source1="/nfs/dust/cms/group/higgs-kit/SingleElectron_Run2016-03Feb2017"
+source2="/nfs/dust/cms/group/higgs-kit/MuonEG_Run2016-03Feb2017/"
+source3="/nfs/dust/cms/user/fcost/store/Moriond17_03Feb2017/"
+#source3="/nfs/dust/cms/group/susy-desy/Run2/Stau/Data/25ns/8020_23SeptReReco"
 
 
 alias ls='ls'
@@ -33,16 +33,10 @@ done
 done
 
 
-ls $source2/SingleMuon*Run2016*/*.root > ${dir}/SingleMuon
-#ls $source3/SingleMuon*Run2016F*/*.root >> ${dir}/SingleMuon
-#ls $source3/SingleMuon*Run2016G*/*.root >> ${dir}/SingleMuon
-#ls $source3/SingleMuon*Run2016H*/*.root >> ${dir}/SingleMuon
+ls $source1/SingleElectron*Run2016*/*.root > ${dir}/SingleElectron
+ls $source3/SingleMuon*Run2016*/*.root > ${dir}/SingleMuon
+ls $source2/MuonEG*/*.root > ${dir}/MuonEG
 
-ls $source3/SingleElectron*Run201*/*.root > ${dir}/SingleElectron
-ls $source3/MuonEG*Run2016*/*.root > ${dir}/MuonEG
-$ls $source2/Tau*Run2016*/*.root > ${dir}/TauTau
-#ls $source/METw*/*.root > ${dir}/MET
-#echo MET > MET
 echo SingleMuon  > SingleMuon
 echo SingleElectron > SingleElectron
 echo MuonEG > MuonEG

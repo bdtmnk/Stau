@@ -1,11 +1,16 @@
 
 dir=$1
 
-rm datasets${dir}
+#rm datasets${dir}
 #sources="/nfs/dust/cms/user/rasp/storage/76x_JECv2_MVAMET0p6/ /nfs/dust/cms/group/susy-desy/Run2/Stau/MC/25ns/76x_JECv2_MVAMET0p6/"
 sources="/nfs/dust/cms/user/rasp/storage/76x_JECv2_MVAMET0p6/"
-
+sources="/nfs/dust/cms/user/bobovnii/NewSignalStau/"
 source2=/nfs/dust/cms/user/rasp/storage/76x_JECv2_MVAMET0p6_DatawFilters/
+
+sources="/nfs/dust/cms/user/bobovnii/NewSignalStau/SplittedSignal2016"
+
+
+
 
 alias ls='ls'
 
@@ -17,19 +22,21 @@ for i in `ls $source/`
 do
 	ls $source/$i/*.root > ${dir}/$i
 	echo $i > $i
-	echo $i >> datasets${dir}
+	echo $i >> SignalNew
 	
+	#echo $i >> datasets${dir}
 
-	echo hadd $i.root ${i}_*.root >> ${dir}/merg.sh
-	echo rm ${i}_* >> ${dir}/merg.sh
-	echo "" >> ${dir}/merg.sh
+
+	#echo hadd $i.root ${i}_*.root >> ${dir}/merg.sh
+	#echo rm ${i}_* >> ${dir}/merg.sh
+	#echo "" >> ${dir}/merg.sh
 done
 done
 
 
-ls $source2/SingleMuon*Run2015D*/*.root > ${dir}/SingleMuon
-ls $source2/SingleEl*Run2015D*/*.root > ${dir}/SingleElectron
-ls $source2/MuonEG*Run2015D*/*.root > ${dir}/MuonEG
+#ls $source2/SingleMuon*Run2015D*/*.root > ${dir}/SingleMuon
+#ls $source2/SingleEl*Run2015D*/*.root > ${dir}/SingleElectron
+#ls $source2/MuonEG*Run2015D*/*.root > ${dir}/MuonEG
 #ls $source/METw*/*.root > ${dir}/MET
 #echo MET > MET
 echo SingleMuon  > SingleMuon
