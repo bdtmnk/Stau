@@ -1,0 +1,18 @@
+#methods="MLP1 MLP2 MLP3 MLPGA MLPBFGS1 MLPBFGS2 MLPBFGS3 MLPBNN1 MLPBNN2 MLPBNN3"
+methods="MLP1 MLP2 MLP3 MLPGA"
+methods="MLP"
+methods="MLPBFGS1 MLPBFGS3 MLPBNN1 MLPBNN3"
+methods="MLP1 MLP2 MLP3 MLPGA MLPBFGS1 MLPBFGS2 MLPBFGS3 MLPBNN1 MLPBNN2 MLPBNN3 MLPBNN4 MLPBNN5 MLPBNN6 MLPBNN7 MLPBNNmoreHiddenLayers BDT SVM"
+methods="MLP4 MLP5 MLP6 MLPGA1 MLPGA2"
+
+methods="MLPBNN4 MLPBNN5 MLPBNN6 MLPBNN7 MLPBNNmoreHiddenLayers SVM MLPGA1 MLPGA2 MLP1 MLP2"
+methods="MLP1 MLP2 MLP3 MLP4 MLP5 MLP6 MLPBFGS1 MLPBNN1"
+for meth in $methods
+do
+
+cat bss > job${meth}.sh
+echo root -l -b -q "'"'myTMVA.C("'${meth}'","'TMVA_Stau200LSP1_${meth}.root'")'"'" ">" logTMVA_Stau200LSP1_${meth} >> job${meth}.sh
+qsub job${meth}.sh
+
+done
+
