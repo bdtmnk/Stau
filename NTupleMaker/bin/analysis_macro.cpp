@@ -135,7 +135,7 @@ const float PionMass = 0.13957;
 int main(int argc, char * argv[]) {
   
   if (argc<2) {
-    std::cout << "Usage of the program : Hto4TausAnalysis [file_list]" << std::endl;
+    std::cout << "Usage of the program : analysis_macro [config] [file_list]" << std::endl;
     std::cout << "file_list : file list of RooT files to be processed. To run on Data the string has to include the string \"Data\"." << std::endl;
     exit(1);
   }
@@ -844,6 +844,9 @@ int main(int argc, char * argv[]) {
      vector<bool> passMu10; passMu10.clear();
      vector<bool> passMu5;  passMu5.clear();
      vector<bool> passMu45; passMu45.clear();
+
+     // **********************
+
      for(UInt_t i=0;i<muon_count;i++){
        bool muonID = muon_isMedium[i]; // MC 
        if (isData) {
@@ -856,6 +859,9 @@ int main(int argc, char * argv[]) {
        if(muon_pt[i]<ptMuonLowCut) continue;
        if(fabs(muon_eta[i])>etaMuonLowCut) continue;
        //      cout << "muon pt = " << muon_pt[i] << endl;
+
+       // ******************************
+
        rand.SetSeed((int)((muon_eta[i]+2.41)*100000));
        double rannum  = rand.Rndm();
        // old staff for trigger efficiency studies
@@ -954,6 +960,9 @@ int main(int argc, char * argv[]) {
 
      }
 
+     // END OF OBSOLET CODE....
+
+
      // *************************
      // selection of dimuon pairs 
      // *************************
@@ -1029,7 +1038,7 @@ int main(int argc, char * argv[]) {
 	   isTriggerMatched = (mu1PtHigh&&mu2PtLow) || (mu1PtLow&&mu2PtHigh);
 	 }
 	 if (!isTriggerMatched) continue;
-	 if (ptSum>maxPtSum) { // choose the mair with maximum Sum(pT)
+	 if (ptSum>maxPtSum) { // choose the pair with maximum Sum(pT)
 	   maxPtSum = ptSum;
 	   if (muon_pt[index1]>muon_pt[index2]) {
 	     iLeading = index1;
