@@ -1,0 +1,6 @@
+INFO: (function: evaluate) CachingNLL.cc: 1020 -- underflow (pdf evaluates to <=0) of constraint pdf dystatMediumSumMT_NJEQ0_2016_Pdf, value = 0 
+INFO: (function: evaluate) CachingNLL.cc: 1020 -- underflow (pdf evaluates to <=0) of constraint pdf dystatMediumSumMT_NJEQ0_lowMT2_2016_Pdf, value = 0 
+INFO: (function: evaluate) CachingNLL.cc: 1020 -- underflow (pdf evaluates to <=0) of constraint pdf topstatHighSumMT_NJEQ0_lowMT2_2017_Pdf, value = 0 
+INFO: (function: evaluate) CachingNLL.cc: 1020 -- underflow (pdf evaluates to <=0) of constraint pdf topstatHighSumMT_NJEQ0_lowMT2_2017_Pdf, value = 0 
+INFO: (function: evaluate) CachingNLL.cc: 1020 -- underflow (pdf evaluates to <=0) of constraint pdf dystatMediumSumMT_NJEQ0_2016_Pdf, value = 0 
+INFO: (function: evaluate) CachingNLL.cc: 1020 -- underflow (pdf evaluates to <=0) of constraint pdf dystatMediumSumMT_NJEQ0_lowMT2_2016_Pdf, value = 0 

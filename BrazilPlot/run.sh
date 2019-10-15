@@ -1,0 +1,7 @@
+python BrazillianPlots_Full_TestSmooth.py CombinedLeftFinalUpdate left 1
+python BrazillianPlots_Full_TestSmooth.py CombinedLeftFinalUpdate left 10
+python BrazillianPlots_Full_TestSmooth.py CombinedLeftFinalUpdate left 20
+
+python BrazillianPlots_Full_TestSmooth.py CombinedDegenFinalUpdate degenerate 1
+python BrazillianPlots_Full_TestSmooth.py CombinedDegenFinalUpdate degenerate 10
+python BrazillianPlots_Full_TestSmooth.py CombinedDegenFinalUpdate degenerate 20

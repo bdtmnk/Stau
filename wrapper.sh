@@ -1,22 +1,15 @@
 rm points_${1}_list
+dir="/nfs/dust/cms/user/bobovnii/new/CMSSW_8_0_20/src/DesyTauAnalyses/NTupleMaker/test/Processing/mutauMVAtest2/"
 
 
-if [[ $1 == "stau" ]] ; then
 
-ls cards_mt/$1*_LSP* | cut -d "/" -f2 | cut -d "_" -f2 | sort -u | awk -F "$1" '{print $2}' | sort -V  > mass_$1
-fi
-
-if [[ $1 == "C1C1" ]] || [[ $1 == "C1N2" ]]; then
-
-ls cards_mt/$1*_LSP* | cut -d "/" -f2 | cut -d "_" -f2 | sort -u | sort -V  > mass_$1
-fi
-
+ls $dir/cards_mt/$1*_LSP* | awk -F"_mt/" '{print $2}' |  cut -d "_" -f2 | sort -u  | sort -V  > mass_$1
 
 while read line
 do
 
 
-ls cards_mt/$1*${line}_LSP*_* | cut -d "/" -f2 | cut -d "_" -f3 | sort -u | awk -F "LSP" '{print $2}' | sort -V >   points_${1}_list
+ls $dir/cards_mt/$1*${line}_LSP*_* | awk -F"_mt/" '{print $2}' | cut -d "_" -f3 | sort -u | awk -F "LSP" '{print $2}' | sort -V >   points_${1}_list
 
 while read lsp
 
