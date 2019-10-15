@@ -1,0 +1,48 @@
+hadd -f DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8.root DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_*.root
+hadd -f DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_ext1.root DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_ext1_*.root
+hadd -f DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8.root DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8_*.root
+hadd -f ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8.root ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8_*.root
+hadd -f ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8.root ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8_*.root
+hadd -f ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8.root ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_*.root
+hadd -f ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8.root ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_*.root
+hadd -f TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8.root TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8_*.root
+hadd -f TTToHadronic_TuneCP5_13TeV-powheg-pythia8.root TTToHadronic_TuneCP5_13TeV-powheg-pythia8_*.root
+hadd -f TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8.root TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_*.root
+hadd -f WW_TuneCP5_13TeV-pythia8.root WW_TuneCP5_13TeV-pythia8_*.root
+hadd -f WZ_TuneCP5_13TeV-pythia8.root WZ_TuneCP5_13TeV-pythia8_*.root
+hadd -f ZZ_TuneCP5_13TeV-pythia8.root ZZ_TuneCP5_13TeV-pythia8_*.root
+hadd -f W1JetsToLNu_TuneCP5_13TeV-12Apr2018.root W1JetsToLNu_TuneCP5_13TeV-12Apr2018_*.root
+hadd -f W2JetsToLNu_TuneCP5_13TeV-12Apr2018.root W2JetsToLNu_TuneCP5_13TeV-12Apr2018_*.root
+hadd -f W3JetsToLNu_TuneCP5_13TeV-12Apr2018.root W3JetsToLNu_TuneCP5_13TeV-12Apr2018_*.root
+hadd -f W4JetsToLNu_TuneCP5_13TeV-12Apr2018.root W4JetsToLNu_TuneCP5_13TeV-12Apr2018_*.root
+hadd -f WJetsToLNu_TuneCP5_13TeV-12Apr2018.root WJetsToLNu_TuneCP5_13TeV-12Apr2018_*.root
+hadd -f WJetsToLNu_TuneCP5_13TeV-12Apr2018-ext1.root WJetsToLNu_TuneCP5_13TeV-12Apr2018-ext1_*.root
+hadd -f QCD_Pt-1000toInf_MuEnrichedPt5_TuneCP5_13TeV_pythia8_RunIIFall17MiniAOD-94X_mc2017_realistic_v10-v1_MINIAODSIM.root QCD_Pt-1000toInf_MuEnrichedPt5_TuneCP5_13TeV_pythia8_RunIIFall17MiniAOD-94X_mc2017_realistic_v10-v1_MINIAODSIM_*.root
+hadd -f QCD_Pt-120to170_MuEnrichedPt5_TuneCP5_13TeV_pythia8_RunIIFall17MiniAOD-94X_mc2017_realistic_v10-v1_MINIAODSIM.root QCD_Pt-120to170_MuEnrichedPt5_TuneCP5_13TeV_pythia8_RunIIFall17MiniAOD-94X_mc2017_realistic_v10-v1_MINIAODSIM_*.root
+hadd -f QCD_Pt-170to300_MuEnrichedPt5_TuneCP5_13TeV_pythia8_RunIIFall17MiniAOD-94X_mc2017_realistic_v10-v1_MINIAODSIM.root QCD_Pt-170to300_MuEnrichedPt5_TuneCP5_13TeV_pythia8_RunIIFall17MiniAOD-94X_mc2017_realistic_v10-v1_MINIAODSIM_*.root
+hadd -f QCD_Pt-300to470_MuEnrichedPt5_TuneCP5_13TeV_pythia8_RunIIFall17MiniAOD-94X_mc2017_realistic_v10-v1_MINIAODSIM.root QCD_Pt-300to470_MuEnrichedPt5_TuneCP5_13TeV_pythia8_RunIIFall17MiniAOD-94X_mc2017_realistic_v10-v1_MINIAODSIM_*.root
+hadd -f QCD_Pt-470to600_MuEnrichedPt5_TuneCP5_13TeV_pythia8_RunIIFall17MiniAOD-94X_mc2017_realistic_v10-v1_MINIAODSIM.root QCD_Pt-470to600_MuEnrichedPt5_TuneCP5_13TeV_pythia8_RunIIFall17MiniAOD-94X_mc2017_realistic_v10-v1_MINIAODSIM_*.root
+hadd -f QCD_Pt-50to80_MuEnrichedPt5_TuneCP5_13TeV_pythia8_RunIIFall17MiniAOD-94X_mc2017_realistic_v10-v1_MINIAODSIM.root QCD_Pt-50to80_MuEnrichedPt5_TuneCP5_13TeV_pythia8_RunIIFall17MiniAOD-94X_mc2017_realistic_v10-v1_MINIAODSIM_*.root
+hadd -f QCD_Pt-600to800_MuEnrichedPt5_TuneCP5_13TeV_pythia8_RunIIFall17MiniAOD-94X_mc2017_realistic_v10-v1_MINIAODSIM.root QCD_Pt-600to800_MuEnrichedPt5_TuneCP5_13TeV_pythia8_RunIIFall17MiniAOD-94X_mc2017_realistic_v10-v1_MINIAODSIM_*.root
+
+hadd -f DY1JetsToLL_M-50_13TeV-12Apr2018.root DY1JetsToLL_M-50_13TeV-12Apr2018_*root
+hadd -f DY2JetsToLL_M-50_13TeV-12Apr2018.root DY2JetsToLL_M-50_13TeV-12Apr2018_*root
+hadd -f DY3JetsToLL_M-50_13TeV-12Apr2018.root DY3JetsToLL_M-50_13TeV-12Apr2018_*root
+hadd -f DY4JetsToLL_M-50_13TeV-12Apr2018.root DY4JetsToLL_M-50_13TeV-12Apr2018_*root
+hadd -f DYJetsToLL_M-50_13TeV-12Apr2018.root DYJetsToLL_M-50_13TeV-12Apr2018_*.root
+
+hadd -f DYJetsToLL_M-5to50_13TeV-12Apr2018.root DYJetsToLL_M-5to50_13TeV-12Apr2018_*.root
+hadd GC0b8e56abfc78.tar.gz.root GC0b8e56abfc78.tar.gz_*.root
+
+hadd GCacc60808706b.tar.gz.root GCacc60808706b.tar.gz_*.root
+
+hadd SingleMuon_Run2017B-31Mar2018-v1.root SingleMuon_Run2017B-31Mar2018-v1_*.root
+
+hadd SingleMuon_Run2017C-31Mar2018-v1.root SingleMuon_Run2017C-31Mar2018-v1_*.root
+
+hadd SingleMuon_Run2017D-31Mar2018-v1.root SingleMuon_Run2017D-31Mar2018-v1_*.root
+
+hadd SingleMuon_Run2017E-31Mar2018-v1.root SingleMuon_Run2017E-31Mar2018-v1_*.root
+
+hadd SingleMuon_Run2017F-31Mar2018-v1.root SingleMuon_Run2017F-31Mar2018-v1_*.root
+
