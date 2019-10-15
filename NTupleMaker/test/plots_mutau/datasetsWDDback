@@ -1,0 +1,43 @@
+ SingleMuon_RunBCDEF 1. 
+ stau-stau_left_90_LSP1 0.47069
+ stau-stau_left_100_LSP1 0.27079
+ stau-stau_left_100_LSP50 0.27079
+ stau-stau_left_200_LSP1 0.02181
+ ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8 880.95
+ ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8 136.02
+ ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8 35.6
+ ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8 35.6
+ TTTo2L2Nu_TuneCP5_PSweights_13TeV-powheg-pythia8 364.4,
+ TTToHadronic_TuneCP5_PSweights_13TeV-powheg-pythia8 380.1
+ TTToSemiLeptonic_TuneCP5_PSweights_13TeV-powheg-pythia8 87.31
+ WW_TuneCP5_13TeV-pythia8 63.21
+ WZ_TuneCP5_13TeV-pythia8 47.13
+ ZZ_TuneCP5_13TeV-pythia8 16.523
+ W1JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8 1.221 9644.5
+ W2JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8 1.221 3144.5
+ W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8 1.221 954.8
+ W4JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8 1.221 485.6
+ WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8_0Parton 61526.7 
+ WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8_1Parton 61526.7 
+ WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8_2Parton 61526.7 
+ WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8_3Parton 61526.7 
+ WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8_4Parton 61526.7 
+ DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_0Parton 5765.4 0.9611
+ DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_1Parton 5765.4 0.9611
+ DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_2Parton 5765.4 0.9611
+ DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_3Parton 5765.4 0.9611
+ DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_4Parton 5765.4 0.9611
+ DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8 1.1637 1012.5 0.9611
+ DY2JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8 1.1637 332.8 0.9611
+ DY3JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8 1.1637 101.8 0.9611
+ DY4JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8 1.1637 54.8 0.9611
+ Fakes 1.
+ DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_isZTT 1.1637 1012.5 0.9611
+ DY2JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_isZTT 1.1637 332.8 0.9611
+ DY3JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_isZTT 1.1637 101.8 0.9611
+ DY4JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_isZTT 1.1637 54.8 0.9611
+ DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_isZTT_0Parton 5765.4 0.9611
+ DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_isZTT_1Parton 5765.4 0.9611
+ DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_isZTT_2Parton 5765.4 0.9611
+ DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_isZTT_3Parton 5765.4 0.9611
+ DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_isZTT_4Parton 5765.4 0.9611

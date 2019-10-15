@@ -24,16 +24,22 @@
 
 
 
-cd /nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_9_4_0_patch1/src/DesyTauAnalyses/NTupleMaker/test;eval `scramv1 runtime -sh` ;
+cd /nfs/dust/cms/user/alkaloge/TauAnalysis/new/new/StauAnalysis/New8025/CMSSW_9_4_0_patch1/src/DesyTauAnalyses/NTupleMaker/test;eval `scramv1 runtime -sh` ;
 
 
-dir="/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_9_4_0_patch1/src/DesyTauAnalyses/NTupleMaker/test"
+dir="/nfs/dust/cms/user/alkaloge/TauAnalysis/new/new/StauAnalysis/New8025/CMSSW_9_4_0_patch1/src/DesyTauAnalyses/NTupleMaker/test"
 
 channel=$2
 channel2=$2
-dirhere=$2
 btag="0.8484"
 
+
+#systematics="Nominal JetEnUp JetEnDown UnclEnUp UnclEnDown TopPt ZPtUp  ZPtDown TauEnUp TauEnDown ElEnUp ElEnDown MuEnUp MuEnDown"
+#systematics="Nominal"
+#systematics="TopPtUp TopPtDown"
+#systematics="Nominal  ZPtUp  ZPtDown"
+#systematics="Nominal JetEnUp JetEnDown UnclEnUp UnclEnDown TopPt ZPtUp  ZPtDown TauEnUp TauEnDown ElEnUp ElEnDown MuEnUp MuEnDown"
+#systematics="Nominal JetEnUp JetEnDown"
 
 
 systematics="$3"
@@ -41,7 +47,6 @@ systematics="$3"
 if [[  $3 == "list" ||  $3 == "all" ]];then
 systematics="Nominal TopPtUp TopPtDown ZPtUp ZPtDown JetEnUp JetEnDown TauEnUp TauEnDown ElEnUp ElEnDown MuEnUp MuEnDown UnclEnUp UnclEnDown genMET ScalesDown ScalesUp PDFUp PDFDown BTagUp BTagDown METRecoilUp METRecoilDown"
 systematics="Nominal JetEnUp JetEnDown TopPtUp TopPtDown ZPtUp ZPtDown TauEnUp TauEnDown ElEnUp ElEnDown MuEnUp MuEnDown UnclEnUp UnclEnDown ScalesDown ScalesUp PDFUp PDFDown BTagUp BTagDown METRecoilUp METRecoilDown TFRJetEnUp TFRJetEnDown TFRMuEnUp TFRMuEnDown TFRTauEnUp TFRTauEnDown"
-#systematics="Nominal JetEnUp JetEnDown TopPtUp TopPtDown ZPtUp ZPtDown TauEnUp TauEnDown ElEnUp ElEnDown MuEnUp MuEnDown UnclEnUp UnclEnDown ScalesDown ScalesUp PDFUp PDFDown BTagUp BTagDown METRecoilUp METRecoilDown"
 #systematics="Nominal JetEnUp JetEnDown TopPtUp TopPtDown ZPtUp ZPtDown TauEnUp TauEnDown ElEnUp ElEnDown MuEnUp MuEnDown UnclEnUp UnclEnDown genMET ScalesDown ScalesUp PDFUp PDFDown"
 #systematics="JetEnUp JetEnDown UnclEnUp UnclEnDown"
 fi
@@ -89,7 +94,7 @@ then
 	channel2="muel"
 fi
 
-if [[ $2 == "Wtemplate"   ||   $2 == *"fakesmu"*  || $2 == "Wtemplate2" || $2 == "mutauInvertedTauIso"  || $2 = "WJetsCRMuTau"  || $2 = "mutauByBin" || $2 = "WJetsCRMuTauVLoose" || $2 == "mutauQCD"  ]]
+if [[ $2 == "Wtemplate"   ||   $2 == "fakesmu"  || $2 == "Wtemplate2" || $2 == "mutauInvertedTauIso"  || $2 = "WJetsCRMuTau" ]]
 then
 	channel2="mutau"
 fi
@@ -99,13 +104,7 @@ then
 	channel2="mutau"
 fi
 
-if [[ $2 == *"Stop"* ]]
-then
-	channel2="mutauStop"
-	dirhere="mutau"
-fi
-
-if [[ $2 == "WJetsCRElTau" || $2 == "eltauQCD" ]]
+if [[ $2 == "WJetsCRElTau" ]]
 then
 	channel2="eltau"
 fi
@@ -132,7 +131,7 @@ fileB=`echo $file | awk -F "_B_OS" '{print $1}'`
 	
 mkdir dir_${file}_${channel}_$syst
 cd dir_${file}_${channel}_$syst
-#echo ==============================================
+echo ==============================================
 
 
 if [[ $file == *"Single"* || $file == *"MuonEG"* ]] && [[ $syst != "Nominal" ]]; then
@@ -171,6 +170,19 @@ lsp=0
 fi
 
 
+cp $dir/analyzer_h .
+cp $dir/analyzer${channel}_C .
+
+
+#cp $dir/analyzer_InvMET_C .
+
+sed -i 's/CHIMASSS/'$lsp'/g' analyzer*C
+sed -i 's/CHANNELHERE/'$channel2'/g' analyzer*
+
+sed -i 's/SYSTEMATICHERE/'$syst'/g' analyzer*
+
+cp $dir/runme.C .
+cp $dir/plots.h .
 
 
 
@@ -178,42 +190,25 @@ export fileB=${fileB}_${syst}
 #fi
 
 
-######### B region non inverted OS
-echo $line , $file, $fileB, $channel, $channel2
+echo $line , $fileB
 
 ######### signal
 
-#if [[ $file == *"B_OS"*  ]] && [[ $file == *"stau"*  || $file == *"C1"*  || $file == *"Chi"* ]];then
-if [[ $file == *"B_OS"*  ]]  &&  [[ ! -f $dir/plots_$channel/${fileB}_B.root ]] ; then
-	#&& [[ $file == *"stau"*  || $file == *"C1"*  || $file == *"Chi"* ]];then
+if [[ $file == *"B_OS"*  ]] && [[ $file == *"stau"*  || $file == *"C1"*  || $file == *"Chi"* ]];then
 
+cp analyzer_h analyzer.h
+cp analyzer${channel}_C analyzer.C
 
 #echo Signal file here .....
 
+
+if [[ ! -f $dir/plots_$channel/${fileB}_B.root ]] ; then
 echo the signal filein : $file , the fileout : ${fileB}_B.root
-
-cp $dir/analyzer_h analyzer.h
-cp $dir/analyzer${channel}_C analyzer.C
-
-#cp $dir/analyzer_InvMET_C .
-
-sed -i 's/CHIMASSS/'$lsp'/g' analyzer*C
-sed -i 's/CHANNELHERE/'$channel2'/g' analyzer*
-sed -i 's/DIRHERE/'$dirhere'/g' analyzer*
-
-sed -i 's/SYSTEMATICHERE/'$syst'/g' analyzer*
-
-cp $dir/runme.C .
-cp $dir/plots.h .
-
-#cp analyzer_h analyzer.h
-#cp analyzer${channel}_C analyzer.C
 
 sed -i 's/FILEIN/'$file'/g' analyzer*
 sed -i 's/LEPTONHERE/false/g' analyzer.C
 sed -i 's/SIGNHERE/OS/g' analyzer.C
 sed -i 's/CHANNELHERE/'$channel2'/g' analyzer*
-sed -i 's/DIRHERE/'$dirhere'/g' analyzer*
 sed -i 's/BTAGCUT/0.8484/g' analyzer*
 
 
@@ -225,22 +220,55 @@ root -l -q -b runme.C
 mv plots.root $dir/plots_$channel/${fileB}_B.root
 fi
 
+fi
+
+
+
+if [[ $file == *"B_OS"* ]];then
+
+cp analyzer_h analyzer.h
+
+
+######### B region non inverted OS
+
+#if [[ ! -f $dir/plots_$channel/${fileB}_${syst}_B.root  ]] && [[ ! -f $dir/plots_$channel/${fileB}_B.root ]]  &&  [[ $file != *"stau"* && $file != *"C1"* ]]; then
+if [[ ! -f $dir/plots_$channel/${fileB}_B.root  ]]   &&  [[ $file != *"stau"* && $file != *"C1"* &&  $file != *"Chi"* ]]; then
+
+
+cp analyzer_h analyzer.h
+cp analyzer${channel}_C analyzer.C
+
+echo the filein : $file , the fileout : ${fileB}_B.root NonInvertedLepton OS
+sed -i 's/FILEIN/'$file'/g' analyzer*
+sed -i 's/LEPTONHERE/false/g' analyzer.C
+sed -i 's/SIGNHERE/OS/g' analyzer.C
+sed -i 's/CHANNELHERE/'$channel2'/g' analyzer*
+sed -i 's/BTAGCUT/'$btag'/g' analyzer*
+
+
+sed -i 's/SYSTEMATICHERE/'$syst'/g' analyzer*
+
+
+rm plots.root
+root -l -q -b runme.C 
+mv plots.root $dir/plots_$channel/${fileB}_B.root
+
+fi
 
 
 ######### A region non inverted SS
 
-if [[ ! -f $dir/plots_$channel/${fileB}_A.root ]] && [[ $file != *"stau"* && $file != *"C1"*  &&  $file != *"Chi"* && $2 != "Ttemplate" && $2 != "mumu" && $2 != "WJETSMU"    &&  $2 != *"fakesmu"*  &&  $2 != *"WJetsCR"*  &&  $2 != *"mutau"*   &&  $2 != *"eltau"*  ]] ;then
+if [[ ! -f $dir/plots_$channel/${fileB}_A.root ]] && [[ $file != *"stau"* && $file != *"C1"*  &&  $file != *"Chi"* ]] && [[ $2 != "Ttemplate" ]] && [[ $2 != "mumu" ]] && [[ $2 != "WJETSMU" ]]   && [[ $2 != "fakesmu" ]] && [[ $2 != *"WJetsCR"* ]] ;then
 #if [[ ! -f $dir/plots_$channel/${fileB}_A.root ]] ; then
 #if [[ ! -f $dir/plots_$channel/${fileB}_A.root ]]  &&  [[ $2 != "Ttemplate" ]] && [[ $2 != "mumu" ]]  && [[ $file == *"stau"*  || $file == *"C1"* ]]; then
-cp $dir/analyzer_h analyzer.h
-cp $dir/analyzer${channel}_C analyzer.C
+cp analyzer_h analyzer.h
+cp analyzer${channel}_C analyzer.C
 
 echo the filein : $file , the fileout : ${fileB}_A.root , NonInvertedLepton SS
 sed -i 's/FILEIN/'$file'/g' analyzer*
 sed -i 's/LEPTONHERE/false/g' analyzer.C
 sed -i 's/SIGNHERE/SS/g' analyzer.C
 sed -i 's/CHANNELHERE/'$channel2'/g' analyzer*
-sed -i 's/DIRHERE/'$dirhere'/g' analyzer*
 sed -i 's/BTAGCUT/'$btag'/g' analyzer*
 
 
@@ -260,9 +288,9 @@ fi
 
 
 ######## D region
-if [[ ! -f $dir/plots_$channel/${fileB}_D.root ]] && [[ $file != *"stau"* && $file != *"C1"*  &&  $file != *"Chi"* && $2 != "Ttemplate" && $2 != "mumu" && $2 != "WJETSMU"    &&  $2 != *"fakesmu"*  &&  $2 != *"WJetsCR"*  &&  $2 != *"mutau"*   &&  $2 != *"eltau"* ]] ;then
-cp $dir/analyzer${channel}_C analyzer.C
-cp $dir/analyzer_h analyzer.h
+if [[ ! -f $dir/plots_$channel/${fileB}_D.root ]] &&  [[ $file != *"stau"*  && $file != *"C1"* && $file != *"Chi"* ]] && [[ $2 != "Ttemplate" ]] && [[ $2 != "mumu" ]] && [[ $2 != "WJETSMU" ]]  && [[ $2 != "fakesmu" ]] && [[ $2 != *"WJetsCR"* ]] ; then
+cp analyzer${channel}_C analyzer.C
+cp analyzer_h analyzer.h
 
 
 echo the filein : $file , the fileout : ${fileB}_D.root InvertedLepton SS
@@ -271,7 +299,6 @@ sed -i 's/FILEIN/'$file'/g' analyzer*
 sed -i 's/LEPTONHERE/true/g' analyzer.C
 sed -i 's/SIGNHERE/SS/g' analyzer.C
 sed -i 's/CHANNELHERE/'$channel2'/g' analyzer*
-sed -i 's/DIRHERE/'$dirhere'/g' analyzer*
 sed -i 's/BTAGCUT/'$btag'/g' analyzer*
 
 
@@ -284,9 +311,9 @@ fi
 
 
 ####### C region
-if [[ ! -f $dir/plots_$channel/${fileB}_C.root ]] && [[ $file != *"stau"* && $file != *"C1"*  &&  $file != *"Chi"* && $2 != "Ttemplate" && $2 != "mumu" && $2 != "WJETSMU"    &&  $2 != *"fakesmu"*  &&  $2 != *"WJetsCR"*  &&  $2 != *"mutau"*   &&  $2 != *"eltau"* ]] ;then
-cp $dir/analyzer${channel}_C analyzer.C
-cp $dir/analyzer_h analyzer.h
+if [[ ! -f $dir/plots_$channel/${fileB}_C.root ]] &&  [[ $file != *"stau"* && $file != *"C1"*  &&  $file != *"Chi"* ]] && [[ $2 != "Ttemplate" ]] && [[ $2 != "mumu" ]] && [[ $2 != "WJETSMU" ]]  && [[ $2 != "fakesmu" ]] && [[ $2 != *"WJetsCR"* ]] ;then
+cp analyzer${channel}_C analyzer.C
+cp analyzer_h analyzer.h
 
 
 
@@ -295,7 +322,6 @@ sed -i 's/FILEIN/'$file'/g' analyzer*
 sed -i 's/LEPTONHERE/true/g' analyzer.C
 sed -i 's/SIGNHERE/OS/g' analyzer.C
 sed -i 's/CHANNELHERE/'$channel2'/g' analyzer*
-sed -i 's/DIRHERE/'$dirhere'/g' analyzer*
 sed -i 's/BTAGCUT/'$btag'/g' analyzer*
 
 
@@ -315,5 +341,6 @@ cd ${dir}
 
 rm -fr dir_${file}_${channel}_$syst
 
+fi
 done
 done<$1

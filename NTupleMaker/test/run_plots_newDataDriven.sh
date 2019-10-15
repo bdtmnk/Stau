@@ -4,10 +4,10 @@
 #$ -S /bin/sh
 #
 #(the cpu time for this job)
-#$ -l h_cpu=1:29:00
-#
+#$ -l h_cpu=20:29:00
+#$ -l h_rt=20:29:00
 #(the maximum memory usage of this job)
-#$ -l h_vmem=1500M
+#$ -l h_vmem=8000M
 #
 #(use hh site)
 #$ -l site=hh
@@ -40,14 +40,14 @@ systematics="$3"
 
 if [[  $3 == "list" ||  $3 == "all" ]];then
 systematics="Nominal TopPtUp TopPtDown ZPtUp ZPtDown JetEnUp JetEnDown TauEnUp TauEnDown ElEnUp ElEnDown MuEnUp MuEnDown UnclEnUp UnclEnDown genMET ScalesDown ScalesUp PDFUp PDFDown BTagUp BTagDown METRecoilUp METRecoilDown"
-systematics="Nominal JetEnUp JetEnDown TopPtUp TopPtDown ZPtUp ZPtDown TauEnUp TauEnDown ElEnUp ElEnDown MuEnUp MuEnDown UnclEnUp UnclEnDown ScalesDown ScalesUp PDFUp PDFDown BTagUp BTagDown METRecoilUp METRecoilDown TFRJetEnUp TFRJetEnDown TFRMuEnUp TFRMuEnDown TFRTauEnUp TFRTauEnDown"
-#systematics="Nominal JetEnUp JetEnDown TopPtUp TopPtDown ZPtUp ZPtDown TauEnUp TauEnDown ElEnUp ElEnDown MuEnUp MuEnDown UnclEnUp UnclEnDown ScalesDown ScalesUp PDFUp PDFDown BTagUp BTagDown METRecoilUp METRecoilDown"
+#systematics="Nominal JetEnUp JetEnDown TopPtUp TopPtDown ZPtUp ZPtDown TauEnUp TauEnDown ElEnUp ElEnDown MuEnUp MuEnDown UnclEnUp UnclEnDown ScalesDown ScalesUp PDFUp PDFDown BTagUp BTagDown METRecoilUp METRecoilDown TFRJetEnUp TFRJetEnDown TFRMuEnUp TFRMuEnDown TFRTauEnUp TFRTauEnDown"
+systematics="Nominal JetEnUp JetEnDown TopPtUp TopPtDown ZPtUp ZPtDown TauEnUp TauEnDown ElEnUp ElEnDown MuEnUp MuEnDown UnclEnUp UnclEnDown ScalesDown ScalesUp PDFUp PDFDown BTagUp BTagDown METRecoilUp METRecoilDown"
 #systematics="Nominal JetEnUp JetEnDown TopPtUp TopPtDown ZPtUp ZPtDown TauEnUp TauEnDown ElEnUp ElEnDown MuEnUp MuEnDown UnclEnUp UnclEnDown genMET ScalesDown ScalesUp PDFUp PDFDown"
 #systematics="JetEnUp JetEnDown UnclEnUp UnclEnDown"
 fi
 
-if [[  $3 == "listme" ]];then
-systematics="Nominal JetEnUp JetEnDown TopPtUp TopPtDown ZPtUp ZPtDown ElEnUp ElEnDown MuEnUp MuEnDown UnclEnUp UnclEnDown ScalesDown ScalesUp PDFUp PDFDown BTagUp BTagDown METRecoilUp METRecoilDown"
+if [[  $3 == "listData" ]];then
+systematics="Nominal JetEnUp JetEnDown ElEnUp ElEnDown MuEnUp MuEnDown UnclEnUp UnclEnDown BTagUp BTagDown"
 fi
 
 if [[  $3 == "listSignal" ]];then
@@ -128,7 +128,7 @@ do
 unset file
 file=`echo $line | cut -d '/' -f2`
 unset fileB
-fileB=`echo $file | awk -F "_B_OS" '{print $1}'`
+fileB=`echo $file | awk -F ".roo" '{print $1}'`
 	
 mkdir dir_${file}_${channel}_$syst
 cd dir_${file}_${channel}_$syst
@@ -159,6 +159,7 @@ fi
 #isSystTopZPt=1
 
 #fi
+export fileB=${fileB}_${syst}
 
 
 if [[ $isDataSyst == 0 ]] ; then
@@ -174,34 +175,39 @@ fi
 
 
 
-export fileB=${fileB}_${syst}
 #fi
 
 
-######### B region non inverted OS
+######### B region non normal Tau
 echo $line , $file, $fileB, $channel, $channel2
 
 ######### signal
 
 #if [[ $file == *"B_OS"*  ]] && [[ $file == *"stau"*  || $file == *"C1"*  || $file == *"Chi"* ]];then
-if [[ $file == *"B_OS"*  ]]  &&  [[ ! -f $dir/plots_$channel/${fileB}_B.root ]] ; then
+if [[ $file == *".root"*  ]] || [[ $file == *"stau"* ]] &&  [[ ! -f $dir/plots_$channel/${fileB}_B.root ]] ; then
+#if true ; then
+
 	#&& [[ $file == *"stau"*  || $file == *"C1"*  || $file == *"Chi"* ]];then
 
 
 #echo Signal file here .....
 
-echo the signal filein : $file , the fileout : ${fileB}_B.root
+echo the signal filein : $file , the fileout : ${fileB}_B.root normal Tau
 
 cp $dir/analyzer_h analyzer.h
 cp $dir/analyzer${channel}_C analyzer.C
+#cp $dir/analyzerWJetsCRMuTau_C analyzer.C
 
 #cp $dir/analyzer_InvMET_C .
 
-sed -i 's/CHIMASSS/'$lsp'/g' analyzer*C
-sed -i 's/CHANNELHERE/'$channel2'/g' analyzer*
-sed -i 's/DIRHERE/'$dirhere'/g' analyzer*
+sed -i 's/CHIMASSS/'$lsp'/g' analyzer*.*C
+sed -i 's/CHANNELHERE/'$channel2'/g' analyzer*.*
+sed -i 's/DIRHERE/'$dirhere'/g' analyzer*.*
 
-sed -i 's/SYSTEMATICHERE/'$syst'/g' analyzer*
+sed -i 's/SYSTEMATICHERE/'$syst'/g' analyzer*.*
+
+sed -i 's/REGION/SR/g' analyzer*.*
+
 
 cp $dir/runme.C .
 cp $dir/plots.h .
@@ -209,15 +215,15 @@ cp $dir/plots.h .
 #cp analyzer_h analyzer.h
 #cp analyzer${channel}_C analyzer.C
 
-sed -i 's/FILEIN/'$file'/g' analyzer*
+sed -i 's/FILEIN/'$file'/g' analyzer*.*
 sed -i 's/LEPTONHERE/false/g' analyzer.C
 sed -i 's/SIGNHERE/OS/g' analyzer.C
-sed -i 's/CHANNELHERE/'$channel2'/g' analyzer*
-sed -i 's/DIRHERE/'$dirhere'/g' analyzer*
-sed -i 's/BTAGCUT/0.8484/g' analyzer*
+sed -i 's/CHANNELHERE/'$channel2'/g' analyzer*.*
+sed -i 's/DIRHERE/'$dirhere'/g' analyzer*.*
+sed -i 's/BTAGCUT/0.8484/g' analyzer*.*
 
 
-sed -i 's/SYSTEMATICHERE/'$syst'/g' analyzer*
+sed -i 's/SYSTEMATICHERE/'$syst'/g' analyzer*.*
 
 rm plots.root
 root -l -q -b runme.C 
@@ -225,26 +231,39 @@ root -l -q -b runme.C
 mv plots.root $dir/plots_$channel/${fileB}_B.root
 fi
 
+fi
 
 
-######### A region non inverted SS
+######### A region loose no tight Tau
 
-if [[ ! -f $dir/plots_$channel/${fileB}_A.root ]] && [[ $file != *"stau"* && $file != *"C1"*  &&  $file != *"Chi"* && $2 != "Ttemplate" && $2 != "mumu" && $2 != "WJETSMU"    &&  $2 != *"fakesmu"*  &&  $2 != *"WJetsCR"*  &&  $2 != *"mutau"*   &&  $2 != *"eltau"*  ]] ;then
+echo ${fileB}
+
+#isA=[! -f $dir/plots_$channel/${fileB}_A.root]
+
+#echo AAAAAAAAAA
+
+
+if [[ ! -f $dir/plots_$channel/${fileB}_A.root ]] && [[ $file != *"stau"* && $file != *"C1"*  &&  $file != *"Chi"* && $2 != "Ttemplate" && $2 != "mumu" && $2 != "WJETSMU"    &&  $2 != *"fakesmu"*  &&  $2 != *"WJetsCR"*   ]] ;then
+echo Start!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 #if [[ ! -f $dir/plots_$channel/${fileB}_A.root ]] ; then
 #if [[ ! -f $dir/plots_$channel/${fileB}_A.root ]]  &&  [[ $2 != "Ttemplate" ]] && [[ $2 != "mumu" ]]  && [[ $file == *"stau"*  || $file == *"C1"* ]]; then
 cp $dir/analyzer_h analyzer.h
 cp $dir/analyzer${channel}_C analyzer.C
+cp $dir/runme.C .
+cp $dir/plots.h .
 
-echo the filein : $file , the fileout : ${fileB}_A.root , NonInvertedLepton SS
-sed -i 's/FILEIN/'$file'/g' analyzer*
+echo the filein : $file , the fileout : ${fileB}_A.root , region loose no tight Tau
+sed -i 's/FILEIN/'$file'/g' analyzer*.*
 sed -i 's/LEPTONHERE/false/g' analyzer.C
-sed -i 's/SIGNHERE/SS/g' analyzer.C
-sed -i 's/CHANNELHERE/'$channel2'/g' analyzer*
-sed -i 's/DIRHERE/'$dirhere'/g' analyzer*
-sed -i 's/BTAGCUT/'$btag'/g' analyzer*
+sed -i 's/SIGNHERE/OS/g' analyzer.C
+sed -i 's/CHANNELHERE/'$channel2'/g' analyzer*.*
+sed -i 's/DIRHERE/'$dirhere'/g' analyzer*.*
+sed -i 's/BTAGCUT/'$btag'/g' analyzer*.*
+sed -i 's/REGION/CR/g' analyzer*.*
 
 
-sed -i 's/SYSTEMATICHERE/'$syst'/g' analyzer*
+sed -i 's/SYSTEMATICHERE/'$syst'/g' analyzer*.*
 #if [[ $channel == "muel" ]] ; then
 
 #sed -i '217 a            bqcd=true;' analyzer.C
@@ -258,58 +277,6 @@ fi
 
 
 
-
-######## D region
-if [[ ! -f $dir/plots_$channel/${fileB}_D.root ]] && [[ $file != *"stau"* && $file != *"C1"*  &&  $file != *"Chi"* && $2 != "Ttemplate" && $2 != "mumu" && $2 != "WJETSMU"    &&  $2 != *"fakesmu"*  &&  $2 != *"WJetsCR"*  &&  $2 != *"mutau"*   &&  $2 != *"eltau"* ]] ;then
-cp $dir/analyzer${channel}_C analyzer.C
-cp $dir/analyzer_h analyzer.h
-
-
-echo the filein : $file , the fileout : ${fileB}_D.root InvertedLepton SS
-
-sed -i 's/FILEIN/'$file'/g' analyzer*
-sed -i 's/LEPTONHERE/true/g' analyzer.C
-sed -i 's/SIGNHERE/SS/g' analyzer.C
-sed -i 's/CHANNELHERE/'$channel2'/g' analyzer*
-sed -i 's/DIRHERE/'$dirhere'/g' analyzer*
-sed -i 's/BTAGCUT/'$btag'/g' analyzer*
-
-
-sed -i 's/SYSTEMATICHERE/'$syst'/g' analyzer*
-rm plots.root
-root -l -q -b runme.C 
-mv plots.root $dir/plots_$channel/${fileB}_D.root
-
-fi
-
-
-####### C region
-if [[ ! -f $dir/plots_$channel/${fileB}_C.root ]] && [[ $file != *"stau"* && $file != *"C1"*  &&  $file != *"Chi"* && $2 != "Ttemplate" && $2 != "mumu" && $2 != "WJETSMU"    &&  $2 != *"fakesmu"*  &&  $2 != *"WJetsCR"*  &&  $2 != *"mutau"*   &&  $2 != *"eltau"* ]] ;then
-cp $dir/analyzer${channel}_C analyzer.C
-cp $dir/analyzer_h analyzer.h
-
-
-
-echo the filein : $file , the fileout : ${fileB}_C.root  InvertedLepton OS
-sed -i 's/FILEIN/'$file'/g' analyzer*
-sed -i 's/LEPTONHERE/true/g' analyzer.C
-sed -i 's/SIGNHERE/OS/g' analyzer.C
-sed -i 's/CHANNELHERE/'$channel2'/g' analyzer*
-sed -i 's/DIRHERE/'$dirhere'/g' analyzer*
-sed -i 's/BTAGCUT/'$btag'/g' analyzer*
-
-
-sed -i 's/SYSTEMATICHERE/'$syst'/g' analyzer*
-
-rm plots.root
-root -l -q -b runme.C 
-
-mv plots.root $dir/plots_$channel/${fileB}_C.root
-
-
-fi
-
-fi
 
 cd ${dir}
 
