@@ -1117,10 +1117,10 @@ if (WithInit)  _inittree = (TTree*)file_->Get(TString(initNtupleName));
 
 	}
 //// TESTAAAAAA
-      if (taus.size()==0) taus.push_back(0);
+      //if (taus.size()==0) taus.push_back(0);
 
 
-      //if (taus.size()==0)  continue;
+      if (taus.size()==0)  continue;
 	//cout << "taus!!!111111111111111111111111111111111111" << endl; 
 
 
@@ -1184,7 +1184,7 @@ if (WithInit)  _inittree = (TTree*)file_->Get(TString(initNtupleName));
 	  float dR = deltaR(analysisTree.tau_eta[tIndex],analysisTree.tau_phi[tIndex],
 			    analysisTree.muon_eta[mIndex],analysisTree.muon_phi[mIndex]);
 
-	 // if (dR<dRleptonsCutmutau) continue;
+	  if (dR<dRleptonsCutmutau) continue;
 
 
 
@@ -1283,7 +1283,7 @@ if (!CutBasedTauId){
 
 //// TESTAAAAAA
 
-	//if (!TauId) continue;
+	if (!TauId) continue;
 
       if ((int)tau_index<0) continue;
       if ((int)mu_index<0) continue;
@@ -1338,7 +1338,7 @@ if (!CutBasedTauId){
 	
 	//// TESTAAAAAA
 
-	//if (dRmutau < 0.5) continue;
+	if (dRmutau < 0.5) continue;
 
 
 
