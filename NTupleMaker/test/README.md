@@ -1,11 +1,11 @@
-Documantation for mutau and eltau Stau analysis
+Documentation for mutau and eltau Stau analysis
 From Ntuples to datacards.
 
 For analysis details check my Thesis: 
-	http://inspirehep.net/record/1751235/
-	Search for supersymmetry with tau leptons in the CMS experiment
-	Illia Babounikau (DESY)
-	2019 - 205 pages
+    http://inspirehep.net/record/1751235/
+    Search for supersymmetry with tau leptons in the CMS experiment
+    Illia Babounikau (DESY)
+    2019 - 205 pages
     Hamburg: Verlag Deutsches Elektronen-Synchrotron (2019)
     (2019)
     DOI: 10.3204/PUBDB-2019-03086
@@ -15,16 +15,16 @@ For analysis details check my Thesis:
 nfs path:
 /nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_9_4_0_patch1/src/DesyTauAnalyses/NTupleMaker/
 
-Short overwiew: 
+Short overview: 
 
 1) Produce skimms
-2) Produce histogramms in control (for corrections) and signal regions (for data to MC agreement)
+2) Produce histograms in control (for corrections) and signal regions (for data to MC agreement)
 3) Make nice control plots
 4) Train MVA and optimize MVA method
-5) Produce histogramms for MVA approach (histogramms with uncertainty source up and down variation)
+5) Produce histograms for MVA approach (histograms with uncertainty source up and down variation)
 6) Produce datdacards and root file with all shapes
 
-I wouldn't recommend to run any codes/skripts without looking inside and understnading. 
+I wouldn't recommend to run any codes/scripts without looking inside and understanding. 
 
 1 PRODUCE SKIMMS
 
@@ -42,7 +42,7 @@ SUSY$channel analysisMacroSUSY_${type}_B.conf ${fileName with all pathes to Ntup
 usefull script: 
 ./list.sh $channel #creats list of Ntuples, merg.sh and delete.sh scripts for deleting and merging skimms
 
-Wrapper for data to send jobs (IMPORTANT!!! check output root file before sending hundrends jobs!!!):
+Wrapper for data to send jobs (IMPORTANT!!! check output root file before sending hundreds jobs!!!):
 run_dataHTC.sh
 run_mc2HTC.sh
 
@@ -53,7 +53,7 @@ example:
 Skimms appear in the folder: tast/${channel}_${systematic} 
 
 For many systematic sources just use corresponding option in run_dataHTC.sh/run_mc2HTC.sh
-Check that all folders test/${channel}_${systematic} exist and have list of ntuples.
+Check that all folders test/${channel}_${systematic} exist and have a list of ntuples.
 
 use ${channel}/merg.sh and delete.sh to merge skimms and delete separrate files.
 use ${channel}/copy_NJets.sh to copy DY and WJets with naming for isZTT and NParton category
@@ -76,7 +76,7 @@ send jobs
 
 ./subm_plots.sh list${channel} ${channel}
 
-It uses run_plots_newDataDriven.sh to create A and B (SR) regions (for datadriven estimation)
+It uses run_plots_newDataDriven.sh to create A and B (SR) regions (for data-driven estimation)
 Root file with histos should arrive to plots_${channel} directory.
 
 In addition: 
@@ -85,7 +85,7 @@ run_plots_newCR.sh creates some CRs populated by  DY and WJets (can be used for 
 run_plots_newWW.sh creates some CRs with WW events
 
 For Transfer factor calculation use plots_$channel/OverlapTF.C after getting all C and D regions.
-It produces text file with all transfer factors to be inserted in plots.h
+It produces a text file with all transfer factors to be inserted in plots.h
 For histos for fakes estimation use plots_$channel/OverlapTauFakes.C after getting all A regions -> it will produce Fakes_${syst}_B.root
 
 example of running: root -l -b -q OverlapTF.C
@@ -118,7 +118,7 @@ run_MVAtrainingMy.sh can send many jobs for training with different options (can
 
 N_FOM.C makes FOM plots for MVA testing
 
-run_MVAtrainingFOM.sh runs N_FOM.C for several trainings. 
+run_MVAtrainingFOM.sh runs N_FOM.C for several pieces of training. 
 
 example:
 
@@ -127,12 +127,12 @@ example:
 
 5 FINAL MVA HISTOS
 
-After implementing MVA discriminator in plots.h rerun subm_plots.sh to get again histos for A and B regions for central value
- and up and down systematic variation, OverlapTauFakes.C to reproduce fakes and OverlapWDD.C to check agreeement.
+After implementing MVA discriminator in plots.h rerun subm_plots.sh to get again histos for A and B regions for the central value
+ and up and down systematic variation, OverlapTauFakes.C to reproduce fakes and OverlapWDD.C to check agreement.
 
 If you have all systematic in place run: 
-OverlapVarsCR.C for creating root file with MVA disctiminators distribution for all bkgs, signals, systematic vatiations and data.
-(OverlapVarsCRdegen.C for degenerate scenatio)
+OverlapVarsCR.C for creating root file with MVA discriminators distribution for all bkgs, signals, systematic variations and data.
+(OverlapVarsCRdegen.C for degenerate scenario)
 
 wrapper: 
 ./make_TemplateRootFilesVarsCR.sh
@@ -146,35 +146,9 @@ cd Syst
 
 it uses script cards.sh and code CreateDatacards_Stau_C
 
-usefull tools
+useful tools
 
 OverlapAllSyst.C can be usufull for plotting all systematic sources on one histo
-TableForUnrolledDistrSyst.C creates table with event yields.
+TableForUnrolledDistrSyst.C creates a table with event yields.
 
 Now, go to branch limits to run limits 
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
