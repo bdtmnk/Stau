@@ -13,6 +13,7 @@
 #include "TROOT.h"
 #include "TLorentzVector.h"
 #include "TVector3.h"
+#include "TRFIOFile.h"
 #include "TH1D.h"
 #include "TH1D.h"
 #include "TChain.h"
@@ -182,7 +183,7 @@ double EFromPandM0(double M0,double Pt,double Eta){
 
 /*
 double DeltaPhi(TLorentzVector METV, TLorentzVector LeptonV){
-  TLorentzVector Ws = METV + LeptonV;
+  TLorentzVector WsW = METV + LeptonV;
 
         //Delta phi between W and Lep
         //standard root defintion (+ fabs)takes care of getting values between 0 and pi
