@@ -1,3 +1,6 @@
+//TODO add Puppi MET
+//add the new TauId
+//Add MVA Features computation:
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -29,8 +32,9 @@
 #include "DesyTauAnalyses/NTupleMaker/interface/AnalysisMacro.h"
 #include "CondFormats/BTauObjects/interface/BTagCalibration.h"
 #include "CondTools/BTau/interface/BTagCalibrationReader.h"
-#include "HTT-utilities/RecoilCorrections/interface/RecoilCorrector.h"
-#include "HTT-utilities/RecoilCorrections/interface/MEtSys.h"
+#include "HTT-utilities/RecoilCorrections_KIT/interface/RecoilCorrector.h"
+#include "HTT-utilities/RecoilCorrections_KIT/interface/MEtSys.h"
+//TODO add Zpt Reweighting
 #include "RooWorkspace.h"
 #include "RooAbsReal.h"
 #include "RooRealVar.h"
@@ -177,10 +181,33 @@ int main(int argc, char * argv[]) {
   string cmsswBase = (getenv ("CMSSW_BASE"));
   string fullPathToJsonFile = cmsswBase + "/src/DesyTauAnalyses/NTupleMaker/test/json/" + jsonFile;
  
-  RecoilCorrector recoilMetCorrector("HTT-utilities/RecoilCorrections/data/Type1_PFMET_2017.root");
+  //Recoil path:========================================================
+  cout<<"Reading Filenames"<<endl;
+  const string recoilFileName   = cfg.get<string>("RecoilFileName");
+  TString RecoilFileName(recoilFileName);
 
-  MEtSys metSys("HTT-utilities/RecoilCorrections/data/MEtSys.root");
+  const string recoilFileNamePuppi   = cfg.get<string>("RecoilFileNamePuppi");
+  TString RecoilFileNamePuppi(recoilFileNamePuppi);
 
+  const string metSysFileName   = cfg.get<string>("MetSysFileName");
+  TString MetSysFileName(metSysFileName);
+
+  const string metSysFileNamePuppi   = cfg.get<string>("MetSysFileNamePuppi");
+  TString MetSysFileNamePuppi(metSysFileNamePuppi);
+
+  const string zMassPtWeightsFileName   = cfg.get<string>("ZMassPtWeightsFileName");
+  TString ZMassPtWeightsFileName(zMassPtWeightsFileName);
+   
+  const string zMassPtWeightsHistName   = cfg.get<string>("ZMassPtWeightsHistName");
+  TString ZMassPtWeightsHistName(zMassPtWeightsHistName);
+
+  //Definition of the Corrector:========================================
+  kit::MEtSys metSys(MetSysFileName);
+  kit::RecoilCorrector recoilMetCorrector(RecoilFileName);
+  kit::MEtSys metSysPuppi(MetSysFileNamePuppi);
+  kit::RecoilCorrector recoilMetCorrectorPuppi(RecoilFileNamePuppi);
+  
+  
   //  const string TauFakeRateFile = cfg.get<string>("TauFakeRateEff");
   // Run-lumi selector
   std::vector<Period> periods;  
@@ -279,7 +306,7 @@ if (string::npos != datasetName.find("SMS-") || string::npos != datasetName.find
   */
 
 
-  //BTags:
+  //BTags:==============================================================
   string BTag_ = "central";
   string BtagCVS = "DeepCSV_2017data.csv" ;
   if (SUSY) BtagCVS = "DeepCSV_2017data.csv";
@@ -324,7 +351,7 @@ if (string::npos != datasetName.find("SMS-") || string::npos != datasetName.find
   float MinLJetPt = 20.;
   float MinBJetPt = 20.;
 
-  // Z pt mass weights
+  // Z pt mass weights==================================================
   // TODO check Zpt mass Weights!
   TFile * fileZMassPtWeights = new TFile(TString(cmsswBase)+"/src/DesyTauAnalyses/NTupleMaker/data/zpt_weights_2017.root"); 
   if (fileZMassPtWeights->IsZombie()) {
@@ -507,6 +534,10 @@ if (!WithInit) cout << "Without initroottree"<<endl;
       Float_t topptweight = 1.;
       analysisTree.GetEntry(iEntry);
       nEvents++;
+
+
+      //HERE Get the values of the DeepTauIdv2;
+      
       if (nEvents%100==0) cout << "      processed " << nEvents << " events" << endl;
 
       if (fabs(analysisTree.primvertex_z)>zVertexCut) continue;
@@ -640,6 +671,7 @@ if (!WithInit) cout << "Without initroottree"<<endl;
       bool isWfound = false;
       bool isHfound = false;
       bool isGSfound = false;
+
       std::vector<TLorentzVector> promptTausFirstCopy; promptTausFirstCopy.clear();
       std::vector<TLorentzVector> promptTausLastCopy;  promptTausLastCopy.clear();
       std::vector<TLorentzVector> promptElectrons; promptElectrons.clear();
@@ -694,7 +726,6 @@ if (!WithInit) cout << "Without initroottree"<<endl;
 					      analysisTree.genparticles_py[igen],
 					      analysisTree.genparticles_pz[igen],
 					      analysisTree.genparticles_e[igen]);
-
 
 	if (SUSY){
 
@@ -859,7 +890,7 @@ if (!WithInit) cout << "Without initroottree"<<endl;
 	    if (bosonPtX<1.)      bosonPtX = 1.;
 	    if (bosonPtX>1000.)   bosonPtX = 1000.;
 	    zptmassweight = histZMassPtWeights->GetBinContent(histZMassPtWeights->GetXaxis()->FindBin(bosonMassX),
-							      histZMassPtWeights->GetYaxis()->FindBin(bosonPtX));
+						histZMassPtWeights->GetYaxis()->FindBin(bosonPtX));
 	  }
 	}
 
@@ -907,42 +938,41 @@ if (!WithInit) cout << "Without initroottree"<<endl;
 	    ScalesV.push_back(analysisTree.weightScale8);
 		
 	    cLower = *min_element(ScalesV.begin(), ScalesV.end());
-      	    cUpper = *max_element(ScalesV.begin(), ScalesV.end());
+		cUpper = *max_element(ScalesV.begin(), ScalesV.end());
 	    histWeightsScalesUp->Fill(0.,analysisTree.genweight*cUpper);
 	    histWeightsScalesDown->Fill(0.,analysisTree.genweight*cLower);
-
 	    histWeightsPDFUp->Fill(0.,analysisTree.genweight*analysisTree.weightPDFup);
 	    histWeightsPDFDown->Fill(0.,analysisTree.genweight*analysisTree.weightPDFdown);
 
-	         lumi=true;
-            wScale0 = analysisTree.weightScale0;
-            wScale1 = analysisTree.weightScale1;
-			      wScale2 = analysisTree.weightScale2;
-            wScale3 = analysisTree.weightScale3;
-            wScale4 = analysisTree.weightScale4;
-            wScale5 = analysisTree.weightScale5;
-            wScale6 = analysisTree.weightScale6;
-            wScale7 = analysisTree.weightScale7;
-            wScale8 = analysisTree.weightScale8;
-            wPDFUp = analysisTree.weightPDFup;
-            wPDFDown = analysisTree.weightPDFdown;
+		lumi=true;
+		wScale0 = analysisTree.weightScale0;
+		wScale1 = analysisTree.weightScale1;
+		wScale2 = analysisTree.weightScale2;
+		wScale3 = analysisTree.weightScale3;
+		wScale4 = analysisTree.weightScale4;
+		wScale5 = analysisTree.weightScale5;
+		wScale6 = analysisTree.weightScale6;
+		wScale7 = analysisTree.weightScale7;
+		wScale8 = analysisTree.weightScale8;
+		wPDFUp = analysisTree.weightPDFup;
+		wPDFDown = analysisTree.weightPDFdown;
 
 	  }
 	
       if (isData)  {
-	XSec = 1.;
-	histRuns->Fill(analysisTree.event_run);
-	int n=analysisTree.event_run;
-	int lum = analysisTree.event_luminosityblock;
+		XSec = 1.;
+		histRuns->Fill(analysisTree.event_run);
+		int n=analysisTree.event_run;
+		int lum = analysisTree.event_luminosityblock;
 
-	std::string num = std::to_string(n);
-	std::string lnum = std::to_string(lum);
-	for(const auto& a : periods)
+		std::string num = std::to_string(n);
+		std::string lnum = std::to_string(lum);
+		for(const auto& a : periods)
 	  {
 
 	    if ( num.c_str() ==  a.name ) {
 	      //std::cout<< " Eureka "<<num<<"  "<<a.name<<" ";
-	      //     std::cout <<"min "<< last->lower << "- max last " << last->bigger << std::endl;
+	      //std::cout <<"min "<< last->lower << "- max last " << last->bigger << std::endl;
 
 	      for(auto b = a.ranges.begin(); b != std::prev(a.ranges.end()); ++b) {
 
@@ -976,20 +1006,23 @@ if (!WithInit) cout << "Without initroottree"<<endl;
 //      cout<<"MET filters flag"<<endl;
       if (isNewRun) allRuns.push_back(analysisTree.event_run);
       if (!lumi) continue;
-	   std::vector<TString> metFlags; metFlags.clear();
-     //////////////MET filters flag
-     metFlags.push_back("Flag_goodVertices");
-     metFlags.push_back("Flag_globalTightHalo2016Filter");
-     metFlags.push_back("Flag_HBHENoiseFilter");
-     metFlags.push_back("Flag_HBHENoiseIsoFilter");
-     metFlags.push_back("Flag_EcalDeadCellTriggerPrimitiveFilter");
-     metFlags.push_back("Flag_BadPFMuonFilter");
-     metFlags.push_back("Flag_BadChargedCandidateFilter");
-     if (isData) metFlags.push_back("Flag_eeBadScFilter");
-     metFlags.push_back("Flag_ecalBadCalibFilter");
-     bool METflag = 1;//metFiltersPasses2(analysisTree, metFlags); 
-     cout<<"MET flags filled"<<endl;
-     //met_flag = METflag;
+	  std::vector<TString> metFlags; metFlags.clear();
+
+	  //TODO Check MET Flags:
+	  metFlags.push_back("Flag_goodVertices");
+	  metFlags.push_back("Flag_globalSuperTightHalo2016Filter");
+	  metFlags.push_back("Flag_HBHENoiseFilter");
+	  metFlags.push_back("Flag_HBHENoiseIsoFilter");
+	  metFlags.push_back("Flag_EcalDeadCellTriggerPrimitiveFilter");
+	  metFlags.push_back("Flag_BadPFMuonFilter");
+	  if (isData){
+	  metFlags.push_back("Flag_eeBadScFilter");
+	  metFlags.push_back("ecalBadCalibReducedMINIAODFilter");
+	  }
+	   
+	 bool METflag = metFiltersPasses2(analysisTree, metFlags);
+	 met_flag = METflag;
+	 //cout<<"Met flag: "<<met_flag<<endl;
 
       //PU weights:
       //cout<<"PU Weights"<<endl;
@@ -1004,14 +1037,14 @@ if (!WithInit) cout << "Without initroottree"<<endl;
       unsigned int nMainTrigger = 0;
       bool isMainTrigger = false;
   
-      cout<<"HLT Triggers"<<endl;
+      //cout<<"HLT Triggers"<<endl;
       if (!isData){
         int nfilters = 39;//analysisTree.run_hltnames->size();//65
-        cout<<"Get size of nfilters:   "<<nfilters<<endl;
+        //cout<<"Get size of nfilters:   "<<nfilters<<endl;
         for (int i=0; i<nfilters; ++i) {
         try{
-           cout<<"Filter iteration:   "<<i<<endl;
-           cout<<"analysisTree.run_hltfilters->at(i)"<<analysisTree.run_hltfilters->at(i)<<endl;
+           //cout<<"Filter iteration:   "<<i<<endl;
+           //cout<<"analysisTree.run_hltfilters->at(i)"<<analysisTree.run_hltfilters->at(i)<<endl;
             TString HLTFilter(analysisTree.run_hltfilters->at(i));
             if (HLTFilter==MainTrigger) {
               nMainTrigger = i;
@@ -1029,7 +1062,7 @@ if (!WithInit) cout << "Without initroottree"<<endl;
     if (isData) isMainTrigger = true;
 
     if (!isMainTrigger) {
-           std::cout << "HLT filter for Mu Trigger " << MainTrigger << " not found" << std::endl;
+           //std::cout << "HLT filter for Mu Trigger " << MainTrigger << " not found" << std::endl;
             //continue;
             return(-1);
     }
@@ -1044,7 +1077,7 @@ if (!WithInit) cout << "Without initroottree"<<endl;
     cout<<"Muon Iterate over the Muons"<<endl;
     vector<int> muons; muons.clear();
     for (unsigned int im = 0; im<analysisTree.muon_count; ++im) {
-
+	//TODO check if it necessary
     //	if (isData && analysisTree.muon_isDuplicate[im]) continue;
     //	if (isData && analysisTree.muon_isBad[im]) continue;
         if (analysisTree.muon_pt[im]<SingleMuonTriggerPtCut) continue;
@@ -1168,10 +1201,9 @@ if (!WithInit) cout << "Without initroottree"<<endl;
 
 
 if (!CutBasedTauId){
+
    isoTau = analysisTree.tau_chargedIsoPtSum[tIndex];
    //isoTau = analysisTree.tau_chargedIsoPtSum[tIndex];
-
-
 
           if ((int)mIndex!=(int)mu_index) {
             if (relIsoMu==isoMuMin) {
@@ -1246,6 +1278,14 @@ if (!CutBasedTauId){
             ta_IsoFlagVLoose[0]=analysisTree.tau_byVLooseIsolationMVArun2017v2DBoldDMwLT2017[tau_index];
             isoTau = analysisTree.tau_byIsolationMVArun2v1DBoldDMwLTraw[tau_index];
 
+			std::cout<<"Tau Vs JEt: "<<analysisTree.tau_byVVTightDeepTau2017v2p1VSe[tau_index]<<endl;
+			std::cout<<"Tau Vs El: "<<analysisTree.tau_byVVTightDeepTau2017v2p1VSjet[tau_index]<<endl;
+		
+			//Loose Isolation:
+			std::cout<<"Loose Vs e: "<<analysisTree.tau_byLooseDeepTau2017v2p1VSe[tau_index]<<endl;
+			std::cout<<"Loose Vs jet: "<<analysisTree.tau_byLooseDeepTau2017v2p1VSjet[tau_index]<<endl;
+			std::cout<<"Loose Vs mu: "<<analysisTree.tau_byLooseDeepTau2017v2p1VSmu[tau_index]<<endl;
+		//	cout<<"Tau Vs Mu: "<<analysisTree.tau_byVVTightDeepTau2017v2p1VSe
         //   tau_byIsolationMVArun2017v1DBoldDMwLTraw
         //   tau_byIsolationMVArun2017v1DBoldDMwLTraw2017
         //   tau_byIsolationMVArun2017v2DBoldDMwLTraw2017
@@ -1936,6 +1976,7 @@ if (el_count > 0.5) eSise = electrons.size();
         met_y = pfmet_corr_y;
  
       // MEt related systematic uncertainties
+      /*
       int bkgdType = 0;
       if (isDY||isW)
 	bkgdType = MEtSys::ProcessType::BOSON;
@@ -1991,7 +2032,7 @@ if (el_count > 0.5) eSise = electrons.size();
       met_ey_recoil = pfmet_corr_y;
       //revert back to uncorrected met
 
-
+      */
 
       }//if isW, isDY !isData
 

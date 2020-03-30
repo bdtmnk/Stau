@@ -131,17 +131,15 @@ int main(int argc, char * argv[]) {
  // const unsigned int RunRangeMin = cfg.get<unsigned int>("RunRangeMin");
   //const unsigned int RunRangeMax = cfg.get<unsigned int>("RunRangeMax");
 
-  // vertex distributions filenames and histname
+// vertex distributions filenames and histname
+   const string jsonFile = cfg.get<string>("jsonFile");
+//
+     string cmsswBase = (getenv ("CMSSW_BASE"));
+     string fullPathToJsonFile = cmsswBase + "/src/DesyTauAnalyses/NTupleMaker/test/json/" + jsonFile;
+//        
+     RecoilCorrector recoilMetCorrector("HTT-utilities/RecoilCorrections/data/Type1_PFMET_2017.root");
 
-  const string jsonFile = cfg.get<string>("jsonFile");
-
-  string cmsswBase = (getenv ("CMSSW_BASE"));
-  string fullPathToJsonFile = cmsswBase + "/src/DesyTauAnalyses/NTupleMaker/test/json/" + jsonFile;
-//RecoilCorrector recoilMetCorrector("HTT-utilities/RecoilCorrections/data/PFMET_MG_2016BCD_RooT_5.2.root");
-  RecoilCorrector recoilMetCorrector("DesyTauAnalyses/NTupleMaker/data/PFMET_Run2016BCDEFGH_Spring16.root");
-
-  MEtSys metSys("HTT-utilities/RecoilCorrections/data/MEtSys.root");
-
+     MEtSys metSys("HTT-utilities/RecoilCorrections/data/MEtSys.root");
   //const string TauFakeRateFile = cfg.get<string>("TauFakeRateEff");
 
   // Run-lumi selector
@@ -232,25 +230,25 @@ int main(int argc, char * argv[]) {
 
 
 // PU reweighting
-  PileUp * PUofficial = new PileUp();
-   //TFile * filePUdistribution_data = new TFile(TString(cmsswBase)+"/src/DesyTauAnalyses/NTupleMaker/data/PileUpDistrib/pileUp_data_2016_Cert_Cert_271036-276811_NoL1T_xsec63mb.root","read");
-
-//  TFile * filePUdistribution_data = new TFile(TString(cmsswBase)+"/src/DesyTauAnalyses/NTupleMaker/data/PileUpDistrib/pileUp_data_Cert_271036-277148_13TeV_PromptReco_Collisions16_xsec69p2mb.root","read");
-  TFile * filePUdistribution_data = new TFile(TString(cmsswBase)+"/src/DesyTauAnalyses/NTupleMaker/data/PileUpDistrib/pileUp_data_RunBCDEFGH_ReReco.root","read");
-  TFile * filePUdistribution_MC = new TFile (TString(cmsswBase)+"/src/DesyTauAnalyses/NTupleMaker/data/PileUpDistrib/MC_Spring16_PU25ns_V1.root", "read");
-
-
-  TH1D * PU_data = (TH1D *)filePUdistribution_data->Get("pileup");
-  TH1D * PU_mc = (TH1D *)filePUdistribution_MC->Get("pileup");
-  PUofficial->set_h_data(PU_data);
-  PUofficial->set_h_MC(PU_mc);
+PileUp * PUofficial = new PileUp();
+TFile * filePUdistribution_data = new TFile(TString(cmsswBase) + "/src/DesyTauAnalyses/NTupleMaker/data/PileUpDistrib/pileUp_data_Autumn18.root","read");
+TFile * filePUdistribution_MC = new TFile (TString(cmsswBase) + "/src/DesyTauAnalyses/NTupleMaker/data/PileUpDistrib/pileUp_MC_Autumn18.root", "read");
+TH1D * PU_data = (TH1D *)filePUdistribution_data->Get("pileup");
+TH1D * PU_mc = (TH1D *)filePUdistribution_MC->Get("pileup");
+PUofficial->set_h_data(PU_data);
+PUofficial->set_h_MC(PU_mc);
 
 
 
-  BTagCalibration calib("csvv2", cmsswBase+"/src/DesyTauAnalyses/NTupleMaker/data/CSVv2_ichep.csv");
-  BTagCalibrationReader reader_B(BTagEntry::OP_MEDIUM,"central");
-  BTagCalibrationReader reader_C(BTagEntry::OP_MEDIUM,"central");
-  BTagCalibrationReader reader_Light(BTagEntry::OP_MEDIUM,"central");
+string BTag_ = "central";
+string BtagCVS = "DeepCSV_2017data.csv" ;
+
+BTagCalibration calib("csvv2", cmsswBase+"/src/DesyTauAnalyses/NTupleMaker/data/"+BtagCVS);
+BTagCalibrationReader reader_B(BTagEntry::OP_MEDIUM,BTag_);
+BTagCalibrationReader reader_C(BTagEntry::OP_MEDIUM,BTag_);
+BTagCalibrationReader reader_Light(BTagEntry::OP_MEDIUM,BTag_);
+
+
   reader_B.load(calib,BTagEntry::FLAV_B,"comb");
   reader_C.load(calib,BTagEntry::FLAV_C,"comb");
   reader_Light.load(calib,BTagEntry::FLAV_UDSG,"incl");
@@ -270,10 +268,11 @@ int main(int argc, char * argv[]) {
   }
   std::cout << std::endl;
 
-  TFile * fileTagging = new TFile(TString(cmsswBase)+TString("/src/DesyTauAnalyses/NTupleMaker/data/tagging_efficiencies_ichep2016.root"));
-  TH1F * tagEff_B = (TH1F*)fileTagging->Get("btag_eff_b");
-  TH1F * tagEff_C = (TH1F*)fileTagging->Get("btag_eff_c");
-  TH1F * tagEff_Light = (TH1F*)fileTagging->Get("btag_eff_oth");
+  TFile * fileTagging = new TFile(TString(cmsswBase)+TString("/src/DesyTauAnalyses/NTupleMaker/data/tagging_efficiencies_Moriond2017.root"));
+TH1F * tagEff_B = (TH1F*)fileTagging->Get("btag_eff_b");
+TH1F * tagEff_C = (TH1F*)fileTagging->Get("btag_eff_c");
+TH1F * tagEff_Light = (TH1F*)fileTagging->Get("btag_eff_oth");
+
   TRandom3 rand;
 	
   float MaxBJetPt = 1000.;
@@ -282,33 +281,28 @@ int main(int argc, char * argv[]) {
   float MinBJetPt = 20.;
 
   // Z pt mass weights
-  TFile * fileZMassPtWeights = new TFile(TString(cmsswBase)+"/src/DesyTauAnalyses/NTupleMaker/data/zpt_weights_2016.root"); 
+  TFile * fileZMassPtWeights = new TFile(TString(cmsswBase)+"/src/DesyTauAnalyses/NTupleMaker/data/zpt_weights_2017.root"); 
   if (fileZMassPtWeights->IsZombie()) {
-    std::cout << "File " << TString(cmsswBase) << "src/DesyTauAnalyses/NTupleMaker/data/zpt_weights_2016.root" << "  does not exist!" << std::endl;
     exit(-1);
   }
   TH2D * histZMassPtWeights = (TH2D*)fileZMassPtWeights->Get("zptmass_histo"); 
   if (histZMassPtWeights==NULL) {
-    std::cout << " ZMassPT Weights histogram cannot found in file " << TString(cmsswBase) << "/src/DesyTauAnalyses/NTupleMaker/data/" << std::endl;
-    exit(-1);
-  }
-
-
-
+  std::cout << " ZMassPT Weights histogram cannot found in file " << TString(cmsswBase) << "/src/DesyTauAnalyses/NTupleMaker/data/" << std::endl;
+ 
 
   // Lepton Scale Factors 
 
   TH1D * ElSF_IdIso_El1H = new TH1D("ElIdIsoSF_El1H", "ElIdIsoSF_El1", 100, 0.5,1.5);
 
-	cout<<" Initializing iD SF files....."<<endl;
+  cout<<" Initializing iD SF files....."<<endl;
 
-  ScaleFactor * SF_elIdIso; 
+    ScaleFactor* SF_elIdIso; 
     SF_elIdIso = new ScaleFactor();
     SF_elIdIso->init_ScaleFactor(TString(cmsswBase)+"/src/"+TString(ElectronIdIsoFile));
 
-	cout<<" Initializing Trigger SF files....."<<endl;
-  ScaleFactor * SF_electronTrigger = new ScaleFactor();
-  SF_electronTrigger->init_ScaleFactor(TString(cmsswBase)+"/src/"+TString(SingleElectronTriggerFile));
+   cout<<" Initializing Trigger SF files....."<<endl;
+   ScaleFactor * SF_electronTrigger = new ScaleFactor();
+   SF_electronTrigger->init_ScaleFactor(TString(cmsswBase)+"/src/"+TString(SingleElectronTriggerFile));
 
 /*  cout<<" Will try to initialize the TFR now.... "<<endl;
   ScaleFactor * SF_TFR; 
@@ -883,7 +877,7 @@ if (WithInit)  _inittree = (TTree*)file_->Get(TString(initNtupleName));
 	std::vector<TString> metFlags; metFlags.clear();
      //////////////MET filters flag
 
-	 
+	//Update List Of MET Filters;	 
 	 metFlags.push_back("Flag_HBHENoiseFilter");
 	 metFlags.push_back("Flag_HBHENoiseIsoFilter");
 	 metFlags.push_back("Flag_EcalDeadCellTriggerPrimitiveFilter");
@@ -941,7 +935,7 @@ if (WithInit)  _inittree = (TTree*)file_->Get(TString(initNtupleName));
 	if (fabs(analysisTree.electron_eta[ie])>etaElectronCut) continue;
 	if (fabs(analysisTree.electron_dxy[ie])>dxyElectronCut) continue;
 	if (fabs(analysisTree.electron_dz[ie])>dzElectronCut) continue;
-	if (applyElectronId && !analysisTree.electron_mva_wp80_nontrig_Spring15_v1[ie]) continue;
+	if (applyElectronId && !analysisTree.electron_mva_wp90_general_Spring16_v1[ie]) continue;
 	if (applyElectronId && !analysisTree.electron_pass_conversion[ie]) continue;
 	if (applyElectronId && analysisTree.electron_nmissinginnerhits[ie]>1) continue;
 	if (fabs(analysisTree.electron_charge[ie]) !=1) continue;
@@ -1225,7 +1219,7 @@ if (WithInit)  _inittree = (TTree*)file_->Get(TString(initNtupleName));
 	    fabs(analysisTree.electron_eta[im])<etaDilepElectronCut&&
 	    fabs(analysisTree.electron_dxy[im])<dxyDilepElectronCut&&
 	    fabs(analysisTree.electron_dz[im])<dzDilepElectronCut&&
-	    analysisTree.electron_cutId_veto_Spring15[im]&&
+	    analysisTree.electron_cutId_veto_Summer16[im]&&
 	    relIsoElec<isoDilepElectronCut && 
 	    fabs(analysisTree.electron_charge[im]) ==1)
 	{
@@ -1243,7 +1237,7 @@ if (WithInit)  _inittree = (TTree*)file_->Get(TString(initNtupleName));
 	if (fabs(analysisTree.electron_eta[im])>etaVetoElectronCut) continue;
 	if (fabs(analysisTree.electron_dxy[im])>dxyVetoElectronCut) continue;
 	if (fabs(analysisTree.electron_dz[im])>dzVetoElectronCut) continue;
-	bool electronMvaId = analysisTree.electron_mva_wp90_nontrig_Spring15_v1[im];
+	bool electronMvaId = analysisTree.electron_mva_wp90_general_Spring16_v1[im];
 	if (applyVetoElectronId && !electronMvaId) continue;
 	if (applyVetoElectronId && !analysisTree.electron_pass_conversion[im]) continue;
 	if (applyVetoElectronId && analysisTree.electron_nmissinginnerhits[im]>1) continue;
@@ -1651,18 +1645,18 @@ if (WithInit)  _inittree = (TTree*)file_->Get(TString(initNtupleName));
       met_y = analysisTree.pfmetcorr_ey;
       }
       else {
-      pfmet_corr_x = analysisTree.pfmet_ex;
-      pfmet_corr_y = analysisTree.pfmet_ey;
-      met_x = analysisTree.pfmet_ex;
-      met_y = analysisTree.pfmet_ey;
+      pfmet_corr_x = analysisTree.pfmetcorr_ex;//pfmet_ex;
+      pfmet_corr_y = analysisTree.pfmetcorr_ex;//pfmet_ey;
+      met_x = analysisTree.pfmetcorr_ex;
+      met_y = analysisTree.pfmetcorr_ey;
       }
 
       if ((isW||isDY) && !isData) {
 
 	  recoilMetCorrector.CorrectByMeanResolution(analysisTree.pfmetcorr_ex,analysisTree.pfmetcorr_ey,bosonPx,bosonPy,lepPx,lepPy,njetsforrecoil,pfmet_corr_x,pfmet_corr_y);
  
-        met_x = pfmet_corr_x;
-        met_y = pfmet_corr_y;
+        met_x =pfmet_corr_x;// pfmetcorr_ex;
+        met_y =pfmet_corr_y;// pfmetcorr_ex;
  
       // MEt related systematic uncertainties
       int bkgdType = 0;
@@ -1740,11 +1734,11 @@ if (WithInit)  _inittree = (TTree*)file_->Get(TString(initNtupleName));
      met_ey_UnclusteredEnDown = analysisTree.pfmetcorr_ey_UnclusteredEnDown;
 
 
-      float genmet_ex = analysisTree.genmet_ex;
-      float genmet_ey = analysisTree.genmet_ey;
+//      float genmet_ex = analysisTree.genmet_ex;
+//      float genmet_ey = analysisTree.genmet_ey;
 
-      genmet = TMath::Sqrt(genmet_ex*genmet_ex + genmet_ey*genmet_ey);
-      genmetphi = TMath::ATan2(genmet_ey,genmet_ex);
+//      genmet = TMath::Sqrt(genmet_ex*genmet_ex + genmet_ey*genmet_ey);
+//      genmetphi = TMath::ATan2(genmet_ey,genmet_ex);
 
       if (!isData) npartons = analysisTree.genparticles_noutgoing;
 
@@ -1766,7 +1760,6 @@ if (WithInit)  _inittree = (TTree*)file_->Get(TString(initNtupleName));
     delete _tree;
     file_->Close();
     delete file_;
-  }
 
   cout<<" Run range from -----> "<<RunMin<<" to  "<<RunMax<<endl;
 
@@ -1794,7 +1787,8 @@ if (WithInit)  _inittree = (TTree*)file_->Get(TString(initNtupleName));
   cout<<"done"<<endl;
   delete file;
 }
+}
 
-
+}
 
 

@@ -23,6 +23,20 @@
  <use name="HTT-utilities/RecoilCorrections"/>
 </bin>
 
+<bin name="SUSYeltau" file="AnalysisMacroSUSYeltau.cpp">
+ <use name="PhysicsTools/Utilities"/>
+ <use name="rootgraphics"/>
+ <use name="root"/>
+ <use name="rootmath"/>
+ <use name="roottmva"/>
+ <use name="FWCore/ParameterSet"/>
+ <use name="HTT-utilities/LepEffInterface"/>
+ <use name="DesyTauAnalyses/NTupleMaker"/>
+ <use name="CondFormats/BTauObjects"/>
+ <use name="CondTools/BTau"/>
+</bin>
+<!--
+
 <bin name="mutrk_mass" file="mutrk_mass.cpp">
  <use name="PhysicsTools/Utilities"/>
  <use name="rootgraphics"/>
@@ -87,7 +101,8 @@
  <use name="HTT-utilities/LepEffInterface"/>
  <use name="HTT-utilities/RecoilCorrections"/>
 </bin>
-
+-->
+<!--
 <bin name="SynchNTupleProducer_mt_2017" file="SynchNTupleProducer_mt_2017.cpp">
  <use name="PhysicsTools/Utilities"/>
  <use name="rootgraphics"/>
@@ -161,7 +176,8 @@
  <use name="HTT-utilities/RecoilCorrections"/>
  <use name="HTT-utilities/QCDModelingEMu"/>
 </bin>
-
+-->
+<!--
 <bin name="EffUpdater" file="EffUpdater.cpp">
  <use name="PhysicsTools/Utilities"/>
  <use name="rootgraphics"/>
@@ -173,7 +189,8 @@
  <use name="boost_program_options"/>
  <use name="DesyTauAnalyses/NTupleMaker"/>
 </bin>
-
+-->
+<!--
 <bin name="AnalysisNTupleProducer" file="AnalysisNTupleProducer.cpp">
  <use name="PhysicsTools/Utilities"/>
  <use name="rootgraphics"/>
@@ -185,7 +202,8 @@
  <use name="DesyTauAnalyses/NTupleMaker"/>
  <use name="HTT-utilities/LepEffInterface"/>
 </bin>
-
+-->
+<!--
 <bin name="AnalysisNTupleProducer_TauID" file="AnalysisNTupleProducer_TauID.cpp">
  <use name="PhysicsTools/Utilities"/>
  <use name="rootgraphics"/>
@@ -197,7 +215,8 @@
  <use name="DesyTauAnalyses/NTupleMaker"/>
  <use name="HTT-utilities/LepEffInterface"/>
 </bin>
-
+-->
+<!--
 <bin name="AnalysisNTupleFakeRate" file="AnalysisNTupleFakeRate.cpp">
  <use name="PhysicsTools/Utilities"/>
  <use name="rootgraphics"/>
@@ -222,8 +241,8 @@
  <use name="DesyTauAnalyses/NTupleMaker"/>
  <use name="HTT-utilities/LepEffInterface"/>
 </bin>
-
-
+-->
+<!--
 <bin name="AnalysisMacro_dielectrons" file="AnalysisMacro_dielectrons.cpp">
  <use name="HTT-utilities/RecoilCorrections"/> 
  <use name="PhysicsTools/Utilities"/>
@@ -348,7 +367,7 @@
  <use name="boost_program_options"/>
  <use name="DesyTauAnalyses/NTupleMaker"/>
 </bin>
-
+-->
 
 <bin name="SUSYmutau" file="AnalysisMacroSUSYmutau.cpp">
  <use name="PhysicsTools/Utilities"/>
@@ -361,8 +380,12 @@
  <use name="DesyTauAnalyses/NTupleMaker"/>
  <use name="CondFormats/BTauObjects"/>
  <use name="CondTools/BTau"/>
+<use name="HTT-utilities/LepEffInterface"/>
+<use name="HTT-utilities/RecoilCorrections_KIT"/>
 </bin>
 
+
+<!--
 <bin name="SUSYWJets" file="AnalysisMacroSUSYWJetsmu.cpp">
  <use name="PhysicsTools/Utilities"/>
  <use name="rootgraphics"/>
@@ -375,7 +398,7 @@
  <use name="DesyTauAnalyses/NTupleMaker"/>
  <use name="CondTools/BTau"/>
 </bin>
-
+--!>
 <bin name="SUSYeltau" file="AnalysisMacroSUSYeltau.cpp">
  <use name="PhysicsTools/Utilities"/>
  <use name="rootgraphics"/>
@@ -387,8 +410,10 @@
  <use name="DesyTauAnalyses/NTupleMaker"/>
  <use name="CondFormats/BTauObjects"/>
  <use name="CondTools/BTau"/>
+<use name="HTT-utilities/LepEffInterface"/>
+<use name="HTT-utilities/RecoilCorrections_KIT"/>
 </bin>
-
+<!--
 <bin name="SUSYmuel" file="AnalysisMacroSUSYmuel.cpp">
  <use name="PhysicsTools/Utilities"/>
  <use name="rootgraphics"/>
@@ -563,3 +588,4 @@
  <use name="DesyTauAnalyses/NTupleMaker"/>
  <use name="HTT-utilities/LepEffInterface"/>
 </bin>
+-->
