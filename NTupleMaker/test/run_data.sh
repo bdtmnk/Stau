@@ -24,28 +24,25 @@
 #
 #mkdir $1
 
-cd  /nfs/dust/cms/user/alkaloge/TauAnalysis/new/new/StauAnalysis/CMSSW_8_0_20/src/DesyTauAnalyses/NTupleMaker/test; eval `scramv1 runtime -sh`
-
+cd $PWD;
+eval `scramv1 runtime -sh`
 channel=$2 
 dir=$2
 
 
-#dir=InvMuIso
 
-if [ ! -d Jobs ]
+if [ ! -d Jobs_data_${channel} ]
 then
-	mkdir Jobs
+	mkdir Jobs_data_${channel}
 fi
 
 
-cp *.conf Jobs/.
+cp *.conf Jobs_data_${channel}/.
 
 while read line
 do
 
 unset xsec
-#xsec=`grep " $line " xsecs | cut -d " " -f2-3`	
-#	cp $dir/$line input$line
 xsec=1
 echo FOUND XSEC for $line to be $xsec
 unset f
@@ -60,23 +57,20 @@ bas=`basename $f | awk -F ".root" '{print $1}'`
 #echo $bas $xsec >> xsecs
 echo $bas $xsec 
 
-if [ ! -f $dir/${bas}_B_OS_DataDriven.root ]
+if [ ! -f $dir/${bas}_B_OS.root ]
 then
 	echo $dir/${bas}_B_OS_DataDriven.root
 echo $f > $dir/$bas
-cat bss > Jobs/job$line$channel$dir${bas}_B.sh
-#echo SUSYTtemplate analysisMacroSUSY_Data_B.conf ${bas} $dir>> Jobs/job$line$channel$dir${bas}_B.sh
-echo SUSY$channel analysisMacroSUSY_Data_B.conf ${bas} $dir 1 >> Jobs/job$line$channel$dir${bas}_B.sh
-#echo SUSYeltau analysisMacroSUSY_Data_B.conf ${bas} $dir>> Jobs/job$line$channel$dir${bas}_B.sh
-
-chmod u+x Jobs/job$line$channel$dir${bas}_B.sh
+cat bss > Jobs_data_${channel}/job$line${channel}$dir${bas}_B.sh
+echo SUSY${channel} analysisMacroSUSY_Data_B.conf ${bas} $dir 1 >> Jobs_data_${channel}/job$line${channel}$dir${bas}_B.sh
+chmod u+x Jobs_data_${channel}/job$line${channel}$dir${bas}_B.sh
 
 wr=$3
 if [[ ${wr} == grid ]] ; 
 then
-	qsub Jobs/job$line$channel$dir${bas}_B.sh 
+	./HTC_submit.sh Jobs_data_${channel}/job$line${channel}$dir${bas}_B.sh ${bas} 
 else
-	. Jobs/job$line$channel$dir${bas}_B.sh 
+	. Jobs_data_${channel}/job$line${channel}$dir${bas}_B.sh 
 fi
 
 fi
