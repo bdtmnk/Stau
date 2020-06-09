@@ -382,6 +382,7 @@
  <use name="CondTools/BTau"/>
 <use name="HTT-utilities/LepEffInterface"/>
 <use name="HTT-utilities/RecoilCorrections_KIT"/>
+<use name="HTT-utilities/RecoilCorrections_KIT"/>
 </bin>
 
 
@@ -411,6 +412,7 @@
  <use name="CondFormats/BTauObjects"/>
  <use name="CondTools/BTau"/>
 <use name="HTT-utilities/LepEffInterface"/>
+<use name="HTT-utilities/RecoilCorrections_KIT"/>
 <use name="HTT-utilities/RecoilCorrections_KIT"/>
 </bin>
 <!--
