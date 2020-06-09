@@ -42,12 +42,25 @@ cp *.conf Jobs_data_${channel}/.
 while read line
 do
 
+ct=`ls ${dir}/${line}*_B_OS.root | wc -l`
+ctt=`cat ${dir}/${line} | wc -l`
+
+
+echo There are  $ct out of $ctt for $line in $dir dir for systematic $syst
+
+if [[ $ct -ge $ctt ]] ;then
+        continue;
+fi
+
 unset xsec
 xsec=1
 echo FOUND XSEC for $line to be $xsec
+echo $f
 unset f
 while read f
 	do
+
+
 
 echo $f
 unset bas
