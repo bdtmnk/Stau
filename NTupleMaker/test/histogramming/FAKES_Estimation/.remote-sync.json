@@ -1,0 +1,19 @@
+{
+  "logger": {
+    "title": "Remote Sync"
+  },
+  "uploadOnSave": true,
+  "useAtomicWrites": false,
+  "deleteLocal": true,
+  "hostname": "naf-cms12.desy.de",
+  "port": "22",
+  "target": "/nfs/dust/cms/user/dydukhle/STAU/Analysis18/CMSSW_10_2_16/src/DesyTauAnalyses/NTupleMaker/test/FAKES_Estimation",
+  "ignore": [
+    ".remote-sync.json",
+    ".git/**"
+  ],
+  "username": "dydukhle",
+  "password": "ououi9985!",
+  "watch": [],
+  "transport": "scp"
+}
