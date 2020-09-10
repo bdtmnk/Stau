@@ -3,9 +3,9 @@
 # $2 - filelist
 
 cat > $2.submit <<EOF
-+RequestRuntime=10000
++RequestRuntime=50000
 
-RequestMemory = 2000
+RequestMemory = 15000
 
 executable = $1
 

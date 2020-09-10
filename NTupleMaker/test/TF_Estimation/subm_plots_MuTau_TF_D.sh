@@ -131,14 +131,14 @@ _lt=`echo $line | cut -d '/' -f2`
 		if [[ true ]] ; then
 
 		echo  plots for channel $2 and syst $syst and $ltt plots_${2} ${ltt}_${syst}_D.root
-		cat bss > job_MuTau_${channel}_${_lt}_$syst
-		echo python /nfs/dust/cms/user/dydukhle/STAU/Analysis18/CMSSW_10_2_16/src/DesyTauAnalyses/NTupleMaker/test/TF_Estimation/run_plots_newDataDriven_new_MuTau_D.py list_$_lt $2 $syst >> job_MuTau_${channel}_${_lt}_$syst
+		cat bss > job_MuTau_${channel}_${_lt}_${syst}_D
+		echo python /nfs/dust/cms/user/dydukhle/STAU/Analysis18/CMSSW_10_2_16/src/DesyTauAnalyses/NTupleMaker/test/TF_Estimation/run_plots_newDataDriven_new_MuTau_D.py list_$_lt $2 $syst >> job_MuTau_${channel}_${_lt}_${syst}_D
 
 
-		chmod 777 job_MuTau_${channel}_${_lt}_$syst
-		echo job_MuTau_${channel}_${_lt}_$syst
-		echo MuTau_${channel}_${_lt}_$syst
-		./HTC_submit.sh job_MuTau_${channel}_${_lt}_$syst MuTau_${channel}_${_lt}_$syst
+		chmod 777 job_MuTau_${channel}_${_lt}_${syst}_D
+		echo job_MuTau_${channel}_${_lt}_${syst}_D
+		echo MuTau_${channel}_${_lt}_${syst}_D
+		./HTC_submit.sh job_MuTau_${channel}_${_lt}_${syst}_D MuTau_${channel}_${_lt}_${syst}_D
 
 
 	fi

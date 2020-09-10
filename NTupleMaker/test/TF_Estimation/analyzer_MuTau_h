@@ -1033,7 +1033,7 @@ if (Mt2as>40 && Mt2as<120)
 	deta=deltaEta(muV.Px(),  muV.Py(),muV.Pz(), tauV.Px(),  tauV.Py(),tauV.Pz() );
 	double dPhiMuMET=dPhiFrom2P( mu_px[mIndex], mu_py[mIndex], metx,  mety );
 	double dPhiTauMET=dPhiFrom2P( tauV.Px(), tauV.Py(), metx,  mety );
-
+/*
 
 			(*inputVec)[0] = MetV.Pt();
 			(*inputVec)[1] = muV.Pt();
@@ -1048,8 +1048,9 @@ if (Mt2as>40 && Mt2as<120)
 			(*inputVec)[10] = Mt2as;
 			(*inputVec)[11] = dPhiMuMET;
 			(*inputVec)[12] = dPhiTauMET;
-
-            //DataChunk *sample = new DataChunkFlat(13, 0);
+*/
+  
+          //DataChunk *sample = new DataChunkFlat(13, 0);
             //sample->set_data(*inputVec);
 
 
@@ -1946,7 +1947,6 @@ if (njj==1)    hCSVv2_b2[CutIndex]->Fill(jet_btag[njj],EvWeight);
 	TVector3 v3 = v1+v2;
 	//double cosT = v3.CosTheta();
 	double cosT2 = cosAngle(bV,muV);
-//if (CutIndex==10 && bV.Pt()>0 && muV.Pt()>0)	cout<<"  cosTheta  "<<cosT<<"   "<<cosT2<<endl;
 	hCosbl[CutIndex]->Fill(cosT2,EvWeight);
         double pl_4[4] = { muV.E(), muV.Px(), muV.Py(),muV.Pz()};
         double pb1_4[4] = {bV.E(), bV.Px(), bV.Py(), bV.Pz()};
@@ -2038,7 +2038,7 @@ if (njj==1)    hCSVv2_b2[CutIndex]->Fill(jet_btag[njj],EvWeight);
 	hTauDecayModeAll[CutIndex]->Fill(genTauDecayMode2,EvWeight);
 
 
-	hTauPtEta[CutIndex]->Fill(ta_pt[tIndex],fabs(ta_eta[tIndex]),EvWeight);
+	hTauPtEta[CutIndex]->Fill(TauV.Pt(), TauV.Eta(),EvWeight);
       }
 
 

@@ -76,7 +76,6 @@ systematics="Nominal JetEnUp JetEnDown ZPtUp ZPtDown MuEnUp MuEnDown UnclEnUp Un
 fi
 
 
-
 if [[  $3 == "listWJ" ]] ;then
 systematics="Nominal JetEnUp JetEnDown MuEnUp MuEnDown UnclEnUp UnclEnDown ScalesDown ScalesUp PDFUp PDFDown METRecoilUp METRecoilDown BTagUp BTagDown ZPtUp ZPtDown TopPtUp TopPtDown"
 fi
@@ -131,15 +130,13 @@ _lt=`echo $line | cut -d '/' -f2`
 		if [[ true ]] ; then
 
 		echo  plots for channel $2 and syst $syst and $ltt plots_${2} ${ltt}_${syst}_C.root
-		cat bss > job_MuTau_${channel}_${_lt}_$syst
-		echo python /nfs/dust/cms/user/dydukhle/STAU/Analysis18/CMSSW_10_2_16/src/DesyTauAnalyses/NTupleMaker/test/TF_Estimation/run_plots_newDataDriven_new_MuTau_C.py list_$_lt $2 $syst >> job_MuTau_${channel}_${_lt}_$syst
-#		echo ./run_plots_newDataDriven.sh list_$lt $2 $syst >> job_${channel}_${lt}_$syst
-#		echo ./run_plots_newTF.sh list_$lt $2 $syst >> job_${channel}_${lt}_$syst
+		cat bss > job_MuTau_${channel}_${_lt}_${syst}_C
+		echo python /nfs/dust/cms/user/dydukhle/STAU/Analysis18/CMSSW_10_2_16/src/DesyTauAnalyses/NTupleMaker/test/TF_Estimation/run_plots_newDataDriven_new_MuTau_C.py list_$_lt $2 $syst >> job_MuTau_${channel}_${_lt}_${syst}_C
 
-		chmod 777 job_MuTau_${channel}_${_lt}_$syst
-		echo job_MuTau_${channel}_${_lt}_$syst
-		echo MuTau_${channel}_${_lt}_$syst
-		./HTC_submit.sh job_MuTau_${channel}_${_lt}_$syst MuTau_${channel}_${_lt}_$syst
+		chmod 777 job_MuTau_${channel}_${_lt}_${syst}_C
+		echo job_MuTau_${channel}_${_lt}_${syst}_C
+		echo MuTau_${channel}_${_lt}_${syst}_C
+		./HTC_submit.sh job_MuTau_${channel}_${_lt}_${syst}_C MuTau_${channel}_${_lt}_${syst}_C
 
 
 	fi
