@@ -803,6 +803,23 @@ if (dogenMET) { met = sqrt(genmet_Ex*genmet_Ex + genmet_Ey*genmet_Ey);
     dzetaR=-9999;
 
    int nSR = GetSRIndex(muV, tauV, JetsV, MetV, Chimass, mIndex, tIndex, CutIndex,dogenMET);
+ 
+     hHEM[CutIndex]->Fill(tauV.Eta(), tauV.Phi(),1);
+
+      int is_hem=0;
+
+      if(elV.Pt()>=0 && elV.Eta()>=-3.0 && elV.Eta()<=-1.4 && elV.Phi()>=-1.57 && elV.Phi()<=-0.87) is_hem+=1;
+      for (int nj=0;nj<JetsV.size();++nj) {
+          if(JetsV[nj].Pt()>=0 && JetsV[nj].Eta()>=-3.2 && JetsV[nj].Eta()<=-1.2 && JetsV[nj].Phi()>=-1.77 && JetsV[nj].Phi()<=-0.67) is_hem+=1;
+      }
+      if(is_hem>=1) cout<<" Is HEM : "<<is_hem<<endl;
+
+      hHEM[CutIndex]->Fill(elV.Eta(), elV.Phi(), EvWeight);
+      //Iterate over Jets
+      for (int nj=0;nj<JetsV.size();++nj) {
+                hHEM[CutIndex]->Fill(JetsV[nj].Eta(), JetsV[nj].Phi(), EvWeight);
+      }
+
 
     ///////////////////mutau
     ////////////////////

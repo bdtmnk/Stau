@@ -140,7 +140,7 @@ double binsEtaElEff[4] =  {0,0.9,1.2,2.1};
 int nBinsTauPt2 = 4;
 int nBinsTauEta2 = 4;
 
-double binsTauPt2[5] =  {20,30,40,70,1000};
+double binsTauPt2[5] =  {30,40,70,110,1000};
 double binsTauEta2[5] =  {0,0.8,1.44,1.566,2.3};
 
 
@@ -348,36 +348,6 @@ if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
 
 
 
-
-/*
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.673922;
-         if (pt>30 && pt<40) SF = 0.643638;
-         if (pt>40 ) SF = 0.580981;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.675703;
-         if (pt>30 && pt<40) SF = 0.635124;
-         if (pt>40 ) SF = 0.58225;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
- {
-        if (pt>20) SF = 0.790876;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.770244;
-         if (pt>30 && pt<40) SF = 0.707088;
-         if (pt>40 ) SF = 0.705259;
- }*/
- // for btagged CR
-/*
-         if (pt>20 && pt<30) SF = 0.77;
-         if (pt>30 && pt<40) SF = 0.74;
-         if (pt>40 ) SF = 0.6;
- */
 
 
   if ( working_point == "JetEnUp"){
@@ -668,310 +638,39 @@ if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
          if (pt>70) SF = 0.237099;
 }
 
+if (working_point=="Nominal"){
+
+ if (  fabs(eta) < 0.8 )
+ {                                                                                                                                                                              if (pt>30 && pt<40) SF = 0.188392;                                                                                                                               }                                                                                                                                                                       if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
+ {                                                                                                                                                                              if (pt>30 && pt<40) SF = 0.21468;
+ }                                                                                                                                                                       if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
+ {                                                                                                                                                                               if (pt>30 && pt<40) SF = 0.165479;
+ }                                                                                                                                                                       if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )                                                                                                                            {                                                                                                                                                                               if (pt>30 && pt<40) SF = 0.19246;
+ }                                                                                                                                                                          if (pt>40 && pt<70) SF = 0.204229;                                                                                                                                      if (pt>70 && pt<110) SF = 0.260247;                                                                                                                                     if (pt>110) SF = 0.27;}
 
 
-
-
- /*
- if ( working_point == "JetEnUp"){
+ if ( working_point == "Nominal"){
  if (  fabs(eta) < 0.8 )
  {
-        if (pt>20 && pt<30) SF = 0.67299;
-         if (pt>30 && pt<40) SF = 0.641404;
-         if (pt>40 ) SF = 0.587893;
+        if (pt>30 && pt<40) SF = 0.187116;
  }
  if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
  {
-        if (pt>20 && pt<30) SF = 0.674998;
-         if (pt>30 && pt<40) SF = 0.625476;
-         if (pt>40 ) SF = 0.571041;
+        if (pt>30 && pt<40) SF = 0.235899;
  }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
+ if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
  {
-        if (pt>20) SF = 0.790677;
+         if (pt>30 && pt<40) SF = 0.198834;
  }
  if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
  {
-        if (pt>20 && pt<30) SF = 0.766055;
-         if (pt>30 && pt<40) SF = 0.696323;
-         if (pt>40 ) SF = 0.713004;
+         if (pt>30 && pt<40) SF = 0.166219;
  }
+    if (pt>40 && pt<70) SF = 0.165152;
+    if (pt>70 && pt<110) SF = 0.221893;
+    if (pt>110) SF = 0.207962;
 }
 
- if ( working_point == "JetEnDown"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.667442;
-         if (pt>30 && pt<40) SF = 0.652886;
-         if (pt>40 ) SF = 0.575058;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.674867;
-         if (pt>30 && pt<40) SF = 0.630325;
-         if (pt>40 ) SF = 0.600444;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
- {
-        if (pt>20) SF = 0.768298;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.761079;
-         if (pt>30 && pt<40) SF = 0.70866;
-         if (pt>40 ) SF = 0.701104;
- }
-}
-
- if ( working_point == "TauEnUp"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.672294;
-         if (pt>30 && pt<40) SF = 0.643862;
-         if (pt>40 ) SF = 0.576386;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.674212;
-         if (pt>30 && pt<40) SF = 0.631933;
-         if (pt>40 ) SF = 0.577185;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
- {
-        if (pt>20) SF = 0.795036;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.76801;
-         if (pt>30 && pt<40) SF = 0.70373;
-         if (pt>40 ) SF = 0.699653;
- }
-}
-
- if ( working_point == "TauEnDown"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.673768;
-         if (pt>30 && pt<40) SF = 0.643572;
-         if (pt>40 ) SF = 0.585973;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.676242;
-         if (pt>30 && pt<40) SF = 0.641822;
-         if (pt>40 ) SF = 0.575633;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
- {
-        if (pt>20) SF = 0.793915;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.771069;
-         if (pt>30 && pt<40) SF = 0.702321;
-         if (pt>40 ) SF = 0.706686;
- }
-}
-
- if ( working_point == "ElEnUp"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.672637;
-         if (pt>30 && pt<40) SF = 0.644345;
-         if (pt>40 ) SF = 0.580745;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.67435;
-         if (pt>30 && pt<40) SF = 0.633671;
-         if (pt>40 ) SF = 0.580209;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
- {
-        if (pt>20) SF = 0.797305;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.770201;
-         if (pt>30 && pt<40) SF = 0.700472;
-         if (pt>40 ) SF = 0.70489;
- }
-}
-
- if ( working_point == "ElEnDown"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.672637;
-         if (pt>30 && pt<40) SF = 0.644345;
-         if (pt>40 ) SF = 0.580666;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.67435;
-         if (pt>30 && pt<40) SF = 0.633671;
-         if (pt>40 ) SF = 0.57994;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
- {
-        if (pt>20) SF = 0.797305;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.770201;
-         if (pt>30 && pt<40) SF = 0.700472;
-         if (pt>40 ) SF = 0.70489;
- }
-}
-
- if ( working_point == "MuEnUp"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.672521;
-         if (pt>30 && pt<40) SF = 0.644222;
-         if (pt>40 ) SF = 0.580483;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.67403;
-         if (pt>30 && pt<40) SF = 0.631744;
-         if (pt>40 ) SF = 0.578989;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
- {
-        if (pt>20) SF = 0.797602;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.769812;
-         if (pt>30 && pt<40) SF = 0.700455;
-         if (pt>40 ) SF = 0.703825;
- }
-}
-
- if ( working_point == "MuEnDown"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.672755;
-         if (pt>30 && pt<40) SF = 0.645719;
-         if (pt>40 ) SF = 0.581132;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.677249;
-         if (pt>30 && pt<40) SF = 0.634087;
-         if (pt>40 ) SF = 0.580193;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
- {
-        if (pt>20) SF = 0.800591;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.771017;
-         if (pt>30 && pt<40) SF = 0.699003;
-         if (pt>40 ) SF = 0.704209;
- }
-}
-
- if ( working_point == "UnclEnUp"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.663881;
-         if (pt>30 && pt<40) SF = 0.6455;
-         if (pt>40 ) SF = 0.575761;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.66202;
-         if (pt>30 && pt<40) SF = 0.651215;
-         if (pt>40 ) SF = 0.574364;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
- {
-        if (pt>20) SF = 0.747702;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.768633;
-         if (pt>30 && pt<40) SF = 0.704527;
-         if (pt>40 ) SF = 0.703865;
- }
-}
-
- if ( working_point == "UnclEnDown"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.675039;
-         if (pt>30 && pt<40) SF = 0.647367;
-         if (pt>40 ) SF = 0.589217;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.668485;
-         if (pt>30 && pt<40) SF = 0.619344;
-         if (pt>40 ) SF = 0.576247;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
- {
-        if (pt>20) SF = 0.776659;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.772044;
-         if (pt>30 && pt<40) SF = 0.716349;
-         if (pt>40 ) SF = 0.70803;
- }
-}
-
- if ( working_point == "BTagUp"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.67323;
-         if (pt>30 && pt<40) SF = 0.646175;
-         if (pt>40 ) SF = 0.588014;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.675746;
-         if (pt>30 && pt<40) SF = 0.635479;
-         if (pt>40 ) SF = 0.586175;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
- {
-        if (pt>20) SF = 0.802677;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.770412;
-         if (pt>30 && pt<40) SF = 0.701023;
-         if (pt>40 ) SF = 0.710078;
- }
-}
-
- if ( working_point == "BTagDown"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.672113;
-         if (pt>30 && pt<40) SF = 0.641569;
-         if (pt>40 ) SF = 0.570456;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.674027;
-         if (pt>30 && pt<40) SF = 0.631134;
-         if (pt>40 ) SF = 0.574189;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
- {
-        if (pt>20) SF = 0.793288;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.769511;
-         if (pt>30 && pt<40) SF = 0.698979;
-         if (pt>40 ) SF = 0.700928;
- }
-}*/
 
 
 
@@ -1205,6 +904,29 @@ if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
         }
 
 }//mutau MVA
+
+//DeepTauId
+if ( working_point == "Nominal"){
+ if (  fabs(eta) < 0.8 )
+ {
+        if (pt>30 && pt<40) SF = 0.633561;
+ }
+ if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
+ {
+        if (pt>30 && pt<40) SF = 0.666032;
+ }
+ if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
+ {
+         if (pt>30 && pt<40) SF = 0.734908;
+ }
+ if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
+ {
+         if (pt>30 && pt<40) SF = 0.613576;
+ }
+    if (pt>40 && pt<70) SF = 0.606865;
+    if (pt>70 && pt<110) SF = 0.695204;
+    if (pt>110) SF = 0.744694;
+}
 
 return SF;
 
@@ -1576,6 +1298,7 @@ TH1D *hDzeta_binned[CutN][nBinsSR];
 
 TH1D *hMET[CutN];
 TH1D *hMETFB[CutN];
+TH1D *hpuMETFB[CutN];
 TH1D *hGenMETFB[CutN];
 TH1D *hMETphi[CutN];
 //TH1D *hnOver[CutN];
@@ -1731,6 +1454,7 @@ TH1D *hdR_taujet[CutN];
 TH1D *hnpv[CutN];
 TH1D *hnpu[CutN];
 TH1D *hnrho[CutN];
+TH2D *hHEM[CutN];
 TH1D *hmet_MT2lester_DZeta_01J1D[CutN];
 
 
@@ -2564,8 +2288,6 @@ for(int jj = 0; jj < 60; jj++){
       hLept2eta[cj]->Sumw2();
 
       //Taus
-      //
-      //
       hnTau[cj] = new TH1D ("nTau_"+nCut + Nplots,"nTau "+cutName + Nplots,10,-0.5,9.5);
       hnTau[cj]->Sumw2();
       hTaupt[cj] = new TH1D ("TaupT_"+nCut + Nplots,"Tau pT "+cutName + Nplots,50,0,500);
@@ -2667,10 +2389,12 @@ for(int jj = 0; jj < 60; jj++){
 
       hMETFB[cj] = new TH1D("METFB_"+nCut + Nplots,"METFB "+cutName + Nplots,50,0.,500.);
       hMETFB[cj]->Sumw2();
+
       hGenMETFB[cj] = new TH1D("GenMETFB_"+nCut + Nplots,"GenMETFB "+cutName + Nplots,50,0.,500.);
       hGenMETFB[cj]->Sumw2();
 
-
+      hpuMETFB[cj] = new TH1D("puMETFB_"+nCut + Nplots,"puMETFB "+cutName + Nplots,50,0.,500.);
+      hpuMETFB[cj]->Sumw2();
 
 
 for (int i=0;i<FakeList.size();++i){
@@ -3032,6 +2756,8 @@ TH1D *hdEtaTauMET[CutN];
       hnpu[cj]= new TH1D ("npu_"+nCut + Nplots,"npu "+cutName + Nplots,100,-0.5,99.5);;
       hnpu[cj]->Sumw2();
       hnrho[cj]= new TH1D ("nrho_"+nCut + Nplots,"nrho "+cutName + Nplots,100,-0.5,99.5);;
+      hHEM[cj] = new TH2D ("HEM" + nCut + Nplots, "HEM" + cutName + Nplots, 30, -3, 3, 30,  -3, 3 );
+      hHEM[cj]->Sumw2();
 /////////////////////////////////////////1D histos
 //
 //
