@@ -324,6 +324,7 @@ if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
 */
 
 // VTight
+if (sel=="MVA"){
  if (  fabs(eta) < 0.8 )
  {
         if (pt>20 && pt<30) SF = 0.338533;
@@ -347,9 +348,51 @@ if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
          if (pt>70) SF = 0.251774;
 
 
-
-
-
+}
+ if ( sel == "DeepTau"){
+ if (  fabs(eta) < 0.8 )
+ {
+        if (pt>30 && pt<40) SF = 0.187129;
+ }
+ if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
+ {
+        if (pt>30 && pt<40) SF = 0.209837;
+ }
+ if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
+ {
+         if (pt>30 && pt<40) SF = 0.139873;
+ }
+ if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
+ {
+         if (pt>30 && pt<40) SF = 0.193377;
+ }
+    if (pt>40 && pt<70) SF = 0.21323;
+    if (pt>70 && pt<110) SF = 0.22107;
+    if (pt>110) SF = 0.277675;
+}
+/*
+if ( sel == "DeepTauId"){
+ if (  fabs(eta) < 0.8 )
+ {
+        if (pt>30 && pt<40) SF = 0.187116;
+ }
+ if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
+ {
+        if (pt>30 && pt<40) SF = 0.235899;
+ }
+ if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
+ {
+         if (pt>30 && pt<40) SF = 0.198834;
+ }
+ if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
+ {
+         if (pt>30 && pt<40) SF = 0.166219;
+ }
+    if (pt>40 && pt<70) SF = 0.165152;
+    if (pt>70 && pt<110) SF = 0.221893;
+    if (pt>110) SF = 0.207962;
+}
+*/
   if ( working_point == "JetEnUp"){
  if (  fabs(eta) < 0.8 )
  {
@@ -637,7 +680,7 @@ if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
         if (pt>40 && pt<70) SF = 0.31117;
          if (pt>70) SF = 0.237099;
 }
-
+/*
 if (working_point=="Nominal"){
 
  if (  fabs(eta) < 0.8 )
@@ -648,8 +691,9 @@ if (working_point=="Nominal"){
  }                                                                                                                                                                       if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )                                                                                                                            {                                                                                                                                                                               if (pt>30 && pt<40) SF = 0.19246;
  }                                                                                                                                                                          if (pt>40 && pt<70) SF = 0.204229;                                                                                                                                      if (pt>70 && pt<110) SF = 0.260247;                                                                                                                                     if (pt>110) SF = 0.27;}
 
-
- if ( working_point == "Nominal"){
+*/
+/*
+ if ( sel == "DeepTauId"){
  if (  fabs(eta) < 0.8 )
  {
         if (pt>30 && pt<40) SF = 0.187116;
@@ -670,8 +714,7 @@ if (working_point=="Nominal"){
     if (pt>70 && pt<110) SF = 0.221893;
     if (pt>110) SF = 0.207962;
 }
-
-
+*/
 
 
 return SF;
@@ -1065,6 +1108,7 @@ TProfile * hprofDZetavsMt2[CutN]  ;//= new TProfile("hprof","",100,-4,4,0,20);
 TH1D * histRuns = new TH1D("histRuns","",6000,24000,30000);
 
 TH1D * histWeightsH = new TH1D("histWeightsH","",1,-0.5,0.5);
+TH1D * histW = new TH1D("histWeightsH","",1,-0.5,0.5);
 
 TH1D * histTopPt = new TH1D("histTopPt","",1,-0.5,0.5);
 

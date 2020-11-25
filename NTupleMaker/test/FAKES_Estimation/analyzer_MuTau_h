@@ -41,8 +41,9 @@ class analyzer {
   TLorentzVector  LeptV1;
   TLorentzVector  LeptV2;
   TLorentzVector  METV;
-
-  vector <int> btag_index;
+  TLorentzVector  puMETV;
+  
+ vector <int> btag_index;
 
 
   const double MuMass = 0.105658367;
@@ -61,6 +62,13 @@ class analyzer {
     double metx=0;
     double mety=0;
     double metphi=0;
+   
+   double pumet=0;
+   double pumetx=0;
+   double pumety=0;
+   double pumetphi=0;
+
+
    Float_t         wScale0;
    Float_t         wScale1;
    Float_t         wScale2;
@@ -90,12 +98,22 @@ class analyzer {
    Float_t         NuPz;
    Float_t         NuPt;
    Float_t         NuPhi;
-  Float_t         met_ex;
-  Float_t         met_ey;
-  Float_t         met_ez;
-  Float_t         met_pt;
-  Float_t         met_phi;
-  Float_t         met_ex_JetEnUp;
+   Float_t         met_ex;
+   Float_t         met_ey;
+   Float_t         met_ez;
+   Float_t         met_pt;
+   Float_t         met_phi;
+  
+  Float_t         puppimet_ex;
+  Float_t        puppimet_ey;
+  Float_t        puppimet_ez;
+  Float_t        puppimet_pt;
+  Float_t        puppimet_phi;
+
+
+
+
+ Float_t         met_ex_JetEnUp;
   Float_t         met_ey_JetEnUp;
   Float_t         met_ex_JetEnDown;
   Float_t         met_ey_JetEnDown;
@@ -296,6 +314,14 @@ class analyzer {
   TBranch        *b_met_ez;   //!
   TBranch        *b_met_pt;   //!
   TBranch        *b_met_phi;   //!
+
+  TBranch        *b_puppimet_ex;   //!
+  TBranch        *b_puppimet_ey;   //!
+  TBranch        *b_puppimet_ez;   //!
+  TBranch        *b_puppimet_pt;   //!
+  TBranch        *b_puppimet_phi;   //!
+
+
   TBranch        *b_met_ex_JetEnUp;
   TBranch        *b_met_ey_JetEnUp;
   TBranch        *b_met_ex_JetEnDown;
@@ -753,21 +779,25 @@ if (tauV.Pt()>0. && etaBin>-1)	    FakeRatePtIncTight[etaBin][CutIndex]->Fill(ta
 
 ////////////////////////////MAIN METHOD
 
-  void FillHists(int CutIndex, Double_t EvWeight, TLorentzVector  elV, TLorentzVector  muV, TLorentzVector tauV, vector<TLorentzVector>  &JetsV, TLorentzVector  &MetV, double Chimass, double mintermediate, string & Sel, int  mIndex, int eIndex, int  tIndex, bool dogenMET){
+  void FillHists(int CutIndex, Double_t EvWeight, TLorentzVector  elV, TLorentzVector  muV, TLorentzVector tauV, vector<TLorentzVector>  &JetsV, TLorentzVector  &MetV, TLorentzVector &puMetV, double Chimass, double mintermediate, string & Sel, int  mIndex, int eIndex, int  tIndex, bool dogenMET){
 
     met = MetV.Pt();
     metx=MetV.Px();
     mety=MetV.Py();
     metphi = MetV.Phi();
 
-//cout<<" before "<<met<<"  "<<metx<<"  "<<mety<<"  "<<metphi<<endl;
+
+    pumet = puMetV.Pt();
+    pumetx=puMetV.Px();
+    pumety=puMetV.Py();
+    pumetphi = puMetV.Phi();
+
 
 if (dogenMET) { met = sqrt(genmet_Ex*genmet_Ex + genmet_Ey*genmet_Ey);
 	metx = genmet_Ex;
 	mety = genmet_Ey;
 	metphi = genmetphi;
 	}
-//cout<<" after "<<met<<"  "<<metx<<"  "<<mety<<"  "<<metphi<<endl;
 
     AllJets_Lepton_noMet.clear();
     for (unsigned int i = 0; i <   JetsV.size(); i++) AllJets_Lepton_noMet.push_back (JetsV.at(i));
@@ -812,7 +842,7 @@ if (dogenMET) { met = sqrt(genmet_Ex*genmet_Ex + genmet_Ey*genmet_Ey);
       for (int nj=0;nj<JetsV.size();++nj) {
           if(JetsV[nj].Pt()>=0 && JetsV[nj].Eta()>=-3.2 && JetsV[nj].Eta()<=-1.2 && JetsV[nj].Phi()>=-1.77 && JetsV[nj].Phi()<=-0.67) is_hem+=1;
       }
-      if(is_hem>=1) cout<<" Is HEM : "<<is_hem<<endl;
+//      if(is_hem>=1) cout<<" Is HEM : "<<is_hem<<endl;
 
       hHEM[CutIndex]->Fill(elV.Eta(), elV.Phi(), EvWeight);
       //Iterate over Jets
@@ -842,8 +872,6 @@ if (dogenMET) { met = sqrt(genmet_Ex*genmet_Ex + genmet_Ey*genmet_Ey);
       double dPhiD=dPhiFrom2P( muV.Px(),  muV.Py(),tauV.Px(),  tauV.Py());
       hdPhiDil[CutIndex]->Fill(dPhiD,EvWeight);
 
-//if (CutIndex ==17)
-//cout<<" insidecheck here  DEta " << fabs(deta)<<"   "<<fabs(detaM)<<" DPhi "<<dPhiD<<"   "<<endl;
 
       //   Mt2::Basic_Mt2_332_Calculator mt2Calculator;
       //   Mt2::LorentzTransverseVector  vis_A(Mt2::TwoVector(muV.Px(), muV.Py()), muonMass);
@@ -860,33 +888,16 @@ if (dogenMET) { met = sqrt(genmet_Ex*genmet_Ex + genmet_Ey*genmet_Ey);
       // TMctLib t;
 
       Mt2as = asymm_mt2_lester_bisect::get_mT2(muonMass, muV.Px(), muV.Py(),tauMass,tauV.Px(),tauV.Py(),metx,mety,Chimass,Chimass,0);
-      //double Mt2as = 0; Mt2as = asymm_mt2_lester_bisect::get_mT2(muV.M(), muV.Px(), muV.Py(),tauV.M(),tauV.Px(),tauV.Py(),metx,mety,Chimass,Chimass,0);
-      //double Mt2ass = 0; Mt2ass = asymm_mt2_lester_bisect::get_mT2(muV.M(), muV.Px(), muV.Py(),tauMass,tauV.Px(),tauV.Py(),metx,mety,Chimass,Chimass,0);
       double mcta = sqrt( 2*muV.Pt()*tauV.Pt()*(1+cos(muV.Phi()-tauV.Phi())) );
 
-      //cout<<"  old "<<muonMass<<"  "<<muV.M()<<"  "<<tauMass<<"  "<<tauV.M()<<"  "<<Mt2as<<"  "<<endl;
-
-
-      //   cout<<"MCTa  = "<<mcta<<" MCT = "<<mct(v1,v2)
-      //   <<", MCTcorr = "<<mctcorr(v1,v2,vds,ptm,ecm,mxlo)
-      //   <<", MT2 = "<<mt2(v1,v2,vds,ptm,ecm,mxlo)<<"  Mt2 lester "<<Mt2as
-      //   <<", MCy = "<<mcy(v1,v2,vds,ptm)
-      //  <<", MCx = "<<mcx(v1,v2,vds,ptm)
-      //  <<endl;
       double pa[3] ={muonMass, muV.Px(),muV.Py()};
       double pb[3] ={tauMass, tauV.Px(),tauV.Py()};
       double pmiss[3] ={0., metx,mety};
-      //mt2_bisect::mt2 mt2_event;
-      //mt2_event.set_momenta( pa, pb, pmiss );
-      //mt2_event.set_mn(Chimass);
-      //double mt2_value = 0;//= mt2_event.get_mt2();
 
       double MT2v =0 ; MT2v = mt2(v1,v2,vds,ptm,ecm,mxlo);
 
-      //cout<<" new mt2 "<<mt2_value<<"  "<<MT2v<<endl;
 
       hMt2mutau[CutIndex]->Fill(MT2v,EvWeight);
-      //hMt2[CutIndex]->Fill(mt2_value,EvWeight);
       hMt2lestermutau[CutIndex]->Fill(Mt2as,EvWeight);
       hMt2lestermutauFB[CutIndex]->Fill(Mt2as,EvWeight);
       hMCTmutau[CutIndex]->Fill(mct(v1,v2),EvWeight);
@@ -897,12 +908,9 @@ if (dogenMET) { met = sqrt(genmet_Ex*genmet_Ex + genmet_Ey*genmet_Ey);
       double MCTcorr = mctcorr(v1,v2,vds,ptm,ecm,mxlo);
       hMCTcor[CutIndex]->Fill(MCTcorr,EvWeight);
 
-      //cout<<" asym "<<Mt2as<<"  "<<mt2<<endl;
 
       double Centr = Centrality(AllJets_Lepton_noMet);
       hCentrality[CutIndex]->Fill(Centr,EvWeight);
-      //cout<<"Centr "<<Centr<<"  "<< EvWeight <<endl;
-      //if(CutIndex>18){
       double mTB =0;//= Lester::mTBound(muV.M(), muV.Px(), muV.Py(), muV.Pz(), tauMass,tauV.Px(),tauV.Py(),tauV.Pz(),metx,mety, mintermediate);
 
       double mTtrue = Lester::mTTrue(muV.M(), muV.Px(), muV.Py(), muV.Pz(), tauMass,tauV.Px(),tauV.Py(),tauV.Pz(),metx,mety, mintermediate);
@@ -910,13 +918,7 @@ if (dogenMET) { met = sqrt(genmet_Ex*genmet_Ex + genmet_Ey*genmet_Ey);
 
       hMTBoundmutau[CutIndex]->Fill(mTB,EvWeight);
       hMTTruemutau[CutIndex]->Fill(mTtrue,EvWeight);
-      //	}
-      //double mTB = Lester::mTTrue(muonMass, muV.Px(), muV.Py(), muV.Pz(), tauMass,tauV.Px(),tauV.Py(),tauV.Pz(),metx,mety, mintermediate);
-      //			cout<<"  "<<mTB<<endl;
-      //	     	double Dr= deltaR(MuV.at(mIndex).Eta(), MuV.at(mIndex).Phi(),tauV.at(mIndex).Eta(),tauV.at(mIndex).Phi());
-      //double Dr= deltaR(muV.Eta(), muV.Phi(),tauV.Eta(),tauV.Phi());
       double Dr = muV.DeltaR(tauV);
-      //
       TLorentzVector DiL = muV  + tauV;
       double dPhi=dPhiFrom2P( DiL.Px(), DiL.Py(), metx,  mety );
       double MTDil = TMath::Sqrt(2*DiL.Pt()*met*(1-TMath::Cos(dPhi)));
@@ -925,10 +927,8 @@ if (dogenMET) { met = sqrt(genmet_Ex*genmet_Ex + genmet_Ey*genmet_Ey);
       hdR_mutau[CutIndex]->Fill(Dr,EvWeight);
 
 
-
-
       dPhi=dPhiFrom2P( mu_px[mIndex], mu_py[mIndex], metx,  mety );
-      //dPhi=dPhiFrom2P( muV.Px(), muV.Py(), metx,  mety );
+      //pudPhi=dPhiFrom2P( muV.Px(), muV.Py(), metx,  mety );
       hdPhiMuMET[CutIndex]->Fill(dPhi,EvWeight);
 
       double MT = TMath::Sqrt(2*mu_pt[mIndex]*met*(1-TMath::Cos(dPhi)));
@@ -974,7 +974,7 @@ if (pzetavis !=0) dzetaR = pzetamiss/pzetavis;
 
 
 if (CutIndex==17 &&  (int)event_lumi==101925 && (int) event_run ==1)
-	cout<< " More Info  vectorVisX "<<  vectorVisX<<" zetaX "<<zetaX<<" vectorVisY "<<vectorVisY<<" zetaY "<<zetaY<<endl;
+//	cout<< " More Info  vectorVisX "<<  vectorVisX<<" zetaX "<<zetaX<<" vectorVisY "<<vectorVisY<<" zetaY "<<zetaY<<endl;
 
       hDZeta[CutIndex]->Fill(dzeta,EvWeight);
       hDZetaFB[CutIndex]->Fill(dzeta,EvWeight);
@@ -1599,6 +1599,7 @@ hDZetaFBByBin[CutIndex][nSR]->Fill(dzeta,EvWeight);
 hMETByBin[CutIndex][nSR]->Fill(met,EvWeight);
 hMETFBByBin[CutIndex][nSR]->Fill(met,EvWeight);
 
+
 if (eIndex!=-1){
 hElptByBin[CutIndex][nSR]->Fill(el_pt[eIndex],EvWeight);
 hEletaByBin[CutIndex][nSR]->Fill(el_eta[eIndex],EvWeight);
@@ -2149,6 +2150,7 @@ if (njj==1)    hCSVv2_b2[CutIndex]->Fill(jet_btag[njj],EvWeight);
 
       hMET[CutIndex]->Fill(met,EvWeight);
       hMETFB[CutIndex]->Fill(met,EvWeight);
+      hpuMETFB[CutIndex]->Fill(pumet,EvWeight);
       hMETphi[CutIndex]->Fill(metphi,EvWeight);
       hHTOsqrMET[CutIndex]->Fill(  sumpT/sqrt(met),EvWeight);
       hMeffMuonOsqrMET[CutIndex]->Fill( (sumMuonpT+sumpT+ met)/sqrt(met),EvWeight);
@@ -2421,7 +2423,7 @@ if (dogenMET) { met = sqrt(genmet_Ex*genmet_Ex + genmet_Ey*genmet_Ey);
 
 
 
-  void FillHistsDiL(int CutIndex, Double_t EvWeight, TLorentzVector  LeptV1, TLorentzVector  LeptV2,  vector<TLorentzVector>  &JetsV, TLorentzVector  &MetV, double Chimass, double mintermediate, string & Sel, int  mIndex_1, int mIndex_2){
+  void FillHistsDiL(int CutIndex, Double_t EvWeight, TLorentzVector  LeptV1, TLorentzVector  LeptV2,  vector<TLorentzVector>  &JetsV, TLorentzVector  &MetV , double Chimass, double mintermediate, string & Sel, int  mIndex_1, int mIndex_2){
     AllJets_Lepton_noMet.clear();
     for (unsigned int i = 0; i <   JetsV.size(); i++) AllJets_Lepton_noMet.push_back (JetsV.at(i));
 
@@ -2816,6 +2818,12 @@ void analyzer::Init(TTree *tree)
   fChain->SetBranchAddress("met_ez", &met_ez, &b_met_ez);
   fChain->SetBranchAddress("met_pt", &met_pt, &b_met_pt);
   fChain->SetBranchAddress("met_phi", &met_phi, &b_met_phi);
+
+   fChain->SetBranchAddress("puppimet_ex", &puppimet_ex, &b_puppimet_ex);
+  fChain->SetBranchAddress("puppimet_ey", &puppimet_ey, &b_puppimet_ey);
+  fChain->SetBranchAddress("puppimet_ez", &puppimet_ez, &b_puppimet_ez);
+  fChain->SetBranchAddress("puppimet_pt", &puppimet_pt, &b_puppimet_pt);
+  fChain->SetBranchAddress("puppimet_phi", &puppimet_phi, &b_puppimet_phi);
 
   fChain->SetBranchAddress("met_ex_recoil", &met_ex_recoil, &b_met_ex_recoil);
   fChain->SetBranchAddress("met_ey_recoil", &met_ey_recoil, &b_met_ey_recoil);
